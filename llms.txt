@@ -1,0 +1,25 @@
+# vibeward
+
+> Security guardrail and scanner for AI-generated / vibe-coded apps (Supabase, Lovable, Bolt, v0, Cursor, Claude Code, MCP, backend). As a Claude Code hook it catches risky requests before the AI acts on them ("disable RLS", "use the service_role key in the frontend"). As a scanner it finds exposed secrets, missing Row-Level Security, insecure backends and local-database exposure — from a URL or from your code — and writes a context-rich report (CWE, exploit path, quantified impact, references) that an AI coding tool can turn into a fix. Deterministic (no LLM call), read-only, open source (MIT), run with `npx vibeward@latest`.
+
+## Run
+
+- Guardrail (Claude Code UserPromptSubmit hook): `npx vibeward@latest guard` — blocks a risky prompt with why + the safe alternative, before the model runs
+- Quick check from a URL: `npx vibeward@latest https://your-app.lovable.app`
+- Deep audit from code: `npx vibeward@latest scan ./your-app`
+- Supabase deep audit without credentials: `npx vibeward@latest supabase-sql` (run the query in the Supabase SQL Editor, then `--supabase result.json`)
+- CI: GitHub Action `JSiapoDEV/vibeward@v1` — scans every push, fails on a critical, uploads SARIF to the GitHub Security tab
+
+## What it finds
+
+- Exposed secrets: Supabase `service_role`, Stripe, OpenAI, Anthropic, Google, AWS, GitHub, and more — in JS bundles or source code, reported with the exact file:line
+- Supabase Row-Level Security: tables readable without authentication, permissive `USING (true)` policies, and risky `SECURITY DEFINER` functions
+- Insecure backend: SQL injection, open CORS, command injection, `eval`, and verbose error leaks in API routes
+- Local database exposure: committed SQLite / `.db` files and `.env` secrets shipped in the repo or build
+- HTTP security headers: missing CSP, HSTS, X-Frame-Options, and technology-stack leaks
+
+## Docs
+
+- [README and usage](https://github.com/JSiapoDEV/vibeward)
+- [npm package](https://www.npmjs.com/package/vibeward)
+- [Full text for LLMs](https://vibeward.ai/llms-full.txt)

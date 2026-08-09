@@ -1,0 +1,116 @@
+# vibeward — full reference for LLMs
+
+> Security scanner for AI-generated / vibe-coded apps. Finds exposed secrets, missing
+> Row-Level Security, insecure backends and local-database exposure — from a URL or from
+> your code — and writes a context-rich report that an AI coding tool can turn into a fix.
+> Read-only. Open source (MIT). Run with `npx vibeward@latest`. Site: https://vibeward.ai
+
+## Why it exists
+
+Apps built with AI coding tools (Lovable, Bolt, v0, Cursor, Claude Code, Codex) ship fast and
+ship the same handful of critical holes. This is documented, not hypothetical:
+
+- CVE-2025-48757 (CVSS 9.3): insufficient Supabase Row-Level Security in Lovable let
+  unauthenticated attackers read/write arbitrary tables. 170 of 1,645 analyzed projects
+  (10.3%) were vulnerable.
+- Moltbook (2026): a vibe-coded app with no RLS policies and a public key in the client bundle
+  exposed ~1.5M auth tokens and 35,000 emails.
+- Veracode (2026): AI-generated code introduced a known security flaw in 45% of tests, a rate
+  ~2.7x higher than human-written code.
+
+## What it scans
+
+Secrets (URL bundles and source code, reported with file:line):
+- Supabase service_role key in the client (decoded from the JWT role, so the public anon key
+  is not falsely flagged)
+- Stripe, OpenAI, Anthropic, Google, AWS, GitHub, Resend, SendGrid, Twilio keys
+- Private PEM keys and suspicious secret assignments
+- Committed .env files
+
+Supabase / Postgres:
+- Tables readable without authentication (probed with the public anon key, read-only)
+- Migrations: tables created without RLS, permissive `USING (true)` policies, SECURITY DEFINER
+  functions
+- Optional deep audit via a read-only SQL query you run in the Supabase SQL Editor (no
+  credentials shared with the tool)
+
+Backend:
+- SQL injection (interpolated queries, Prisma $queryRawUnsafe, Drizzle sql.raw, better-sqlite3)
+- Open CORS, command injection, eval / new Function, verbose error leaks
+
+Local database:
+- Committed SQLite / .db files (they contain data), including files served from a public folder
+
+HTTP security headers:
+- Missing Content-Security-Policy, Strict-Transport-Security, X-Frame-Options,
+  X-Content-Type-Options; technology-stack leaks
+
+## Guardrail (the differentiator)
+
+Most vibe-coded holes start with a prompt. vibeward runs as a Claude Code `UserPromptSubmit` hook
+and catches the risky request the moment the user types it — before the agent acts:
+- "disable RLS so it works" → blocked, with why + the safe policy to write instead
+- "use the service_role key in the frontend" → blocked
+- "make the table public to debug" / "remove the login for now" → blocked
+
+The rules are deterministic (regex, no LLM call), so they cannot be prompt-injected away. Install:
+```json
+{ "hooks": { "UserPromptSubmit": [ { "hooks": [{ "type": "command", "command": "npx vibeward@latest guard" }] } ] } }
+```
+Use `guard --warn` to warn without blocking.
+
+## Modes (the scanner — a backstop to the guardrail)
+
+Black-box (from a URL) — quick outside-in check:
+```
+npx vibeward@latest https://your-app.lovable.app
+```
+
+White-box (from the code) — deep audit with exact file:line, reads a git repo, a downloaded ZIP,
+or a synced folder:
+```
+npx vibeward@latest scan ./your-app
+```
+
+Supabase deep audit without giving credentials:
+```
+npx vibeward@latest supabase-sql          # run this query in the Supabase SQL Editor
+npx vibeward@latest scan ./your-app --supabase result.json
+```
+
+CI (GitHub Action) — runs on every push, uploads SARIF to the GitHub Security tab, fails the
+build on a critical finding:
+```yaml
+- uses: JSiapoDEV/vibeward@v1
+  with:
+    path: '.'
+```
+
+## Output
+
+Every finding is a context block designed to be both human-readable and consumable by an AI
+coding assistant to open a correct pull request. Each finding includes:
+- Classification (CWE)
+- Where (URL, bundle, or file:line)
+- Evidence (counts, snippets, column names)
+- How it's exploited (a concrete abuse path for that instance)
+- Impact (quantified: rows, data, money at risk)
+- Why it matters (in business language)
+- References (CVE, CWE, vendor docs)
+
+Reports are written as Markdown; JSON and SARIF 2.1.0 are also available. Exit code is 2 when a
+critical finding is present, for CI gating.
+
+## Authorization
+
+vibeward is strictly read-only: no writes, no deletes, no data exfiltration. It only reads what a
+browser would fetch, and confirms database exposure by reading at most one row (storing only the
+count and the names of sensitive columns, never row contents). Run it only against applications
+whose owner authorized the audit.
+
+## Links
+
+- GitHub: https://github.com/JSiapoDEV/vibeward
+- npm: https://www.npmjs.com/package/vibeward
+- Site: https://vibeward.ai
+- License: MIT
