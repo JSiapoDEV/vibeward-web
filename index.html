@@ -225,10 +225,11 @@
     <h2 class="sec-title">What it finds</h2>
     <p class="sec-lead">The exact holes AI coding tools leave behind — across the front end, the back end, and the database.</p>
     <div class="grid">
-      <div class="card"><h3>🔑 Exposed secrets</h3><p>Supabase <code style="font-family:var(--mono);font-size:12px;color:var(--amber)">service_role</code>, Stripe, OpenAI, AWS, GitHub and more — in bundles or source, with the exact file:line.</p></div>
-      <div class="card"><h3>🗄️ Missing RLS <span class="tag">Supabase</span></h3><p>Tables readable without auth, permissive <code style="font-family:var(--mono);font-size:12px;color:var(--amber)">USING (true)</code> policies, and risky SECURITY DEFINER functions.</p></div>
+      <div class="card"><h3>🔑 Exposed secrets</h3><p>Supabase <code style="font-family:var(--mono);font-size:12px;color:var(--amber)">service_role</code> and new-format <code style="font-family:var(--mono);font-size:12px;color:var(--amber)">sb_secret_</code>, Stripe, OpenAI, AWS, GitHub, Slack, DB connection strings — in bundles or source, with the exact file:line.</p></div>
+      <div class="card"><h3>🗄️ Broken RLS <span class="tag">Supabase</span></h3><p>Enumerates your tables <em>live</em>, then flags any readable — or unauthenticated-<em>writable</em> (opt-in) — without a login. Plus <code style="font-family:var(--mono);font-size:12px;color:var(--amber)">USING (true)</code> policies, SECURITY DEFINER, and GraphQL introspection.</p></div>
+      <div class="card"><h3>🔥 Firebase exposure</h3><p>Open Realtime Databases and publicly listable Storage buckets — the pattern behind the Tea breach (72k IDs &amp; selfies leaked).</p></div>
       <div class="card"><h3>🧩 Insecure backend</h3><p>SQL injection, open CORS, command injection, <code style="font-family:var(--mono);font-size:12px;color:var(--amber)">eval</code>, and verbose error leaks in your API routes.</p></div>
-      <div class="card"><h3>💾 Local DB exposure</h3><p>Committed SQLite/<code style="font-family:var(--mono);font-size:12px;color:var(--amber)">.db</code> files and <code style="font-family:var(--mono);font-size:12px;color:var(--amber)">.env</code> secrets shipped in the repo or the build.</p></div>
+      <div class="card"><h3>💾 Local DB &amp; source exposure</h3><p>Committed SQLite/<code style="font-family:var(--mono);font-size:12px;color:var(--amber)">.db</code> files, <code style="font-family:var(--mono);font-size:12px;color:var(--amber)">.env</code> secrets, and exposed <code style="font-family:var(--mono);font-size:12px;color:var(--amber)">.map</code> source maps shipped in the build.</p></div>
       <div class="card"><h3>🛡️ Security headers</h3><p>Missing CSP, HSTS, X-Frame-Options — and tech-stack leaks that hand attackers a target list.</p></div>
       <div class="card"><h3>🤖 Built for AI fixes</h3><p>Every finding ships with CWE, exploit path, impact and references — the context an AI needs to open a correct PR.</p></div>
     </div>
@@ -241,7 +242,7 @@
       <div class="mode">
         <div class="k">Black-box · from a URL</div>
         <h3>Quick outside-in check</h3>
-        <p>Point it at a live app. Scans bundles for secrets, probes Supabase RLS, checks headers. <b style="color:var(--ink-soft)">Only scan apps you own or have written permission to audit.</b></p>
+        <p>Point it at a live app. Scans bundles for secrets, enumerates &amp; probes Supabase/Firebase, checks headers and source maps. <b style="color:var(--ink-soft)">Read-only by default; only scan apps you own or have written permission to audit.</b></p>
         <pre>npx vibeward@latest https://app.lovable.app</pre>
       </div>
       <div class="mode">
@@ -277,7 +278,11 @@
     <div class="faq">
       <details>
         <summary>Does it exploit or change anything?</summary>
-        <p class="a">No. vibeward is strictly read-only. It reads your code, bundles and public responses to <em>detect</em> risk — it never writes, deletes or exploits. It reports; you (or your AI) make the fix.</p>
+        <p class="a">Read-only by default: it reads your code, bundles and public responses to <em>detect</em> risk — it never modifies, deletes or exploits. The one exception is an explicit, opt-in <code>--write-test</code> that runs a single non-mutating write probe (an empty insert) to check for unauthenticated writes; it stays off unless you ask for it.</p>
+      </details>
+      <details>
+        <summary>Does it catch the bug behind the Moltbook &amp; Lovable leaks?</summary>
+        <p class="a">Yes — that's the flagship check. It finds the public Supabase key in your bundle (a JWT or the new-format <code>sb_publishable_</code>), enumerates every exposed table live, and flags which ones return data with no login — the exact failure mode that leaked ~1.5M tokens from Moltbook.</p>
       </details>
       <details>
         <summary>Does my code leave my machine?</summary>
@@ -285,7 +290,7 @@
       </details>
       <details>
         <summary>Do I need Supabase?</summary>
-        <p class="a">No. Supabase RLS is one check. It also finds exposed secrets, insecure backends (SQLi, open CORS, command injection), SQLite/<code>.env</code> exposure and missing security headers — on any stack.</p>
+        <p class="a">No. Supabase RLS is one check. It also covers Firebase (open databases &amp; buckets), exposed secrets, insecure backends (SQLi, open CORS), source maps, SQLite/<code>.env</code> exposure and security headers — on any stack.</p>
       </details>
       <details>
         <summary>What about false positives?</summary>
