@@ -114,6 +114,24 @@
 
   .toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ward); color: #06130C; font-weight: 650; font-size: 13px; padding: 9px 16px; border-radius: 8px; opacity: 0; transition: all .25s; pointer-events: none; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .trust { font-family: var(--mono); font-size: 12.5px; color: var(--ward); margin: 11px 0 2px; }
+  .term { background:#07090B; border:1px solid var(--line); border-radius:12px; overflow:hidden; font-family:var(--mono); font-size:12.5px; }
+  .term .bar { background:#12171A; padding:8px 14px; border-bottom:1px solid var(--line); color:var(--ink-faint); font-size:11px; }
+  .term .bar i { width:10px; height:10px; border-radius:50%; background:#333; display:inline-block; margin-right:6px; vertical-align:middle; }
+  .term pre { margin:0; padding:16px 18px; overflow-x:auto; line-height:1.65; color:var(--ink); white-space:pre; }
+  .term .g { color:var(--ward); } .term .r { color:var(--danger); } .term .d { color:var(--ink-faint); } .term .y { color:#E8B24C; }
+  .faq { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .faq details { background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:2px 16px; }
+  .faq summary { cursor:pointer; padding:14px 0; font-weight:650; font-size:14.5px; list-style:none; }
+  .faq summary::-webkit-details-marker { display:none; }
+  .faq summary::before { content:"+"; color:var(--ward); margin-right:9px; font-weight:700; }
+  .faq details[open] summary::before { content:"\2013"; }
+  .faq .a { color:var(--ink-soft); font-size:13.5px; margin:0 0 14px; line-height:1.55; }
+  .notdo { display:flex; flex-wrap:wrap; gap:8px 18px; margin-top:16px; }
+  .notdo span { color:var(--ink-soft); font-size:13px; }
+  .notdo b { color:var(--danger); }
+  @media (max-width:620px){ .faq { grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
@@ -124,6 +142,7 @@
     <div class="links">
       <a href="#guard">Guardrail</a>
       <a href="#finds">What it finds</a>
+      <a href="#faq">FAQ</a>
       <a href="https://github.com/JSiapoDEV/vibeward">GitHub</a>
     </div>
   </nav>
@@ -134,14 +153,16 @@
     <p class="sub">Apps built with Lovable, Bolt, v0, Cursor and Claude Code ship fast — and ship the same holes. vibeward catches the risky request <em>before</em> your AI acts on it — <em>"disable RLS"</em>, <em>"use the service_role key in the frontend"</em> — and scans the finished code from a URL or your repo, with reports your AI can turn into a fix.</p>
 
     <div class="cmd">
-      <code id="cmd"><span class="muted">$</span> npx vibeward@latest https://your-app.lovable.app</code>
+      <code id="cmd"><span class="muted">$</span> npx vibeward@latest scan ./your-app</code>
       <button onclick="copyCmd()">copy</button>
     </div>
+    <div class="trust">🔒 100% local · no telemetry · read-only · your code never leaves your machine · MIT</div>
 
     <div class="cta-row">
-      <a class="btn primary" href="https://github.com/JSiapoDEV/vibeward">★ Star on GitHub</a>
-      <a class="btn ghost" href="https://www.npmjs.com/package/vibeward">npm</a>
-      <span style="color:var(--ink-faint);font-size:13px">MIT · zero install · always latest via npx</span>
+      <a class="btn primary" href="#guard">🛡 Add the guardrail</a>
+      <a class="btn ghost" href="https://github.com/JSiapoDEV/vibeward">★ Star on GitHub</a>
+      <a href="https://github.com/JSiapoDEV/vibeward" aria-label="GitHub stars"><img src="https://img.shields.io/github/stars/JSiapoDEV/vibeward?style=flat&label=stars&color=46D08A&labelColor=12171A" alt="GitHub stars" style="height:22px;display:block" /></a>
+      <a href="https://www.npmjs.com/package/vibeward" aria-label="npm downloads"><img src="https://img.shields.io/npm/dm/vibeward?color=46D08A&labelColor=12171A&label=npm" alt="npm downloads" style="height:22px;display:block" /></a>
     </div>
   </header>
 
@@ -158,8 +179,8 @@
     </div>
     <div class="stat">
       <div class="n">45%</div>
-      <div class="l">of AI-generated code introduces a known security flaw</div>
-      <div class="src">Veracode 2026</div>
+      <div class="l">of AI-generated code introduces a known security flaw (100+ LLMs, 80 tasks)</div>
+      <div class="src">Veracode 2025 GenAI report</div>
     </div>
   </div>
 
@@ -180,10 +201,23 @@
       </div>
     </div>
     <div class="mode" style="margin-top:12px">
-      <div class="k">Install · Claude Code hook (~/.claude/settings.json)</div>
-      <pre>{ "hooks": { "UserPromptSubmit": [
+      <div class="k">Install · Claude Code hook (~/.claude/settings.json) <button onclick="copyEl('ghook')" style="font-family:var(--mono);font-size:11px;color:var(--ink-faint);background:none;border:none;cursor:pointer;float:right">copy</button></div>
+      <pre id="ghook">{ "hooks": { "UserPromptSubmit": [
   { "hooks": [{ "type": "command", "command": "npx vibeward@latest guard" }] }
 ] } }</pre>
+    </div>
+
+    <div class="term" style="margin-top:14px">
+      <div class="bar"><i></i><i></i><i></i> you → Claude Code</div>
+<pre><span class="d">&gt;</span> disable RLS on the users table so the query works
+
+<span class="y">⚠  vibeward blocked a risky request</span>
+
+<span class="r">✗ Disabling Row-Level Security</span>
+  <span class="d">why:</span>  turning off RLS makes every row readable by anyone with the public
+        anon key — the #1 cause of vibe-coded data leaks.
+  <span class="g">do this instead:</span>  keep RLS on and add a policy:
+        CREATE POLICY ... USING (auth.uid() = user_id)</pre>
     </div>
   </section>
 
@@ -207,7 +241,7 @@
       <div class="mode">
         <div class="k">Black-box · from a URL</div>
         <h3>Quick outside-in check</h3>
-        <p>Point it at a live app. Scans bundles for secrets, probes Supabase RLS, checks headers.</p>
+        <p>Point it at a live app. Scans bundles for secrets, probes Supabase RLS, checks headers. <b style="color:var(--ink-soft)">Only scan apps you own or have written permission to audit.</b></p>
         <pre>npx vibeward@latest https://app.lovable.app</pre>
       </div>
       <div class="mode">
@@ -237,6 +271,47 @@
     </div>
   </section>
 
+  <section id="faq">
+    <h2 class="sec-title">FAQ</h2>
+    <p class="sec-lead">The questions people ask before running it.</p>
+    <div class="faq">
+      <details>
+        <summary>Does it exploit or change anything?</summary>
+        <p class="a">No. vibeward is strictly read-only. It reads your code, bundles and public responses to <em>detect</em> risk — it never writes, deletes or exploits. It reports; you (or your AI) make the fix.</p>
+      </details>
+      <details>
+        <summary>Does my code leave my machine?</summary>
+        <p class="a">Never. The scanner and the guardrail run 100% locally — no telemetry, no account, no upload. The only network call is to the URL <em>you</em> point it at.</p>
+      </details>
+      <details>
+        <summary>Do I need Supabase?</summary>
+        <p class="a">No. Supabase RLS is one check. It also finds exposed secrets, insecure backends (SQLi, open CORS, command injection), SQLite/<code>.env</code> exposure and missing security headers — on any stack.</p>
+      </details>
+      <details>
+        <summary>What about false positives?</summary>
+        <p class="a">Every finding ships with evidence — file:line, the exact pattern and an exploit path — so you can judge it in seconds. Deterministic rules keep the noise low; no vague "maybe" flags.</p>
+      </details>
+      <details>
+        <summary>Is the guardrail an LLM?</summary>
+        <p class="a">No — and that's the point. It's a deterministic rule engine, so it can't be talked out of blocking. <code>"ignore previous instructions"</code> doesn't work on it.</p>
+      </details>
+      <details>
+        <summary>Does it work with Next.js / my framework?</summary>
+        <p class="a">Yes. Point it at any repo, ZIP or URL — it walks your source and build output regardless of framework.</p>
+      </details>
+    </div>
+
+    <h3 style="font-size:16px;margin:30px 0 2px">What vibeward does <em>not</em> do</h3>
+    <div class="notdo">
+      <span><b>✗</b> exploit or attack</span>
+      <span><b>✗</b> modify your code</span>
+      <span><b>✗</b> send your code anywhere</span>
+      <span><b>✗</b> need an account or key</span>
+      <span><b>✗</b> replace a full pentest</span>
+      <span><b>✗</b> ask an LLM to decide</span>
+    </div>
+  </section>
+
   <section style="text-align:center">
     <h2 class="sec-title">Run it in five seconds</h2>
     <p class="sec-lead" style="margin-left:auto;margin-right:auto">No install. Always the latest. Read-only.</p>
@@ -261,14 +336,19 @@
 <div class="toast" id="toast">copied</div>
 
 <script>
+  function flashToast() {
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 1400);
+  }
   function copyCmd(id) {
     const el = document.getElementById(id || 'cmd');
     const text = el.textContent.replace(/^\$\s*/, '').trim();
-    navigator.clipboard.writeText(text).then(() => {
-      const t = document.getElementById('toast');
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 1400);
-    });
+    navigator.clipboard.writeText(text).then(flashToast);
+  }
+  function copyEl(id) {
+    const text = document.getElementById(id).textContent.trim();
+    navigator.clipboard.writeText(text).then(flashToast);
   }
 </script>
 </body>
