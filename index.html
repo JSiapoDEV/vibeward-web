@@ -3,332 +3,881 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>vibeward — security scanner for AI-generated apps</title>
-<meta name="description" content="vibeward finds the security holes in AI-generated / vibe-coded apps (Supabase, Lovable, MCP, backend) — exposed secrets, missing RLS, insecure backends — from a URL or your code, with context-rich reports an AI can turn into a fix." />
+<title>vibeward — the audit for anything built by AI</title>
+<meta name="description" content="One read-only command audits an AI-built app end to end: exposed secrets, missing Supabase RLS and insecure backends on one scale — and the SEO, llms.txt and AI-visibility gaps that give a vibe-coded site away on another. Never mixed." />
+<link rel="canonical" href="https://vibeward.ai/" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-<meta property="og:title" content="vibeward — security scanner for AI-generated apps" />
-<meta property="og:description" content="Find the holes in vibe-coded apps: exposed secrets, missing RLS, insecure backends. From a URL or your code." />
+<link rel="apple-touch-icon" href="/avatar-512.png" />
+
+<meta property="og:title" content="vibeward — the audit for anything built by AI" />
+<meta property="og:description" content="Exposed secrets, missing RLS and insecure backends on one scale. The SEO and AI-visibility gaps that give a vibe-coded site away on another. One read-only command." />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://vibeward.ai" />
+<meta property="og:url" content="https://vibeward.ai/" />
+<meta property="og:image" content="https://vibeward.ai/avatar-512.png" />
+<meta property="og:site_name" content="vibeward" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="vibeward — the audit for anything built by AI" />
+<meta name="twitter:description" content="Secrets, RLS and insecure backends on one scale. SEO and AI visibility on another. One read-only command." />
+<meta name="twitter:image" content="https://vibeward.ai/avatar-512.png" />
+<meta name="theme-color" content="#F0EEE6" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..500&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "vibeward",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "macOS, Linux, Windows",
+      "softwareVersion": "0.3.0",
+      "url": "https://vibeward.ai/",
+      "codeRepository": "https://github.com/JSiapoDEV/vibeward",
+      "downloadUrl": "https://www.npmjs.com/package/vibeward",
+      "license": "https://opensource.org/licenses/MIT",
+      "description": "Read-only scanner for AI-generated / vibe-coded apps and websites. Finds exposed secrets, missing Supabase Row-Level Security, Firebase exposure and insecure backends — plus the SEO, llms.txt and AI-visibility gaps that give a vibe-coded site away.",
+      "author": { "@type": "Person", "name": "José Siapo", "url": "https://github.com/JSiapoDEV" },
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does it exploit or change anything?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Scanning is read-only: it reads your code, bundles and public responses to detect risk — it never modifies, deletes or exploits. The one exception is an explicit, opt-in --write-test that runs a single non-mutating write probe. vibeward init is the only command that writes, and only into your own project, after showing you every file it will touch." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this Lighthouse?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. vibeward detects binary absences — the tag is not there, the file was never generated — which is exactly what an AI-built site is missing. Core Web Vitals and full WCAG auditing are out of scope." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can a website finding fail my build?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Never. Website findings stay out of the severity counts, out of the SARIF file and out of the exit code. Only security findings gate. A missing favicon must never share a scale with an exposed service key." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does my code leave my machine?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Never. The scanner and the guardrail run 100% locally — no telemetry, no account, no upload. The only network call is to the URL you point it at." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I silence a check I disagree with?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Website checks only, and never silently. Each entry in vibeward.json needs a written reason, and the report prints how many suppressions were in effect plus each declared reason. Security findings cannot be silenced by a config file, by design." }
+        },
+        {
+          "@type": "Question",
+          "name": "Is the guardrail an LLM?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No — and that is the point. It is a deterministic rule engine, so it cannot be talked out of blocking. 'Ignore previous instructions' does not work on it." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<script>document.documentElement.className += ' js';</script>
 <style>
   :root {
-    --bg: #0A0D0F;
-    --surface: #12171A;
-    --surface-2: #161C20;
-    --line: #232B31;
-    --ink: #E7EDF1;
-    --ink-soft: #9AA7B0;
-    --ink-faint: #6A7681;
-    --ward: #46D08A;
-    --ward-dim: #1B3A2C;
-    --danger: #F0705A;
-    --danger-dim: #35201B;
-    --amber: #E8B24C;
-    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    /* paper */
+    --paper:      #F0EEE6;
+    --paper-warm: #EAE7DC;
+    --card:       #FAF9F5;
+    --card-2:     #F5F3EB;
+    --line:       #DFDACE;
+    --line-soft:  #E8E4D9;
+
+    /* ink */
+    --ink:        #141413;
+    --ink-2:      #3F3E39;
+    --ink-3:      #6C6A61;
+    --ink-4:      #96938A;
+
+    /* accent */
+    --clay:       #D97757;
+    --clay-deep:  #B85A38;
+    --clay-wash:  #F6E7DF;
+    --clay-line:  #E8CBBB;
+
+    /* semantic */
+    --crit:       #A63B26;
+    --crit-wash:  #F5E2DD;
+    --amber:      #9A6A18;
+    --amber-wash: #F2E8D2;
+    --sage:       #4C6B52;
+    --sage-wash:  #E4EBE2;
+
+    /* terminal */
+    --term-bg:    #1E1C19;
+    --term-bar:   #2A2723;
+    --term-ink:   #E9E4D8;
+    --term-dim:   #8E887B;
+    --term-clay:  #E89A78;
+    --term-crit:  #E8836A;
+    --term-amber: #DDB86A;
+    --term-sage:  #93BE95;
+
+    --serif: "Newsreader", Georgia, "Times New Roman", serif;
+    --sans:  "Instrument Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono:  "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --r-sm: 6px; --r: 10px; --r-lg: 16px;
+    --ease: cubic-bezier(.22,.68,.24,1);
   }
+
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
   body {
-    margin: 0; background: var(--bg); color: var(--ink);
-    font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased;
-    background-image: radial-gradient(60% 40% at 50% -5%, rgba(70,208,138,0.09), transparent 70%);
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16.5px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-  .wrap { max-width: 940px; margin: 0 auto; padding: 0 22px; }
-  a { color: var(--ward); text-decoration: none; }
+
+  /* paper grain — warmth without a single extra request */
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.055'/%3E%3C/svg%3E");
+  }
+  .wrap { position: relative; z-index: 1; max-width: 1060px; margin: 0 auto; padding: 0 26px; }
+
+  a { color: var(--clay-deep); text-decoration: none; text-underline-offset: 3px; }
   a:hover { text-decoration: underline; }
-  h1, h2, h3 { margin: 0; text-wrap: balance; letter-spacing: -0.02em; }
 
-  /* nav */
-  nav { display: flex; justify-content: space-between; align-items: center; padding: 22px 0; }
-  .brand { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 17px; }
-  .brand .dot { color: var(--ward); }
-  nav .links { display: flex; gap: 20px; font-size: 14px; color: var(--ink-soft); }
-  nav .links a { color: var(--ink-soft); }
+  h1, h2, h3 { margin: 0; letter-spacing: -0.018em; text-wrap: balance; font-weight: 500; }
+  h1, h2 { font-family: var(--serif); }
+  p { margin: 0; }
+  em { font-family: var(--serif); font-style: italic; font-size: 1.06em; letter-spacing: 0; }
 
-  /* hero */
-  header.hero { padding: 56px 0 40px; }
-  .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ward); }
-  h1 { font-size: clamp(34px, 6vw, 58px); line-height: 1.03; font-weight: 750; margin: 16px 0 0; max-width: 15ch; }
-  .sub { font-size: 18.5px; color: var(--ink-soft); margin: 20px 0 0; max-width: 60ch; }
+  code, pre, kbd { font-family: var(--mono); font-variant-ligatures: none; }
+  .k { /* small-caps mono label */
+    font-family: var(--mono); font-size: 10.5px; font-weight: 500;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--ink-4);
+  }
+  .lit { /* inline literal */
+    font-family: var(--mono); font-size: .845em; background: var(--card-2);
+    border: 1px solid var(--line-soft); border-radius: 5px; padding: .08em .4em;
+    color: var(--clay-deep); white-space: nowrap;
+  }
+
+  /* ── nav ─────────────────────────────────────────────── */
+  nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 24px 0 22px; gap: 20px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 17px; letter-spacing: -.02em; }
+  nav .links { display: flex; gap: 26px; font-size: 14.5px; }
+  nav .links a { color: var(--ink-3); }
+  nav .links a:hover { color: var(--ink); text-decoration: none; }
+  @media (max-width: 760px) { nav .links a.hide-sm { display: none; } nav .links { gap: 18px; } }
+
+  /* ── hero ────────────────────────────────────────────── */
+  header.hero { padding: 62px 0 12px; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: .13em; text-transform: uppercase;
+    color: var(--clay-deep); background: var(--clay-wash);
+    border: 1px solid var(--clay-line); border-radius: 100px; padding: 5px 13px 5px 11px;
+  }
+  .eyebrow b { font-weight: 600; color: var(--ink-2); }
+
+  h1 {
+    font-size: clamp(40px, 6.6vw, 70px); line-height: 1.04; font-weight: 400;
+    margin: 24px 0 0; max-width: 17ch; letter-spacing: -.032em;
+  }
+  h1 .accent { color: var(--clay-deep); font-style: italic; font-weight: 300; }
+  .sub { font-size: 19px; color: var(--ink-2); margin: 24px 0 0; max-width: 58ch; line-height: 1.58; }
 
   .cmd {
-    margin: 30px 0 14px; display: flex; align-items: stretch; gap: 0;
-    background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
-    max-width: 520px; font-family: var(--mono);
+    margin: 32px 0 0; display: flex; align-items: stretch;
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+    overflow: hidden; max-width: 520px;
+    box-shadow: 0 1px 2px rgba(20,20,19,.04), 0 8px 24px -14px rgba(20,20,19,.18);
   }
-  .cmd code { padding: 15px 18px; font-size: 14.5px; color: var(--ink); flex: 1; overflow-x: auto; white-space: nowrap; }
-  .cmd code .muted { color: var(--ink-faint); }
+  .cmd code { padding: 15px 17px; font-size: 14px; color: var(--ink); flex: 1; overflow-x: auto; white-space: nowrap; }
+  .cmd code .p { color: var(--clay); user-select: none; }
   .cmd button {
-    background: var(--surface-2); border: none; border-left: 1px solid var(--line);
-    color: var(--ink-soft); font-family: var(--mono); font-size: 12px; padding: 0 16px; cursor: pointer; white-space: nowrap;
+    background: var(--card-2); border: 0; border-left: 1px solid var(--line);
+    color: var(--ink-3); font-family: var(--mono); font-size: 11.5px; letter-spacing: .06em;
+    text-transform: uppercase; padding: 0 17px; cursor: pointer; transition: color .18s, background .18s;
   }
-  .cmd button:hover { color: var(--ward); }
+  .cmd button:hover { color: var(--clay-deep); background: var(--clay-wash); }
 
-  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 8px; }
+  .trust { font-size: 13.5px; color: var(--ink-3); margin: 14px 0 0; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+  .trust span { display: inline-flex; align-items: center; gap: 6px; }
+  .trust span::before { content: ""; width: 4px; height: 4px; border-radius: 50%; background: var(--clay); }
+
+  .cta-row { display: flex; flex-wrap: wrap; gap: 11px; align-items: center; margin-top: 26px; }
   .btn {
-    display: inline-flex; align-items: center; gap: 8px; font-weight: 650; font-size: 14.5px;
-    padding: 11px 18px; border-radius: 9px; border: 1px solid var(--line);
+    display: inline-flex; align-items: center; gap: 8px; font-weight: 500; font-size: 14.5px;
+    padding: 11px 19px; border-radius: 100px; border: 1px solid var(--line);
+    transition: transform .18s var(--ease), box-shadow .18s var(--ease), background .18s, border-color .18s;
   }
-  .btn.primary { background: var(--ward); color: #06130C; border-color: var(--ward); }
-  .btn.primary:hover { text-decoration: none; filter: brightness(1.06); }
-  .btn.ghost { color: var(--ink); }
-  .btn.ghost:hover { border-color: var(--ward); text-decoration: none; }
+  .btn:hover { text-decoration: none; transform: translateY(-1px); }
+  .btn.primary {
+    background: var(--clay); color: #FFF9F6; border-color: var(--clay);
+    box-shadow: 0 1px 2px rgba(184,90,56,.2), 0 10px 22px -12px rgba(184,90,56,.5);
+  }
+  .btn.primary:hover { background: var(--clay-deep); border-color: var(--clay-deep); }
+  .btn.ghost { color: var(--ink); background: var(--card); }
+  .btn.ghost:hover { border-color: var(--ink-4); }
+  .badges { display: flex; gap: 9px; align-items: center; margin-left: 2px; }
+  .badges img { height: 21px; display: block; opacity: .9; }
 
-  /* danger stats */
-  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 30px 0; }
-  .stat { background: var(--surface); padding: 22px; }
-  .stat .n { font-family: var(--mono); font-size: 30px; font-weight: 700; color: var(--danger); line-height: 1; }
-  .stat .l { color: var(--ink-soft); font-size: 13.5px; margin-top: 8px; }
-  .stat .src { color: var(--ink-faint); font-size: 11.5px; margin-top: 6px; }
+  /* ── evidence strip ──────────────────────────────────── */
+  .stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1px; background: var(--line); border: 1px solid var(--line);
+    border-radius: var(--r-lg); overflow: hidden; margin: 56px 0 0;
+  }
+  .stat { background: var(--card); padding: 24px 24px 22px; }
+  .stat .n { font-family: var(--serif); font-size: 40px; font-weight: 400; color: var(--crit); line-height: 1; letter-spacing: -.03em; }
+  .stat .l { color: var(--ink-2); font-size: 14px; margin-top: 11px; line-height: 1.5; }
+  .stat .src { color: var(--ink-4); font-size: 11.5px; margin-top: 9px; font-family: var(--mono); }
 
-  section { padding: 46px 0; border-top: 1px solid var(--line); }
-  .sec-title { font-size: clamp(22px, 3vw, 30px); font-weight: 700; }
-  .sec-lead { color: var(--ink-soft); margin: 10px 0 26px; max-width: 62ch; }
+  /* ── sections ────────────────────────────────────────── */
+  section { padding: 82px 0 0; }
+  section > .head { max-width: 62ch; margin-bottom: 34px; }
+  .sec-title { font-size: clamp(27px, 3.6vw, 40px); line-height: 1.12; font-weight: 400; letter-spacing: -.028em; margin-top: 14px; }
+  .sec-lead { color: var(--ink-3); margin: 14px 0 0; font-size: 16.5px; line-height: 1.6; }
 
-  /* finds grid */
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
-  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
-  .card h3 { font-size: 15.5px; display: flex; align-items: center; gap: 8px; }
-  .card p { color: var(--ink-soft); font-size: 13.5px; margin: 8px 0 0; }
-  .tag { font-family: var(--mono); font-size: 10px; color: var(--ward); border: 1px solid var(--ward-dim); background: var(--ward-dim); padding: 1px 6px; border-radius: 20px; }
+  /* ── the two-scale split ─────────────────────────────── */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .lane {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--r-lg);
+    padding: 26px 26px 24px; position: relative; overflow: hidden;
+  }
+  .lane::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 3px; }
+  .lane.sec::before { background: var(--crit); }
+  .lane.web::before { background: var(--clay); }
+  .lane h3 { font-family: var(--serif); font-size: 22px; font-weight: 400; margin: 10px 0 0; letter-spacing: -.02em; }
+  .lane > p { color: var(--ink-3); font-size: 14.5px; margin: 10px 0 18px; }
+  .lane ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-soft); }
+  .lane li {
+    font-size: 14px; padding: 10px 0 10px 22px; border-bottom: 1px solid var(--line-soft);
+    position: relative; color: var(--ink-2);
+  }
+  .lane li:last-child { border-bottom: 0; padding-bottom: 0; }
+  .lane li::before {
+    position: absolute; left: 0; top: 10px; font-family: var(--mono); font-size: 13px; font-weight: 600;
+  }
+  .lane.sec li::before { content: "×"; color: var(--crit); }
+  .lane.web li::before { content: "→"; color: var(--clay); }
+  .pull {
+    grid-column: 1 / -1; margin-top: 8px; padding: 24px 28px;
+    background: var(--paper-warm); border: 1px solid var(--line); border-left: 3px solid var(--clay);
+    border-radius: var(--r);
+    font-family: var(--serif); font-size: clamp(18px, 2.4vw, 23px); font-style: italic;
+    font-weight: 300; line-height: 1.45; color: var(--ink); letter-spacing: -.015em;
+  }
+  @media (max-width: 720px) { .split { grid-template-columns: 1fr; } }
 
-  /* modes */
-  .modes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .mode { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; }
-  .mode .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
-  .mode h3 { font-size: 17px; margin: 6px 0 8px; }
-  .mode p { color: var(--ink-soft); font-size: 13.5px; margin: 0 0 12px; }
-  .mode pre { margin: 0; font-family: var(--mono); font-size: 13px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 11px 13px; overflow-x: auto; color: var(--ink); }
-  @media (max-width: 620px) { .modes { grid-template-columns: 1fr; } }
+  /* ── card grids ──────────────────────────────────────── */
+  .fam { margin-top: 34px; }
+  .fam-head { display: flex; align-items: baseline; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--line); margin-bottom: 16px; }
+  .fam-head h3 { font-family: var(--sans); font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+  .fam-head .note { font-size: 12.5px; color: var(--ink-4); margin-left: auto; font-family: var(--mono); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(248px, 1fr)); gap: 12px; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+    padding: 19px 20px; transition: border-color .2s, transform .2s var(--ease);
+  }
+  .card:hover { border-color: var(--clay-line); transform: translateY(-2px); }
+  .card h4 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -.012em; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .card p { color: var(--ink-3); font-size: 13.6px; margin: 9px 0 0; line-height: 1.55; }
+  .tag {
+    font-family: var(--mono); font-size: 9.5px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--clay-deep); background: var(--clay-wash); border: 1px solid var(--clay-line);
+    padding: 2px 7px; border-radius: 100px;
+  }
+  .tag.n { color: var(--sage); background: var(--sage-wash); border-color: #CBD9C9; }
 
-  /* finding sample */
-  .finding { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--danger); border-radius: 10px; padding: 20px 22px; font-size: 14px; }
-  .finding .ttl { font-weight: 700; margin-bottom: 12px; }
-  .finding .row { margin: 7px 0; }
-  .finding .row b { color: var(--ink-soft); font-family: var(--mono); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; display: block; }
-  .finding code { font-family: var(--mono); font-size: 12.5px; color: var(--amber); }
+  /* ── terminal ────────────────────────────────────────── */
+  .term {
+    background: var(--term-bg); border-radius: var(--r-lg); overflow: hidden;
+    font-family: var(--mono); font-size: 12.8px; color: var(--term-ink);
+    box-shadow: 0 2px 4px rgba(20,20,19,.08), 0 24px 48px -28px rgba(20,20,19,.5);
+  }
+  .term .bar {
+    background: var(--term-bar); padding: 9px 15px; color: var(--term-dim); font-size: 11px;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .term .bar i { width: 9px; height: 9px; border-radius: 50%; background: #45403A; display: inline-block; }
+  .term .bar i:first-child { background: #6E4A3C; }
+  .term .bar span { margin-left: 6px; }
+  .term pre { margin: 0; padding: 20px 20px; overflow-x: auto; line-height: 1.72; white-space: pre; }
+  .term .d { color: var(--term-dim); }
+  .term .c { color: var(--term-clay); }
+  .term .r { color: var(--term-crit); }
+  .term .y { color: var(--term-amber); }
+  .term .g { color: var(--term-sage); }
+  .term b { font-weight: 600; }
 
-  footer { border-top: 1px solid var(--line); padding: 30px 0 60px; color: var(--ink-faint); font-size: 13.5px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-  footer a { color: var(--ink-soft); }
+  /* ── panels (code + prose) ───────────────────────────── */
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 24px 26px; }
+  .panel h3 { font-family: var(--serif); font-size: 21px; font-weight: 400; margin: 9px 0 0; letter-spacing: -.02em; }
+  .panel p { color: var(--ink-3); font-size: 14.5px; margin: 10px 0 0; }
+  .panel pre {
+    margin: 15px 0 0; background: var(--paper-warm); border: 1px solid var(--line);
+    border-radius: var(--r-sm); padding: 13px 15px; overflow-x: auto;
+    font-size: 12.9px; line-height: 1.6; color: var(--ink); white-space: pre;
+  }
+  .panel pre .d { color: var(--ink-4); }
+  .panel pre .c { color: var(--clay-deep); }
+  .copy-mini {
+    float: right; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ink-4); background: none; border: 0; cursor: pointer; padding: 0;
+  }
+  .copy-mini:hover { color: var(--clay-deep); }
 
-  .toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ward); color: #06130C; font-weight: 650; font-size: 13px; padding: 9px 16px; border-radius: 8px; opacity: 0; transition: all .25s; pointer-events: none; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 820px) { .three { grid-template-columns: 1fr; } }
+  @media (max-width: 720px) { .two { grid-template-columns: 1fr; } }
+
+  /* ── loop diagram ────────────────────────────────────── */
+  .loop { display: flex; align-items: stretch; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+  .loop .step {
+    flex: 1 1 190px; background: var(--card); border: 1px solid var(--line);
+    border-radius: var(--r); padding: 17px 18px;
+  }
+  .loop .step .n { font-family: var(--mono); font-size: 11px; color: var(--clay); letter-spacing: .1em; }
+  .loop .step h4 { margin: 7px 0 0; font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+  .loop .step p { margin: 6px 0 0; font-size: 13.4px; color: var(--ink-3); line-height: 1.5; }
+  .loop .arw { display: flex; align-items: center; color: var(--clay); font-family: var(--mono); font-size: 17px; }
+  @media (max-width: 820px) { .loop .arw { display: none; } }
+
+  /* ── finding sample ──────────────────────────────────── */
+  .finding {
+    background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--crit);
+    border-radius: var(--r); padding: 24px 26px; font-size: 14.5px;
+  }
+  .finding .ttl { font-weight: 600; font-size: 16px; letter-spacing: -.012em; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  .sev { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: .1em; color: #FFF9F6; background: var(--crit); padding: 3px 8px; border-radius: 4px; }
+  .finding .rows { margin-top: 18px; display: grid; gap: 13px; }
+  .finding .row b { display: block; font-family: var(--mono); font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 3px; }
+  .finding .row { color: var(--ink-2); line-height: 1.55; font-size: 14.2px; }
+  .finding code { font-size: 12.8px; color: var(--clay-deep); background: var(--card-2); border: 1px solid var(--line-soft); border-radius: 5px; padding: .08em .4em; }
+
+  /* ── faq ─────────────────────────────────────────────── */
+  .faq { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .faq details {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+    padding: 2px 20px; transition: border-color .2s; height: fit-content;
+  }
+  .faq details[open] { border-color: var(--clay-line); }
+  .faq summary {
+    cursor: pointer; padding: 15px 0; font-weight: 500; font-size: 15px; list-style: none;
+    display: flex; gap: 11px; align-items: baseline; letter-spacing: -.012em;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::before { content: "+"; color: var(--clay); font-family: var(--mono); font-weight: 500; flex: none; }
+  .faq details[open] summary::before { content: "−"; }
+  .faq .a { color: var(--ink-3); font-size: 14.2px; margin: 0 0 16px 22px; line-height: 1.58; }
+
+  .notdo { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 18px; }
+  .notdo span {
+    font-size: 13.4px; color: var(--ink-3); background: var(--card);
+    border: 1px solid var(--line); border-radius: 100px; padding: 6px 15px;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .notdo span::before { content: "✗"; color: var(--crit); font-family: var(--mono); font-size: 12px; }
+  @media (max-width: 720px) { .faq { grid-template-columns: 1fr; } }
+
+  /* ── closer + footer ─────────────────────────────────── */
+  .closer { text-align: center; padding: 96px 0 0; }
+  .closer .sec-title { max-width: 20ch; margin-inline: auto; }
+  .closer .sec-lead { margin-inline: auto; max-width: 46ch; }
+  .closer .cmd { margin-inline: auto; margin-top: 30px; }
+
+  footer {
+    margin-top: 92px; border-top: 1px solid var(--line); padding: 30px 0 64px;
+    color: var(--ink-4); font-size: 13.5px; display: flex; justify-content: space-between;
+    flex-wrap: wrap; gap: 14px; align-items: center;
+  }
+  footer a { color: var(--ink-3); }
+  footer .left { display: flex; align-items: center; gap: 9px; }
+
+  .toast {
+    position: fixed; bottom: 26px; left: 50%; z-index: 20;
+    transform: translateX(-50%) translateY(16px);
+    background: var(--ink); color: var(--paper); font-size: 13px; font-weight: 500;
+    padding: 10px 18px; border-radius: 100px; opacity: 0;
+    transition: opacity .25s var(--ease), transform .25s var(--ease); pointer-events: none;
+  }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  .trust { font-family: var(--mono); font-size: 12.5px; color: var(--ward); margin: 11px 0 2px; }
-  .term { background:#07090B; border:1px solid var(--line); border-radius:12px; overflow:hidden; font-family:var(--mono); font-size:12.5px; }
-  .term .bar { background:#12171A; padding:8px 14px; border-bottom:1px solid var(--line); color:var(--ink-faint); font-size:11px; }
-  .term .bar i { width:10px; height:10px; border-radius:50%; background:#333; display:inline-block; margin-right:6px; vertical-align:middle; }
-  .term pre { margin:0; padding:16px 18px; overflow-x:auto; line-height:1.65; color:var(--ink); white-space:pre; }
-  .term .g { color:var(--ward); } .term .r { color:var(--danger); } .term .d { color:var(--ink-faint); } .term .y { color:#E8B24C; }
-  .faq { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-  .faq details { background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:2px 16px; }
-  .faq summary { cursor:pointer; padding:14px 0; font-weight:650; font-size:14.5px; list-style:none; }
-  .faq summary::-webkit-details-marker { display:none; }
-  .faq summary::before { content:"+"; color:var(--ward); margin-right:9px; font-weight:700; }
-  .faq details[open] summary::before { content:"\2013"; }
-  .faq .a { color:var(--ink-soft); font-size:13.5px; margin:0 0 14px; line-height:1.55; }
-  .notdo { display:flex; flex-wrap:wrap; gap:8px 18px; margin-top:16px; }
-  .notdo span { color:var(--ink-soft); font-size:13px; }
-  .notdo b { color:var(--danger); }
-  @media (max-width:620px){ .faq { grid-template-columns:1fr; } }
+  /* ── motion ──────────────────────────────────────────── */
+  .js [data-reveal] { opacity: 0; transform: translateY(16px); }
+  .js [data-reveal].in {
+    opacity: 1; transform: none;
+    transition: opacity .75s var(--ease), transform .75s var(--ease);
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  .js .stagger > * { animation: rise .85s var(--ease) both; }
+  .js .stagger > *:nth-child(1) { animation-delay: .04s; }
+  .js .stagger > *:nth-child(2) { animation-delay: .12s; }
+  .js .stagger > *:nth-child(3) { animation-delay: .20s; }
+  .js .stagger > *:nth-child(4) { animation-delay: .28s; }
+  .js .stagger > *:nth-child(5) { animation-delay: .36s; }
+  .js .stagger > *:nth-child(6) { animation-delay: .44s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .js [data-reveal], .js [data-reveal].in { opacity: 1; transform: none; transition: none; }
+    .js .stagger > * { animation: none; }
+    * { transition-duration: .01ms !important; }
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <nav>
-    <div class="brand"><svg width="19" height="19" viewBox="0 0 100 100" style="vertical-align:-3px"><path d="M50 8 L86 22 V50 C86 72 70 86 50 92 C30 86 14 72 14 50 V22 Z" fill="#46D08A"/><path d="M37 40 L49 50 L37 60" fill="none" stroke="#0A0D0F" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><line x1="54" y1="60" x2="67" y2="60" stroke="#0A0D0F" stroke-width="7" stroke-linecap="round"/></svg> vibeward</div>
+    <div class="brand">
+      <svg width="20" height="20" viewBox="0 0 100 100" aria-hidden="true" style="vertical-align:-3px">
+        <path d="M50 8 L86 22 V50 C86 72 70 86 50 92 C30 86 14 72 14 50 V22 Z" fill="#D97757"/>
+        <path d="M37 40 L49 50 L37 60" fill="none" stroke="#FAF9F5" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="54" y1="60" x2="67" y2="60" stroke="#FAF9F5" stroke-width="7" stroke-linecap="round"/>
+      </svg>
+      vibeward
+    </div>
     <div class="links">
-      <a href="#guard">Guardrail</a>
-      <a href="#finds">What it finds</a>
-      <a href="#faq">FAQ</a>
+      <a href="#scan">What it finds</a>
+      <a href="#guard" class="hide-sm">Guardrail</a>
+      <a href="#install" class="hide-sm">Install</a>
+      <a href="#faq" class="hide-sm">FAQ</a>
       <a href="https://github.com/JSiapoDEV/vibeward">GitHub</a>
     </div>
   </nav>
 
-  <header class="hero">
-    <span class="eyebrow">Security guardrail for AI coding</span>
-    <h1>Stop the hole before your AI ships it.</h1>
-    <p class="sub">Apps built with Lovable, Bolt, v0, Cursor and Claude Code ship fast — and ship the same holes. vibeward catches the risky request <em>before</em> your AI acts on it — <em>"disable RLS"</em>, <em>"use the service_role key in the frontend"</em> — and scans the finished code from a URL or your repo, with reports your AI can turn into a fix.</p>
+  <header class="hero stagger">
+    <span class="eyebrow"><b>v0.3.0</b> · security + AI visibility</span>
+    <h1>Built in an afternoon. <span class="accent">Audited</span> in one command.</h1>
+    <p class="sub">
+      Apps built with Lovable, Bolt, v0, Cursor and Claude Code ship fast — and ship the same
+      handful of holes. vibeward reads a live URL or your repo and comes back with two verdicts:
+      what is <em>exposed</em>, and what was never <em>there</em>. Deterministic, read-only, MIT.
+    </p>
 
     <div class="cmd">
-      <code id="cmd"><span class="muted">$</span> npx vibeward@latest scan ./your-app</code>
-      <button onclick="copyCmd()">copy</button>
+      <code id="cmd"><span class="p">$</span> npx vibeward@latest https://your-app.com</code>
+      <button onclick="copyCmd('cmd')">copy</button>
     </div>
-    <div class="trust">🔒 100% local · no telemetry · read-only · your code never leaves your machine · MIT</div>
+
+    <p class="trust">
+      <span>100% local</span><span>no telemetry</span><span>no account</span><span>your code never leaves your machine</span>
+    </p>
 
     <div class="cta-row">
-      <a class="btn primary" href="#guard">🛡 Add the guardrail</a>
-      <a class="btn ghost" href="https://github.com/JSiapoDEV/vibeward">★ Star on GitHub</a>
-      <a href="https://github.com/JSiapoDEV/vibeward" aria-label="GitHub stars"><img src="https://img.shields.io/github/stars/JSiapoDEV/vibeward?style=flat&label=stars&color=46D08A&labelColor=12171A" alt="GitHub stars" style="height:22px;display:block" /></a>
-      <a href="https://www.npmjs.com/package/vibeward" aria-label="npm downloads"><img src="https://img.shields.io/npm/dm/vibeward?color=46D08A&labelColor=12171A&label=npm" alt="npm downloads" style="height:22px;display:block" /></a>
+      <a class="btn primary" href="#install">Install into your AI tools</a>
+      <a class="btn ghost" href="https://github.com/JSiapoDEV/vibeward">Star on GitHub</a>
+      <span class="badges">
+        <a href="https://github.com/JSiapoDEV/vibeward" aria-label="GitHub stars"><img src="https://img.shields.io/github/stars/JSiapoDEV/vibeward?style=flat&label=stars&color=D97757&labelColor=EAE7DC" alt="GitHub stars for vibeward" /></a>
+        <a href="https://www.npmjs.com/package/vibeward" aria-label="npm downloads"><img src="https://img.shields.io/npm/dm/vibeward?color=D97757&labelColor=EAE7DC&label=npm" alt="Monthly npm downloads for vibeward" /></a>
+      </span>
     </div>
   </header>
 
-  <div class="stats">
+  <div class="stats" data-reveal>
     <div class="stat">
       <div class="n">10.3%</div>
-      <div class="l">of analyzed Lovable apps had Row-Level Security wide open (CVE-2025-48757, CVSS 9.3)</div>
+      <div class="l">of analyzed Lovable projects had Row-Level Security wide open — 170 of 1,645 (CVE-2025-48757, CVSS 9.3)</div>
       <div class="src">NVD</div>
     </div>
     <div class="stat">
       <div class="n">1.5M</div>
-      <div class="l">auth tokens + 35k emails exposed by one vibe-coded app with no RLS (Moltbook, 2026)</div>
-      <div class="src">Wiz</div>
+      <div class="l">auth tokens and 35,000 emails exposed by a single vibe-coded app with no RLS policies</div>
+      <div class="src">Wiz · Moltbook, 2026</div>
     </div>
     <div class="stat">
       <div class="n">45%</div>
-      <div class="l">of AI-generated code introduces a known security flaw (100+ LLMs, 80 tasks)</div>
-      <div class="src">Veracode 2025 GenAI report</div>
+      <div class="l">of AI-generated code introduced a known security flaw across 100+ models and 80 tasks</div>
+      <div class="src">Veracode GenAI, 2025</div>
     </div>
   </div>
 
-  <section id="guard">
-    <h2 class="sec-title">Catch the risky request — before it happens</h2>
-    <p class="sec-lead">Most holes start with a prompt. vibeward runs as a Claude Code hook and stops the dangerous ask the moment you type it — deterministic, so it can't be prompt-injected away.</p>
-    <div class="modes">
-      <div class="mode" style="border-left:3px solid var(--danger)">
-        <div class="k">🚫 You ask your AI</div>
-        <pre>"disable RLS so it works"
-"use the service_role key in the frontend"
-"make the users table public to debug"
-"remove the login for now"</pre>
-      </div>
-      <div class="mode" style="border-left:3px solid var(--ward)">
-        <div class="k">🛡️ vibeward stops it first</div>
-        <p style="margin-top:8px">Blocks the request with <b>why it's dangerous</b> and the <b>safe alternative</b> — before the model touches your code.</p>
-      </div>
-    </div>
-    <div class="mode" style="margin-top:12px">
-      <div class="k">Install · Claude Code hook (~/.claude/settings.json) <button onclick="copyEl('ghook')" style="font-family:var(--mono);font-size:11px;color:var(--ink-faint);background:none;border:none;cursor:pointer;float:right">copy</button></div>
-      <pre id="ghook">{ "hooks": { "UserPromptSubmit": [
-  { "hooks": [{ "type": "command", "command": "npx vibeward@latest guard" }] }
-] } }</pre>
+  <!-- ── two scales ───────────────────────────────────── -->
+  <section id="scan">
+    <div class="head" data-reveal>
+      <span class="k">One scan</span>
+      <h2 class="sec-title">Two verdicts that never share a scale</h2>
+      <p class="sec-lead">
+        An AI-built product fails in two unrelated ways: it leaves data open, and it leaves the
+        page empty. Both are worth knowing. Reporting them on the same scale is how a real leak
+        ends up buried under a missing favicon — so vibeward keeps them apart, all the way down
+        to the exit code.
+      </p>
     </div>
 
-    <div class="term" style="margin-top:14px">
-      <div class="bar"><i></i><i></i><i></i> you → Claude Code</div>
+    <div class="split">
+      <div class="lane sec" data-reveal>
+        <span class="k">Security · gates the build</span>
+        <h3>What is exposed</h3>
+        <p>Counted by severity, written to SARIF, and exit code <span class="lit">2</span> on a critical. No config file can silence it.</p>
+        <ul>
+          <li>A key in the bundle is a key in the world</li>
+          <li>A table that answers without a login is a leak, today</li>
+          <li>An open bucket has no owner</li>
+        </ul>
+      </div>
+      <div class="lane web" data-reveal>
+        <span class="k">Website · never gates</span>
+        <h3>What was never there</h3>
+        <p>Its own section, its own scale. Out of the severity counts, out of SARIF, out of the exit code. Skip it all with <span class="lit">--no-web</span>.</p>
+        <ul>
+          <li>The tag the generator never wrote</li>
+          <li>The file that was never generated</li>
+          <li>The crawler quietly turned away</li>
+        </ul>
+      </div>
+      <p class="pull" data-reveal>“A missing favicon must never share a scale with an exposed service key.”</p>
+    </div>
+
+    <!-- security family -->
+    <div class="fam" data-reveal>
+      <div class="fam-head">
+        <h3>Security</h3>
+        <span class="note">counts · SARIF · exit 2</span>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <h4>Exposed secrets</h4>
+          <p>Supabase <span class="lit">service_role</span> and new-format <span class="lit">sb_secret_</span>, Stripe, OpenAI, Anthropic, Google, AWS, GitHub, Slack, Resend, Twilio, DB connection strings and private PEM keys — in bundles or source, with the exact <span class="lit">file:line</span>.</p>
+        </div>
+        <div class="card">
+          <h4>Broken RLS <span class="tag">Supabase</span></h4>
+          <p>Enumerates your exposed tables <em>live</em> from the data API, then probes each with the public key. Flags which columns hold personal data, scans returned rows for third-party secrets, and checks GraphQL introspection.</p>
+        </div>
+        <div class="card">
+          <h4>Firebase exposure</h4>
+          <p>Detects the client config and probes for an open Realtime Database and a publicly listable Storage bucket — the pattern behind the Tea breach.</p>
+        </div>
+        <div class="card">
+          <h4>Server-rendered stacks <span class="tag n">new</span></h4>
+          <p>Next.js with Prisma or Drizzle: missing headers in <span class="lit">next.config</span>, server actions and route handlers that mutate data with no auth guard, and formula injection in CSV exports.</p>
+        </div>
+        <div class="card">
+          <h4>Insecure backend</h4>
+          <p>SQL injection, open CORS, command injection, <span class="lit">eval</span> and verbose error leaks across your API routes.</p>
+        </div>
+        <div class="card">
+          <h4>Source &amp; local DB exposure</h4>
+          <p>Shipped <span class="lit">.map</span> source maps, committed SQLite files, a <span class="lit">.env</span> in the repo — plus CSP, HSTS and X-Frame-Options on the live response.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- website family -->
+    <div class="fam" data-reveal>
+      <div class="fam-head">
+        <h3>Website quality &amp; AI visibility <span class="tag n">new in 0.3</span></h3>
+        <span class="note">crawls up to 8 pages</span>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <h4>AI visibility</h4>
+          <p>A <span class="lit">robots.txt</span> that turns away GPTBot, ClaudeBot, PerplexityBot, CCBot or Google-Extended — and a missing <span class="lit">llms.txt</span>. People search inside assistants now; a site they can't read doesn't get quoted.</p>
+        </div>
+        <div class="card">
+          <h4>Search &amp; social</h4>
+          <p>No <span class="lit">&lt;title&gt;</span> — or the <em>same</em> title on every page. No meta description, no canonical, no Open Graph, no JSON-LD, no <span class="lit">sitemap.xml</span>.</p>
+        </div>
+        <div class="card">
+          <h4>Structure &amp; accessibility</h4>
+          <p>Zero or several <span class="lit">&lt;h1&gt;</span> on a page, a missing <span class="lit">lang</span> attribute, images shipped with no <span class="lit">alt</span>.</p>
+        </div>
+        <div class="card">
+          <h4>Quality</h4>
+          <p>No real 404, no favicon, broken assets, console errors on load, and an uncompressed JS bundle over 1 MB. Console errors use Playwright if you happen to have it; if not, it says so.</p>
+        </div>
+        <div class="card">
+          <h4>Vibe-coded fingerprint</h4>
+          <p>Still on <span class="lit">*.vercel.app</span> or <span class="lit">*.lovable.app</span>, framework detected, empty view-source — scored out of 12. How much the site still looks like the day it was generated.</p>
+        </div>
+        <div class="card">
+          <h4>Not Lighthouse</h4>
+          <p>vibeward detects <em>binary absences</em>: the tag isn't there, the file was never written. That's what an AI-built site is missing. Core Web Vitals and full WCAG are out of scope, on purpose.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── guardrail ────────────────────────────────────── -->
+  <section id="guard">
+    <div class="head" data-reveal>
+      <span class="k">Before the code exists</span>
+      <h2 class="sec-title">Most holes start as a prompt</h2>
+      <p class="sec-lead">
+        <em>“disable RLS so it works.”</em> <em>“use the service_role key in the frontend.”</em>
+        <em>“remove the login for now.”</em> vibeward runs as a Claude Code hook and stops the
+        request the moment you type it — with why it's dangerous and what to do instead, before
+        the model touches your code. The rules are deterministic, so they can't be prompt-injected away.
+      </p>
+    </div>
+
+    <div class="term" data-reveal>
+      <div class="bar"><i></i><i></i><i></i><span>you → Claude Code</span></div>
 <pre><span class="d">&gt;</span> disable RLS on the users table so the query works
 
 <span class="y">⚠  vibeward blocked a risky request</span>
 
 <span class="r">✗ Disabling Row-Level Security</span>
-  <span class="d">why:</span>  turning off RLS makes every row readable by anyone with the public
-        anon key — the #1 cause of vibe-coded data leaks.
+  <span class="d">why:</span>  turning off RLS makes every row readable by anyone holding the public
+        anon key — the single most common cause of vibe-coded data leaks.
   <span class="g">do this instead:</span>  keep RLS on and add a policy:
-        CREATE POLICY ... USING (auth.uid() = user_id)</pre>
+        <span class="c">CREATE POLICY ... USING (auth.uid() = user_id)</span></pre>
     </div>
   </section>
 
-  <section id="finds">
-    <h2 class="sec-title">What it finds</h2>
-    <p class="sec-lead">The exact holes AI coding tools leave behind — across the front end, the back end, and the database.</p>
-    <div class="grid">
-      <div class="card"><h3>🔑 Exposed secrets</h3><p>Supabase <code style="font-family:var(--mono);font-size:12px;color:var(--amber)">service_role</code> and new-format <code style="font-family:var(--mono);font-size:12px;color:var(--amber)">sb_secret_</code>, Stripe, OpenAI, AWS, GitHub, Slack, DB connection strings — in bundles or source, with the exact file:line.</p></div>
-      <div class="card"><h3>🗄️ Broken RLS <span class="tag">Supabase</span></h3><p>Enumerates your tables <em>live</em>, then flags any readable — or unauthenticated-<em>writable</em> (opt-in) — without a login. Plus <code style="font-family:var(--mono);font-size:12px;color:var(--amber)">USING (true)</code> policies, SECURITY DEFINER, and GraphQL introspection.</p></div>
-      <div class="card"><h3>🔥 Firebase exposure</h3><p>Open Realtime Databases and publicly listable Storage buckets — the pattern behind the Tea breach (72k IDs &amp; selfies leaked).</p></div>
-      <div class="card"><h3>🧩 Insecure backend</h3><p>SQL injection, open CORS, command injection, <code style="font-family:var(--mono);font-size:12px;color:var(--amber)">eval</code>, and verbose error leaks in your API routes.</p></div>
-      <div class="card"><h3>💾 Local DB &amp; source exposure</h3><p>Committed SQLite/<code style="font-family:var(--mono);font-size:12px;color:var(--amber)">.db</code> files, <code style="font-family:var(--mono);font-size:12px;color:var(--amber)">.env</code> secrets, and exposed <code style="font-family:var(--mono);font-size:12px;color:var(--amber)">.map</code> source maps shipped in the build.</p></div>
-      <div class="card"><h3>🛡️ Security headers</h3><p>Missing CSP, HSTS, X-Frame-Options — and tech-stack leaks that hand attackers a target list.</p></div>
-      <div class="card"><h3>🤖 Built for AI fixes</h3><p>Every finding ships with CWE, exploit path, impact and references — the context an AI needs to open a correct PR.</p></div>
+  <!-- ── init / skill ─────────────────────────────────── -->
+  <section id="install">
+    <div class="head" data-reveal>
+      <span class="k">vibeward init</span>
+      <h2 class="sec-title">The package detects. Your agent fixes.</h2>
+      <p class="sec-lead">
+        Ask an agent “is the meta description missing?” and it will hallucinate an answer. A parser
+        answering yes or no never does. So vibeward installs itself into your AI tools as a skill:
+        it reports, the agent applies what it can, and then re-runs vibeward to verify.
+      </p>
     </div>
-  </section>
 
-  <section id="modes">
-    <h2 class="sec-title">Two modes</h2>
-    <p class="sec-lead">A fast look from the outside, or a deep audit from the code.</p>
-    <div class="modes">
-      <div class="mode">
-        <div class="k">Black-box · from a URL</div>
-        <h3>Quick outside-in check</h3>
-        <p>Point it at a live app. Scans bundles for secrets, enumerates &amp; probes Supabase/Firebase, checks headers and source maps. <b style="color:var(--ink-soft)">Read-only by default; only scan apps you own or have written permission to audit.</b></p>
-        <pre>npx vibeward@latest https://app.lovable.app</pre>
+    <div class="loop" data-reveal>
+      <div class="step"><div class="n">01</div><h4>Detect</h4><p>Deterministic rules produce findings — no model in the loop, no invented gaps.</p></div>
+      <div class="arw">→</div>
+      <div class="step"><div class="n">02</div><h4>Fix</h4><p>Every finding carries a <span class="lit">fix</span> and an <span class="lit">autofix</span> field — <em>auto</em>, <em>needs-input</em> or <em>manual</em> — telling the agent how far it may go alone.</p></div>
+      <div class="arw">→</div>
+      <div class="step"><div class="n">03</div><h4>Re-detect</h4><p>vibeward runs again and proves it. The same loop as a test suite.</p></div>
+    </div>
+
+    <div class="two" style="margin-top:14px">
+      <div class="term" data-reveal>
+        <div class="bar"><i></i><i></i><i></i><span>npx vibeward@latest init</span></div>
+<pre><span class="d">?</span> <b>Where do you want it?</b>
+<span class="c">❯</span> ● This project      <span class="d">~/Developer/my-site</span>
+  ○ My user account   <span class="d">~/.claude — every repo</span>
+
+<span class="d">?</span> <b>What should I install?</b>
+<span class="c">❯</span> ◉ Claude Code · skill    <span class="d">audit + fix</span>
+  ◉ Claude Code · guard hook
+  ◉ Cursor · rule
+  ○ AGENTS.md · fallback   <span class="d">merge</span>
+  ○ GitHub Action          <span class="d">every push</span></pre>
       </div>
-      <div class="mode">
-        <div class="k">White-box · from the code</div>
-        <h3>Deep audit with file:line</h3>
-        <p>Point it at a repo or a downloaded ZIP. Scans source, backend and SQL migrations.</p>
-        <pre>npx vibeward@latest scan ./your-app</pre>
+      <div class="panel" data-reveal>
+        <span class="k">The one command that writes</span>
+        <h3>And it writes carefully</h3>
+        <p>
+          It previews every file before touching disk, never overwrites a file it did not author,
+          merges <span class="lit">settings.json</span> key by key — your other hooks stay put — and
+          <span class="lit">AGENTS.md</span> between markers. Re-running is how you update. Any
+          existing file is backed up to <span class="lit">.vibeward.bak</span> before its first change.
+        </p>
+        <p style="margin-top:12px">
+          Options the chosen scope can't take are greyed out <em>with the reason</em> rather than hidden.
+          Non-interactive for CI and dotfiles:
+        </p>
+        <pre><button class="copy-mini" onclick="copyEl('initcmd')">copy</button><span id="initcmd">vibeward init --scope user --all --yes</span></pre>
+        <p style="margin-top:14px;font-size:13.6px">
+          Security findings are never auto-fixed. Deleting an exposed key from a bundle does not
+          un-leak it — only the owner decides when it is rotated and whether the incident has to
+          be disclosed.
+        </p>
       </div>
-    </div>
-    <div style="margin-top:12px" class="mode">
-      <div class="k">CI · runs itself</div>
-      <h3>GitHub Action</h3>
-      <p>Add it once and it scans every push, failing the build on a critical and posting findings to the Security tab.</p>
-      <pre>- uses: JSiapoDEV/vibeward@v1</pre>
     </div>
   </section>
 
+  <!-- ── config ───────────────────────────────────────── -->
   <section>
-    <h2 class="sec-title">Context, not just a red flag</h2>
-    <p class="sec-lead">This is what a single finding looks like — enough for a human to grasp the risk and for an AI to fix it.</p>
-    <div class="finding">
-      <div class="ttl">🔴 CRITICAL — Table <code>users</code> readable without authentication</div>
-      <div class="row"><b>Classification</b> CWE-863 · Incorrect Authorization</div>
-      <div class="row"><b>Evidence</b> 1,847 rows readable with only the public anon key; sensitive columns: email, phone, full_name</div>
-      <div class="row"><b>How it's exploited</b> Any visitor sends <code>GET /rest/v1/users?select=*</code> with the anon key from the JS bundle — every row comes back, no login.</div>
-      <div class="row"><b>Impact</b> ~1,847 user records readable by anyone on the internet right now. Active personal-data leak.</div>
+    <div class="head" data-reveal>
+      <span class="k">vibeward.json</span>
+      <h2 class="sec-title">Some “problems” are decisions</h2>
+      <p class="sec-lead">
+        Declare what the site is meant to be and vibeward checks reality against it. An
+        <span class="lit">internal</span> tool is not judged on sitemaps or Open Graph — but still on
+        broken assets and <span class="lit">alt</span> text.
+      </p>
+    </div>
+
+    <div class="two">
+      <div class="panel" data-reveal>
+        <span class="k">Declare it</span>
+        <h3>Intent, not a mute button</h3>
+        <pre>{
+  <span class="c">"schemaVersion"</span>: 1,
+  <span class="c">"intent"</span>: {
+    <span class="c">"aiCrawlers"</span>: <span class="d">"blocked"</span>,
+    <span class="c">"siteType"</span>: <span class="d">"website"</span>
+  },
+  <span class="c">"suppress"</span>: [
+    { <span class="c">"id"</span>: <span class="d">"web_missing_og"</span>,
+      <span class="c">"reason"</span>: <span class="d">"private landing"</span> }
+  ]
+}</pre>
+      </div>
+      <div class="panel" data-reveal>
+        <span class="k">What it does with that</span>
+        <h3>It turns the question around</h3>
+        <p>
+          Saying <span class="lit">aiCrawlers: "blocked"</span> stops vibeward calling that a mistake —
+          and asks the better question instead: <em>are you blocked as thoroughly as you think?</em>
+          If your robots.txt shuts out three of the twelve AI crawlers, that incomplete block is now
+          the finding. Believing you are closed while nine crawlers walk in is worse than not having decided.
+        </p>
+        <p style="margin-top:13px">
+          And nothing is ever hidden. Every suppression needs a written reason, the report prints
+          <em>“produced with N suppression(s) in effect”</em> right under the verdict and lists each one.
+          Only website checks can be suppressed at all — a verdict anyone can edit their way out of
+          is not a verdict.
+        </p>
+      </div>
     </div>
   </section>
 
+  <!-- ── modes ────────────────────────────────────────── -->
+  <section>
+    <div class="head" data-reveal>
+      <span class="k">Four ways to run it</span>
+      <h2 class="sec-title">From the outside, from the code, or from your pipeline</h2>
+    </div>
+    <div class="three">
+      <div class="panel" data-reveal>
+        <span class="k">Black-box · a URL</span>
+        <h3>Outside-in</h3>
+        <p>Bundles, live Supabase and Firebase probing, headers, source maps — and the whole website pass. <span class="lit">--passive</span> narrows it to what a browser already downloads, with no data probing at all.</p>
+        <pre><span class="d">$</span> vibeward https://app.lovable.app</pre>
+      </div>
+      <div class="panel" data-reveal>
+        <span class="k">White-box · a folder</span>
+        <h3>Deep audit</h3>
+        <p>A repo, or a ZIP straight out of v0 or Bolt. Reads source, backend and SQL migrations — tables created without RLS, <span class="lit">USING (true)</span> policies, <span class="lit">SECURITY DEFINER</span> functions.</p>
+        <pre><span class="d">$</span> vibeward scan ./client-app</pre>
+      </div>
+      <div class="panel" data-reveal>
+        <span class="k">Agents &amp; CI</span>
+        <h3>Machine mode</h3>
+        <p>JSON on stdout, every human-facing line on stderr, so it pipes straight into a parser. The payload carries a <span class="lit">schemaVersion</span> — if the shape changes, that number changes with it.</p>
+        <pre><span class="d">$</span> vibeward https://app.com \
+    --json --stdout --yes</pre>
+      </div>
+    </div>
+
+    <div class="panel" data-reveal style="margin-top:14px">
+      <span class="k">GitHub Action</span>
+      <h3>Or let it run itself, on every push</h3>
+      <p>Findings upload as SARIF and land in the repo's Security tab. The job fails on a critical — website findings never change the exit code. Point it at a folder with <span class="lit">path</span>, or at a deployed URL with <span class="lit">url</span>.</p>
+      <pre><button class="copy-mini" onclick="copyEl('gha')">copy</button><span id="gha">- uses: JSiapoDEV/vibeward@v0.3.0
+  with:
+    url: https://your-app.com</span></pre>
+    </div>
+  </section>
+
+  <!-- ── sample finding ───────────────────────────────── -->
+  <section>
+    <div class="head" data-reveal>
+      <span class="k">Every finding</span>
+      <h2 class="sec-title">Context, not a red flag</h2>
+      <p class="sec-lead">Enough for a person to grasp the risk in five seconds, and enough for an agent to open a correct pull request.</p>
+    </div>
+    <div class="finding" data-reveal>
+      <div class="ttl"><span class="sev">CRITICAL</span> Table <code>users</code> is readable without authentication</div>
+      <div class="rows">
+        <div class="row"><b>Classification</b> CWE-863 · Incorrect Authorization</div>
+        <div class="row"><b>Evidence</b> 1,847 rows returned with only the public anon key. Sensitive columns present: <code>email</code>, <code>phone</code>, <code>full_name</code>.</div>
+        <div class="row"><b>How it's exploited</b> Any visitor sends <code>GET /rest/v1/users?select=*</code> with the anon key lifted from the JS bundle. Every row comes back. No login.</div>
+        <div class="row"><b>Impact</b> ~1,847 user records readable by anyone on the internet right now. An active personal-data leak, not a theoretical one.</div>
+        <div class="row"><b>Fix</b> <code>autofix: manual</code> — enable RLS and add an owner policy, then rotate nothing: the anon key is public by design. The exposure was the missing policy.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── faq ──────────────────────────────────────────── -->
   <section id="faq">
-    <h2 class="sec-title">FAQ</h2>
-    <p class="sec-lead">The questions people ask before running it.</p>
-    <div class="faq">
+    <div class="head" data-reveal>
+      <span class="k">Before you run it</span>
+      <h2 class="sec-title">Questions people ask</h2>
+    </div>
+    <div class="faq" data-reveal>
       <details>
         <summary>Does it exploit or change anything?</summary>
-        <p class="a">Read-only by default: it reads your code, bundles and public responses to <em>detect</em> risk — it never modifies, deletes or exploits. The one exception is an explicit, opt-in <code>--write-test</code> that runs a single non-mutating write probe (an empty insert) to check for unauthenticated writes; it stays off unless you ask for it.</p>
+        <p class="a">Scanning is read-only: it reads your code, bundles and public responses to <em>detect</em> risk — never modifying, deleting or exploiting. The one exception is an explicit, opt-in <span class="lit">--write-test</span> that sends a single non-mutating write probe (an empty insert) to check for unauthenticated writes; it stays off unless you ask. <span class="lit">init</span> is the only command that writes, and only into your own project.</p>
       </details>
       <details>
-        <summary>Does it catch the bug behind the Moltbook &amp; Lovable leaks?</summary>
-        <p class="a">Yes — that's the flagship check. It finds the public Supabase key in your bundle (a JWT or the new-format <code>sb_publishable_</code>), enumerates every exposed table live, and flags which ones return data with no login — the exact failure mode that leaked ~1.5M tokens from Moltbook.</p>
+        <summary>Can a missing favicon fail my build?</summary>
+        <p class="a">No. Website findings are excluded from the severity counts, from the SARIF file and from the exit code — by design, not by configuration. Only security findings gate. If you don't want them in the report at all, <span class="lit">--no-web</span> skips the whole pass.</p>
+      </details>
+      <details>
+        <summary>Does it catch the bug behind the Moltbook and Lovable leaks?</summary>
+        <p class="a">Yes — that's the flagship check. It finds the public Supabase key in your bundle (a JWT or the new-format <span class="lit">sb_publishable_</span>), enumerates every exposed table live, and flags which ones return data with no login. That exact failure mode leaked roughly 1.5M tokens from Moltbook.</p>
+      </details>
+      <details>
+        <summary>Is this Lighthouse for AI apps?</summary>
+        <p class="a">No. vibeward tests <em>binary absences</em> — a tag that isn't in the HTML, a file that was never generated, a crawler that was turned away. Those are the things a generator skips and nobody goes back for. Core Web Vitals, performance budgets and full WCAG auditing are deliberately out of scope; run Lighthouse for those.</p>
       </details>
       <details>
         <summary>Does my code leave my machine?</summary>
-        <p class="a">Never. The scanner and the guardrail run 100% locally — no telemetry, no account, no upload. The only network call is to the URL <em>you</em> point it at.</p>
+        <p class="a">Never. The scanner and the guardrail run entirely locally — no telemetry, no account, no upload. The only outbound request is to the URL <em>you</em> point it at.</p>
       </details>
       <details>
-        <summary>Do I need Supabase?</summary>
-        <p class="a">No. Supabase RLS is one check. It also covers Firebase (open databases &amp; buckets), exposed secrets, insecure backends (SQLi, open CORS), source maps, SQLite/<code>.env</code> exposure and security headers — on any stack.</p>
-      </details>
-      <details>
-        <summary>What about false positives?</summary>
-        <p class="a">Every finding ships with evidence — file:line, the exact pattern and an exploit path — so you can judge it in seconds. Deterministic rules keep the noise low; no vague "maybe" flags.</p>
+        <summary>Can I silence a check I disagree with?</summary>
+        <p class="a">Website checks only, and never silently. Each entry in <span class="lit">vibeward.json</span> requires a written reason, and the report states how many suppressions were in effect and what each one claimed. Security findings can't be silenced by a config file — otherwise anyone could pass their own audit by editing a file.</p>
       </details>
       <details>
         <summary>Is the guardrail an LLM?</summary>
-        <p class="a">No — and that's the point. It's a deterministic rule engine, so it can't be talked out of blocking. <code>"ignore previous instructions"</code> doesn't work on it.</p>
+        <p class="a">No — and that's the point. It's a deterministic rule engine, so it can't be talked out of blocking. <span class="lit">"ignore previous instructions"</span> does not work on it.</p>
       </details>
       <details>
-        <summary>Does it work with Next.js / my framework?</summary>
-        <p class="a">Yes. Point it at any repo, ZIP or URL — it walks your source and build output regardless of framework.</p>
+        <summary>Do I need Supabase? Or a specific framework?</summary>
+        <p class="a">Neither. Supabase RLS is one check among many: Firebase, exposed secrets, insecure backends, source maps, headers and the entire website pass work on any stack. Point it at any repo, ZIP or URL.</p>
       </details>
     </div>
 
-    <h3 style="font-size:16px;margin:30px 0 2px">What vibeward does <em>not</em> do</h3>
-    <div class="notdo">
-      <span><b>✗</b> exploit or attack</span>
-      <span><b>✗</b> modify your code</span>
-      <span><b>✗</b> send your code anywhere</span>
-      <span><b>✗</b> need an account or key</span>
-      <span><b>✗</b> replace a full pentest</span>
-      <span><b>✗</b> ask an LLM to decide</span>
+    <h3 style="font-family:var(--sans);font-size:15px;font-weight:600;margin:38px 0 0">What vibeward does <em>not</em> do</h3>
+    <div class="notdo" data-reveal>
+      <span>exploit or attack</span>
+      <span>modify your code</span>
+      <span>send your code anywhere</span>
+      <span>need an account or a key</span>
+      <span>replace a full pentest</span>
+      <span>ask an LLM to decide</span>
+      <span>auto-fix a security finding</span>
     </div>
   </section>
 
-  <section style="text-align:center">
-    <h2 class="sec-title">Run it in five seconds</h2>
-    <p class="sec-lead" style="margin-left:auto;margin-right:auto">No install. Always the latest. Read-only.</p>
-    <div class="cmd" style="margin-left:auto;margin-right:auto">
-      <code id="cmd2"><span class="muted">$</span> npx vibeward@latest scan ./your-app</code>
-      <button onclick="copyCmd('cmd2')">copy</button>
+  <!-- ── closer ───────────────────────────────────────── -->
+  <section class="closer">
+    <div data-reveal>
+      <span class="k">Five seconds</span>
+      <h2 class="sec-title">Point it at something you own</h2>
+      <p class="sec-lead">No install, always the latest, read-only. Run it only against apps whose owner authorized the audit.</p>
+      <div class="cmd">
+        <code id="cmd2"><span class="p">$</span> npx vibeward@latest scan ./your-app</code>
+        <button onclick="copyCmd('cmd2')">copy</button>
+      </div>
+      <div style="margin-top:24px"><a class="btn primary" href="https://github.com/JSiapoDEV/vibeward">Star it on GitHub</a></div>
     </div>
-    <div style="margin-top:18px"><a class="btn primary" href="https://github.com/JSiapoDEV/vibeward">★ Star it on GitHub</a></div>
   </section>
 
   <footer>
-    <div><svg width="15" height="15" viewBox="0 0 100 100" style="vertical-align:-2px"><path d="M50 8 L86 22 V50 C86 72 70 86 50 92 C30 86 14 72 14 50 V22 Z" fill="#46D08A"/><path d="M37 40 L49 50 L37 60" fill="none" stroke="#0A0D0F" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><line x1="54" y1="60" x2="67" y2="60" stroke="#0A0D0F" stroke-width="7" stroke-linecap="round"/></svg> vibeward · MIT · built in Lima 🇵🇪</div>
+    <div class="left">
+      <svg width="15" height="15" viewBox="0 0 100 100" aria-hidden="true" style="vertical-align:-2px">
+        <path d="M50 8 L86 22 V50 C86 72 70 86 50 92 C30 86 14 72 14 50 V22 Z" fill="#D97757"/>
+        <path d="M37 40 L49 50 L37 60" fill="none" stroke="#F0EEE6" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="54" y1="60" x2="67" y2="60" stroke="#F0EEE6" stroke-width="7" stroke-linecap="round"/>
+      </svg>
+      vibeward · MIT · built in Lima 🇵🇪
+    </div>
     <div>
       <a href="https://github.com/JSiapoDEV/vibeward">GitHub</a> ·
       <a href="https://www.npmjs.com/package/vibeward">npm</a> ·
@@ -344,17 +893,30 @@
   function flashToast() {
     const t = document.getElementById('toast');
     t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 1400);
+    setTimeout(() => t.classList.remove('show'), 1500);
   }
   function copyCmd(id) {
-    const el = document.getElementById(id || 'cmd');
-    const text = el.textContent.replace(/^\$\s*/, '').trim();
+    const text = document.getElementById(id).textContent.replace(/^\$\s*/, '').trim();
     navigator.clipboard.writeText(text).then(flashToast);
   }
   function copyEl(id) {
-    const text = document.getElementById(id).textContent.trim();
-    navigator.clipboard.writeText(text).then(flashToast);
+    navigator.clipboard.writeText(document.getElementById(id).textContent.trim()).then(flashToast);
   }
+
+  (function () {
+    const els = document.querySelectorAll('[data-reveal]');
+    if (!('IntersectionObserver' in window)) {
+      els.forEach((el) => el.classList.add('in'));
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      }),
+      { rootMargin: '0px 0px -6% 0px', threshold: 0.04 }
+    );
+    els.forEach((el) => io.observe(el));
+  })();
 </script>
 </body>
 </html>

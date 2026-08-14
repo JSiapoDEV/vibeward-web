@@ -1,51 +1,145 @@
 # vibeward — full reference for LLMs
 
-> Security scanner for AI-generated / vibe-coded apps. Finds exposed secrets, missing
-> Row-Level Security, insecure backends and local-database exposure — from a URL or from
-> your code — and writes a context-rich report that an AI coding tool can turn into a fix.
-> Read-only. Open source (MIT). Run with `npx vibeward@latest`. Site: https://vibeward.ai
+> Read-only scanner and guardrail for AI-generated / vibe-coded apps and websites. One command
+> returns two verdicts that never share a scale: security (exposed secrets, missing Row-Level
+> Security, Firebase exposure, insecure backends) and website quality / AI visibility (missing
+> metadata, sitemap, structured data, llms.txt, AI crawlers turned away). Deterministic — no LLM
+> call. Open source (MIT). Current version 0.3.0. Run with `npx vibeward@latest`.
+> Site: https://vibeward.ai
 
 ## Why it exists
 
-Apps built with AI coding tools (Lovable, Bolt, v0, Cursor, Claude Code, Codex) ship fast and
-ship the same handful of critical holes. This is documented, not hypothetical:
+Things built with AI coding tools (Lovable, Bolt, v0, Cursor, Claude Code, Codex) ship fast and
+ship the same handful of holes. Apps leak API keys, forget Row-Level Security and check
+authorization in the browser. Websites ship with no metadata, no sitemap and a robots.txt that
+blocks the AI assistants people now search with — invisible to Google and to ChatGPT alike.
+
+This is documented, not hypothetical:
 
 - CVE-2025-48757 (CVSS 9.3): insufficient Supabase Row-Level Security in Lovable let
   unauthenticated attackers read/write arbitrary tables. 170 of 1,645 analyzed projects
   (10.3%) were vulnerable.
 - Moltbook (2026): a vibe-coded app with no RLS policies and a public key in the client bundle
   exposed ~1.5M auth tokens and 35,000 emails.
-- Veracode (2026): AI-generated code introduced a known security flaw in 45% of tests, a rate
-  ~2.7x higher than human-written code.
+- Veracode (2025): AI-generated code introduced a known security flaw in 45% of tests.
 
-## What it scans
+## The core design rule: two scales, never mixed
+
+A missing favicon must never share a scale with an exposed service key. So:
+
+- Security findings are counted by severity, written to the SARIF file, and set exit code 2 when
+  a critical is present. No config file can silence them.
+- Website findings live in their own report section with their own scale. They are excluded from
+  the severity counts, from SARIF and from the exit code. `--no-web` skips the pass entirely.
+
+## What it scans — security
 
 Secrets (URL bundles and source code, reported with file:line):
-- Supabase service_role key in the client (decoded from the JWT role, so the public anon key
-  is not falsely flagged)
-- Stripe, OpenAI, Anthropic, Google, AWS, GitHub, Resend, SendGrid, Twilio keys
-- Private PEM keys and suspicious secret assignments
+- Supabase service_role key in the client, decoded from the JWT role so the public anon key is
+  not falsely flagged, plus the new-format `sb_secret_` key
+- Stripe, OpenAI, Anthropic, Google, AWS, GitHub, Slack, Resend, SendGrid, Twilio keys
+- Database connection strings, private PEM keys and suspicious secret assignments
 - Committed .env files
 
 Supabase / Postgres:
-- Tables readable without authentication (probed with the public anon key, read-only)
+- Enumerates the exposed tables live from the data API (falling back to common names), then
+  probes each with the public key — including new-format `sb_publishable_` keys. If a table
+  returns data, RLS is broken.
+- Flags which columns hold personal data, scans returned rows for leaked third-party secrets,
+  and checks GraphQL introspection
+- `--write-test` adds an opt-in, non-mutating check for unauthenticated writes (an empty insert)
 - Migrations: tables created without RLS, permissive `USING (true)` policies, SECURITY DEFINER
   functions
-- Optional deep audit via a read-only SQL query you run in the Supabase SQL Editor (no
+- Optional deep audit via a read-only SQL query you run yourself in the Supabase SQL Editor (no
   credentials shared with the tool)
+
+Firebase:
+- Detects the client config and probes for an open Realtime Database and a publicly listable
+  Storage bucket
+
+Server-rendered stacks (Next.js with Prisma or Drizzle):
+- Missing security headers in next.config
+- Server actions and route handlers that mutate data with no auth guard
+- Formula injection in Excel/CSV exports
 
 Backend:
 - SQL injection (interpolated queries, Prisma $queryRawUnsafe, Drizzle sql.raw, better-sqlite3)
 - Open CORS, command injection, eval / new Function, verbose error leaks
 
-Local database:
-- Committed SQLite / .db files (they contain data), including files served from a public folder
+Source and local database:
+- Exposed .map source maps shipped in the build
+- Committed SQLite / .db files, including files served from a public folder
 
 HTTP security headers:
 - Missing Content-Security-Policy, Strict-Transport-Security, X-Frame-Options,
   X-Content-Type-Options; technology-stack leaks
 
-## Guardrail (the differentiator)
+Not claimed: the deeper server-side classes (IDOR/BOLA behind a login, rate limiting, orphaned
+datastores, business logic) are the manual part of an audit, not something an automated scan
+should assert.
+
+## What it scans — website quality and AI visibility (new in 0.3.0)
+
+Every URL scan also crawls up to 8 same-host pages and reports:
+
+AI visibility:
+- robots.txt blocking GPTBot, ClaudeBot, PerplexityBot, CCBot, Google-Extended and others
+- Missing llms.txt
+
+Search and social:
+- Missing <title>, or the same <title> on every page
+- Missing meta description, canonical URL, Open Graph tags, JSON-LD structured data, sitemap.xml
+
+Structure and accessibility:
+- Zero or multiple <h1> per page
+- Missing lang attribute on <html>
+- Images with no alt text
+
+Quality:
+- No real 404 for unknown URLs
+- Missing favicon
+- Broken assets (a 404 on a <script> or <img> is also a console error)
+- JavaScript console errors on load — needs a real browser, so Playwright is used if it happens
+  to be installed; if not, the scan says so and falls back to what it can prove without one
+- Uncompressed JS bundle over 1 MB
+
+Vibe-coded fingerprint, scored out of 12:
+- Still on a platform domain (*.vercel.app, *.netlify.app, *.lovable.app, *.pages.dev, ...)
+- Detected framework
+- Empty view-source (an HTML shell with no real content)
+
+This is not Lighthouse. vibeward detects binary absences — the tag is not there, the file was
+never generated — which is exactly what a vibe-coded site is missing. Core Web Vitals and full
+WCAG auditing are deliberately out of scope.
+
+## vibeward.json — declaring what the site is meant to be
+
+Some "problems" are decisions. Drop a vibeward.json next to the project (or point at one with
+`--config`):
+
+```json
+{
+  "schemaVersion": 1,
+  "intent": { "aiCrawlers": "blocked", "siteType": "website" },
+  "suppress": [{ "id": "web_missing_og", "reason": "private landing, never shared" }]
+}
+```
+
+`intent` is not a mute button. Declaring `aiCrawlers: "blocked"` stops vibeward calling that a
+mistake — and turns the question around: are you blocked as thoroughly as you think? If the
+robots.txt shuts out three of the twelve AI crawlers, that incomplete block becomes the finding.
+
+`siteType` switches off a whole family in one line: an `internal` tool is not judged on sitemaps,
+Open Graph or canonical URLs, but still on broken assets and alt text.
+
+`suppress` never hides anything. Every entry needs a reason, the report prints "produced with N
+suppression(s) in effect" under the verdict and lists each declared reason. Only website checks
+can be suppressed — a security finding cannot be silenced by a config file, by design.
+
+The file is read from local disk only, never fetched from the site being scanned: otherwise
+anyone could silence their own audit by uploading a file to their own server.
+
+## Guardrail — stopping the request before the code exists
 
 Most vibe-coded holes start with a prompt. vibeward runs as a Claude Code `UserPromptSubmit` hook
 and catches the risky request the moment the user types it — before the agent acts:
@@ -53,21 +147,56 @@ and catches the risky request the moment the user types it — before the agent 
 - "use the service_role key in the frontend" → blocked
 - "make the table public to debug" / "remove the login for now" → blocked
 
-The rules are deterministic (regex, no LLM call), so they cannot be prompt-injected away. Install:
+The rules are deterministic (no LLM call), so they cannot be prompt-injected away. Install:
 ```json
 { "hooks": { "UserPromptSubmit": [ { "hooks": [{ "type": "command", "command": "npx vibeward@latest guard" }] } ] } }
 ```
 Use `guard --warn` to warn without blocking.
 
-## Modes (the scanner — a backstop to the guardrail)
+## vibeward init — installing into your AI tools
+
+```
+npx vibeward@latest init
+```
+
+An interactive picker asks where (this project or your user account) and what, pre-checking
+whatever it detects in the repo: a Claude Code skill (audit + fix), the Claude Code guard hook, a
+Cursor rule, AGENTS.md, a Windsurf/Devin rule, and a GitHub Action workflow. Options the chosen
+scope cannot take are shown greyed out with the reason rather than hidden.
+
+It previews every file before touching disk, never overwrites a file it did not write, merges
+settings.json key by key and AGENTS.md between markers — so re-running is how you update. It backs
+up any existing file to `<file>.vibeward.bak` before its first change. Non-interactive:
+
+```
+vibeward init --scope project --targets claude-skill,claude-hook,cursor --yes
+vibeward init --scope user --all --yes
+```
+
+Why a skill: the deterministic package detects, the agent fixes. An agent asked "is the meta
+description missing?" hallucinates; a parser answering yes/no never does. So vibeward reports, the
+skill applies the fixes it can, and then re-runs vibeward to verify — detect, fix, re-detect, the
+same loop as a test suite. Every finding carries a `fix` and an `autofix` field (auto /
+needs-input / manual) telling the agent exactly how far it may go on its own.
+
+The installed instructions are explicit that security findings are never auto-fixed: deleting an
+exposed key from a bundle does not un-leak it, and only the owner decides when it is rotated and
+whether the incident must be disclosed.
+
+Note: Claude Code reads CLAUDE.md, not AGENTS.md. If you install only the AGENTS.md target, add
+`@AGENTS.md` as the first line of your CLAUDE.md — or install the Claude Code skill, which init
+offers first.
+
+## Modes
 
 Black-box (from a URL) — quick outside-in check:
 ```
 npx vibeward@latest https://your-app.lovable.app
+npx vibeward@latest https://your-app.lovable.app --passive   # public assets only, no data probing
 ```
 
-White-box (from the code) — deep audit with exact file:line, reads a git repo, a downloaded ZIP,
-or a synced folder:
+White-box (from the code) — deep audit with exact file:line; reads a git repo, a downloaded ZIP
+from v0/Bolt/Lovable, or a synced folder:
 ```
 npx vibeward@latest scan ./your-app
 ```
@@ -78,35 +207,64 @@ npx vibeward@latest supabase-sql          # run this query in the Supabase SQL E
 npx vibeward@latest scan ./your-app --supabase result.json
 ```
 
-CI (GitHub Action) — runs on every push, uploads SARIF to the GitHub Security tab, fails the
-build on a critical finding:
-```yaml
-- uses: JSiapoDEV/vibeward@v1
-  with:
-    path: '.'
+Agents and CI — JSON payload on stdout, every human-facing line on stderr, so it pipes straight
+into a parser. No colors, no prompts, no report files unless you pass `--out`. The payload carries
+a schemaVersion:
 ```
+npx vibeward@latest https://your-app.com --json --stdout --yes
+```
+
+GitHub Action — runs on every push, uploads SARIF to the GitHub Security tab, fails the build on a
+critical finding. Takes a folder (`path`) or a deployed URL (`url`):
+```yaml
+- uses: JSiapoDEV/vibeward@v0.3.0
+  with:
+    url: https://your-app.com
+```
+
+## Flags
+
+- `--passive` — URL mode: read only public assets (bundles, headers, pages), no data probing
+- `--write-test` — URL mode: opt-in, non-mutating check for unauthenticated writes
+- `--no-web` — URL mode: skip the website quality / AI-visibility checks
+- `--config <file>` — path to a vibeward.json (default: beside the target, then the cwd)
+- `--supabase <file.json>` — fold in a Supabase audit export
+- `--supabase-url <url>` / `--anon-key <key>` — Supabase config if not auto-detected
+- `--no-rls` — skip the Row-Level Security probe
+- `--sarif <file>` — write SARIF 2.1.0 for GitHub code scanning (security findings only)
+- `--out <file.md>` — report path
+- `--json` — also dump raw findings as JSON
+- `--stdout` — JSON payload on stdout, everything else on stderr (implies --yes)
+- `--yes` — confirm authorization without the interactive prompt
 
 ## Output
 
-Every finding is a context block designed to be both human-readable and consumable by an AI
-coding assistant to open a correct pull request. Each finding includes:
+Every finding is a context block designed to be both human-readable and consumable by an AI coding
+assistant to open a correct pull request. Each finding includes:
 - Classification (CWE)
 - Where (URL, bundle, or file:line)
 - Evidence (counts, snippets, column names)
 - How it's exploited (a concrete abuse path for that instance)
 - Impact (quantified: rows, data, money at risk)
 - Why it matters (in business language)
+- A `fix`, and an `autofix` level: auto, needs-input, or manual
 - References (CVE, CWE, vendor docs)
 
 Reports are written as Markdown; JSON and SARIF 2.1.0 are also available. Exit code is 2 when a
-critical finding is present, for CI gating.
+critical security finding is present. Website findings never change the exit code.
 
 ## Authorization
 
-vibeward is strictly read-only: no writes, no deletes, no data exfiltration. It only reads what a
+Scanning is strictly read-only: no writes, no deletes, no data exfiltration. It only reads what a
 browser would fetch, and confirms database exposure by reading at most one row (storing only the
-count and the names of sensitive columns, never row contents). Run it only against applications
-whose owner authorized the audit.
+count and the names of sensitive columns, never row contents). `--write-test` is the single
+opt-in exception and must only be used with explicit authorization.
+
+`vibeward init` is the one command that writes, and only into your own project, after showing you
+exactly which files it will touch.
+
+Run it only against applications whose owner hired or authorized you to audit them. Scanning
+systems you do not own without permission may be illegal.
 
 ## Links
 
