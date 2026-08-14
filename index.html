@@ -236,15 +236,21 @@
   .badges img { height: 21px; display: block; opacity: .9; }
 
   /* ── evidence strip ──────────────────────────────────── */
+  .why { margin: 60px 0 14px; max-width: 60ch; }
+  .why p { color: var(--ink-3); font-size: 15px; margin-top: 7px; }
   .stats {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     gap: 1px; background: var(--line); border: 1px solid var(--line);
-    border-radius: var(--r-lg); overflow: hidden; margin: 56px 0 0;
+    border-radius: var(--r-lg); overflow: hidden;
   }
-  .stat { background: var(--card); padding: 24px 24px 22px; }
+  .stat { background: var(--card); padding: 24px 24px 22px; display: flex; flex-direction: column; }
   .stat .n { font-family: var(--serif); font-size: 40px; font-weight: 400; color: var(--crit); line-height: 1; letter-spacing: -.03em; }
   .stat .l { color: var(--ink-2); font-size: 14px; margin-top: 11px; line-height: 1.5; }
-  .stat .src { color: var(--ink-4); font-size: 11.5px; margin-top: 9px; font-family: var(--mono); }
+  .stat .src {
+    color: var(--ink-3); font-size: 12px; margin-top: auto; padding-top: 14px;
+    font-family: var(--mono); display: flex; align-items: center; gap: 7px;
+  }
+  .stat .src::before { content: "source"; font-size: 9.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-4); }
 
   /* ── sections ────────────────────────────────────────── */
   section { padding: 82px 0 0; }
@@ -489,6 +495,11 @@
       </span>
     </div>
   </header>
+
+  <div class="why" data-reveal>
+    <span class="k">Why this exists</span>
+    <p>Three documented failures in the wild — public incident reports and published research, not vibeward's own measurements.</p>
+  </div>
 
   <div class="stats" data-reveal>
     <div class="stat">
