@@ -38,6 +38,14 @@ This is not Lighthouse: vibeward detects binary absences (the tag is not there, 
 
 Declare what the site is meant to be and vibeward checks reality against it. `intent.siteType` (`website` / `app` / `internal`) switches off whole families of checks; `intent.aiCrawlers: "blocked"` stops vibeward calling that a mistake and instead flags an *incomplete* block. `suppress` entries require a written reason, are counted under the verdict, and only work on website checks — security findings cannot be silenced by a config file. Read from local disk only, never fetched from the scanned site.
 
+## What it deliberately does not find
+
+No scanner finds broken object-level authorization behind a login, a tenant boundary that holds on the first request and leaks on the third, rate limiting, orphaned datastores, or business logic that was wrong before anyone typed a prompt. vibeward does not claim them, and a clean report is not a statement that an app is secure — it means nothing was found in the automated scope.
+
+## Human audits
+
+That remaining half is manual work. José Siapo, who wrote vibeward, takes paid security audits of AI-generated apps: Supabase and Firebase rules, auth boundaries, tenant isolation, and a written report specific enough for the owner's own coding agent to act on. Booking: https://cal.com/jsiapo — the tool itself stays free and MIT, with no paid tier and nothing held back from it.
+
 ## Docs
 
 - [README and usage](https://github.com/JSiapoDEV/vibeward)

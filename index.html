@@ -494,6 +494,7 @@
       <a href="#scan" class="hide-sm">What it finds</a>
       <a href="#install" class="hide-sm">Install</a>
       <a href="#faq" class="hide-sm">FAQ</a>
+      <a href="#audits">Audits</a>
       <a href="https://github.com/JSiapoDEV/vibeward">GitHub</a>
     </div>
   </nav>
@@ -529,24 +530,24 @@
 
   <div class="why" data-reveal>
     <span class="k">Why this exists</span>
-    <p>Three documented failures in the wild — public incident reports and published research, not vibeward's own measurements.</p>
+    <p>Three documented failures in the wild — public incident reports and published research, not vibeward's own measurements. All three get quoted badly; what follows is the version that survives reading the primary source.</p>
   </div>
 
   <div class="stats" data-reveal>
     <div class="stat">
       <div class="n">10.3%</div>
-      <div class="l">of analyzed Lovable projects had Row-Level Security wide open — 170 of 1,645 (CVE-2025-48757, CVSS 9.3)</div>
-      <div class="src">NVD</div>
+      <div class="l">of the Lovable <em>Launched</em> showcase had Row-Level Security wide open — 170 of 1,645 projects. A floor, not a rate: only each site's homepage was scanned. Mar 2025, by two Replit engineers.</div>
+      <div class="src">Palmer &amp; Low · CVE-2025-48757, disputed</div>
     </div>
     <div class="stat">
-      <div class="n">1.5M</div>
-      <div class="l">auth tokens and 35,000 emails exposed by a single vibe-coded app with no RLS policies</div>
-      <div class="src">Wiz · Moltbook, 2026</div>
+      <div class="n">29,631</div>
+      <div class="l">early-access emails, plus 4,060 agent-to-agent DM threads and ~4.75M records, left world-readable by one app with no RLS and unauthenticated writes — not a leaked key</div>
+      <div class="src">as reported by Wiz · Moltbook, Jan 2026</div>
     </div>
     <div class="stat">
-      <div class="n">45%</div>
-      <div class="l">of AI-generated code introduced a known security flaw across 100+ models and 80 tasks</div>
-      <div class="src">Veracode GenAI, 2025</div>
+      <div class="n">44%</div>
+      <div class="l">of AI-generated code fails security review — a pass rate flat at 56% for four years across 100+ models, while the volume of that code exploded</div>
+      <div class="src">Veracode GenAI, 2026</div>
     </div>
   </div>
 
@@ -901,7 +902,7 @@ vibeward init --scope user --yes</span></pre>
       </details>
       <details>
         <summary>Does it catch the bug behind the Moltbook and Lovable leaks?</summary>
-        <p class="a">Yes — that's the flagship check. It finds the public Supabase key in your bundle (a JWT or the new-format <span class="lit">sb_publishable_</span>), enumerates every exposed table live, and flags which ones return data with no login. That exact failure mode leaked roughly 1.5M tokens from Moltbook.</p>
+        <p class="a">Yes — that's the flagship check. It finds the public Supabase key in your bundle (a JWT or the new-format <span class="lit">sb_publishable_</span>), enumerates every exposed table live, and flags which ones return data with no login. That is the exact failure mode behind Moltbook — <span class="lit">agents</span>, <span class="lit">owners</span>, <span class="lit">agent_messages</span> and <span class="lit">observers</span> readable by anyone, and public tables writable too. To be precise about what the check is <em>not</em>: finding the <span class="lit">sb_publishable_</span> key in a bundle is not the finding. That key belongs in the client by design. The finding is a table that answers it.</p>
       </details>
       <details>
         <summary>Is this Lighthouse for AI apps?</summary>
@@ -938,6 +939,30 @@ vibeward init --scope user --yes</span></pre>
   </section>
 
   <!-- ── closer ───────────────────────────────────────── -->
+  <!-- ── audits ───────────────────────────────────────── -->
+  <section id="audits">
+    <div class="panel" data-reveal>
+      <span class="k">The half a scanner cannot do</span>
+      <h3>Want a person to read it?</h3>
+      <p>
+        vibeward finds what is visible from outside and from the code. It does not find broken
+        object-level authorization behind a login, a tenant boundary that holds on the first
+        request and leaks on the third, or business logic that was wrong before anyone typed a
+        prompt. That is not modesty — it is in the README, because a scanner claiming otherwise is
+        the reason people trust a green checkmark they should not.
+      </p>
+      <p>
+        Those need someone reading your app, and that is the work I do: Supabase and Firebase
+        rules, auth boundaries, and a written report specific enough for your own agent to act on.
+        <a href="https://cal.com/jsiapo">Book 20 minutes</a> — bring the URL.
+      </p>
+      <p style="color:var(--ink-4);font-size:13.6px">
+        The tool stays free and MIT regardless. There is no paid tier and nothing is held back
+        from it.
+      </p>
+    </div>
+  </section>
+
   <section class="closer">
     <div data-reveal>
       <span class="k">Five seconds</span>
