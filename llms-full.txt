@@ -1,10 +1,14 @@
 # vibeward — full reference for LLMs
 
-> Read-only scanner and guardrail for AI-generated / vibe-coded apps and websites. One command
+> Stops the insecure prompt before an AI agent runs it, and audits what it already shipped.
+> As a Claude Code `UserPromptSubmit` hook, eight deterministic rules catch requests like
+> "disable RLS so it works" or "use the service_role key in the frontend" — in English, Spanish
+> and Portuguese — and answer with the risk and the safe alternative before the agent acts. No
+> LLM call anywhere, so the rules cannot be prompt-injected away. As a read-only scanner it
 > returns two verdicts that never share a scale: security (exposed secrets, missing Row-Level
 > Security, Firebase exposure, insecure backends) and website quality / AI visibility (missing
-> metadata, sitemap, structured data, llms.txt, AI crawlers turned away). Deterministic — no LLM
-> call. Open source (MIT). Current version 0.3.0. Run with `npx vibeward@latest`.
+> metadata, sitemap, structured data, llms.txt, AI crawlers turned away).
+> Open source (MIT). Current version 0.3.1. Install with `npm i -g vibeward`.
 > Site: https://vibeward.ai
 
 ## Why it exists
@@ -143,15 +147,35 @@ anyone could silence their own audit by uploading a file to their own server.
 
 Most vibe-coded holes start with a prompt. vibeward runs as a Claude Code `UserPromptSubmit` hook
 and catches the risky request the moment the user types it — before the agent acts:
-- "disable RLS so it works" → blocked, with why + the safe policy to write instead
-- "use the service_role key in the frontend" → blocked
-- "make the table public to debug" / "remove the login for now" → blocked
+- "disable RLS so it works" → caught, with why + the safe policy to write instead
+- "use the service_role key in the frontend" → caught
+- "make the table public to debug" / "remove the login for now" → caught
 
-The rules are deterministic (no LLM call), so they cannot be prompt-injected away. Install:
-```json
-{ "hooks": { "UserPromptSubmit": [ { "hooks": [{ "type": "command", "command": "npx vibeward@latest guard" }] } ] } }
+The rules are deterministic (no LLM call), so they cannot be prompt-injected away.
+
+**Languages.** The rules work in English, Spanish and Portuguese — "desactiva el RLS", "usa la
+service_role en el front", "desativa o login por enquanto". Not eight rules translated three
+times: the dangerous objects (`RLS`, `service_role`, `CORS`, `.env`) are identifiers rather than
+words, so they are already language-independent, and a new language costs one verb table of about
+40 entries in `src/checks/lexicon.ts` and nothing else. That size is the point — it is the only
+way a rule set in a language you do not read ever gets audited by someone who does.
+
+Install:
+```bash
+npm i -g vibeward
 ```
-Use `guard --warn` to warn without blocking.
+```json
+{ "hooks": { "UserPromptSubmit": [ { "hooks": [{ "type": "command", "command": "vibeward guard" }] } ] } }
+```
+Use the installed binary, not `npx vibeward@latest`: the guard runs on every prompt, where
+`@latest` adds ~1.8 s per prompt, fails without a network, and executes any future publish on the
+user's machine without review. `npx` is fine for a one-off scan.
+
+**By default a risky request is not blocked.** `UserPromptSubmit` is the one hook whose stdout is
+fed back into the model's context, so the guard exits `0` and injects the rule — the risk, why it
+matters, and the safe alternative — into the context of the agent that is about to act. The prompt
+survives and the agent corrects its own approach. Pass `--block` for a hard stop (`exit 2`), which
+also erases the prompt. `--warn` is a legacy alias of the default.
 
 ## vibeward init — installing into your AI tools
 
@@ -217,7 +241,7 @@ npx vibeward@latest https://your-app.com --json --stdout --yes
 GitHub Action — runs on every push, uploads SARIF to the GitHub Security tab, fails the build on a
 critical finding. Takes a folder (`path`) or a deployed URL (`url`):
 ```yaml
-- uses: JSiapoDEV/vibeward@v0.3.0
+- uses: JSiapoDEV/vibeward@v0.3.1
   with:
     url: https://your-app.com
 ```

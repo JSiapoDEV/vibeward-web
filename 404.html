@@ -7,10 +7,27 @@
 <meta name="description" content="That page does not exist on vibeward.ai. Head back to the scanner for AI-generated apps and websites." />
 <meta name="robots" content="noindex, follow" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
+  /* Self-hosted: the site's CSP is `style-src 'self' 'unsafe-inline'; font-src 'self'`,
+     which blocks a fonts.googleapis.com stylesheet. See index.html. */
+  @font-face {
+    font-family: 'Newsreader'; font-style: normal; font-weight: 300 700; font-display: swap;
+    src: url(/fonts/newsreader-var.woff2) format('woff2');
+  }
+  @font-face {
+    font-family: 'Instrument Sans'; font-style: normal; font-weight: 400 700;
+    font-stretch: 100%; font-display: swap;
+    src: url(/fonts/instrument-sans-var.woff2) format('woff2');
+  }
+  @font-face {
+    font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 400; font-display: swap;
+    src: url(/fonts/ibm-plex-mono-400.woff2) format('woff2');
+  }
+  @font-face {
+    font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 500; font-display: swap;
+    src: url(/fonts/ibm-plex-mono-500.woff2) format('woff2');
+  }
+
   :root {
     --paper: #F0EEE6; --card: #FAF9F5; --line: #DFDACE;
     --ink: #141413; --ink-3: #6C6A61; --ink-4: #96938A;
