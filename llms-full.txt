@@ -8,7 +8,8 @@
 > returns two verdicts that never share a scale: security (exposed secrets, missing Row-Level
 > Security, Firebase exposure, insecure backends) and website quality / AI visibility (missing
 > metadata, sitemap, structured data, llms.txt, AI crawlers turned away).
-> Open source (MIT). Current version 0.4.0. Install with `npm i -g vibeward`.
+> Open source (MIT). Current version 0.4.0. Run with `npx vibeward@latest`, no install needed,
+> or `npm i -g vibeward` for repeat use.
 > Site: https://vibeward.ai
 
 ## Why it exists
@@ -189,14 +190,16 @@ words, so they are already language-independent, and a new language costs one ve
 40 entries in `src/checks/lexicon.ts` and nothing else. That size is the point — it is the only
 way a rule set in a language you do not read ever gets audited by someone who does.
 
-Install:
+Install — either entry point works, and `init` resolves the hook command itself:
 ```bash
-npm i -g vibeward
+npx vibeward@latest init          # no install
+npm i -g vibeward && vibeward init  # faster if you use it often
 ```
+By hand, the hook is:
 ```json
 { "hooks": { "UserPromptSubmit": [ { "hooks": [{ "type": "command", "command": "vibeward guard" }] } ] } }
 ```
-Use the installed binary, not `npx vibeward@latest`: the guard runs on every prompt, where
+Use an installed binary or an exact pin, never `npx vibeward@latest`: the guard runs on every prompt, where
 `@latest` adds ~1.8 s per prompt, fails without a network, and executes any future publish on the
 user's machine without review. `npx` is fine for a one-off scan.
 

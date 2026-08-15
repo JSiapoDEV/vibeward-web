@@ -510,7 +510,7 @@
     </p>
 
     <div class="cmd">
-      <code id="cmd"><span class="p">$</span> npm i -g vibeward &amp;&amp; vibeward init</code>
+      <code id="cmd"><span class="p">$</span> npx vibeward@latest init</code>
       <button onclick="copyCmd('cmd')">copy</button>
     </div>
 
@@ -598,15 +598,17 @@
       </div>
       <div class="panel" data-reveal>
         <span class="k">Wiring it up</span>
-        <h3>Install it, don't <span class="lit">npx</span> it</h3>
+        <h3>One command. It sorts the rest out.</h3>
         <p>
-          The scan is something you run on purpose. The guard runs on <em>every prompt you type</em>,
-          and that is the one place <span class="lit">@latest</span> is the wrong trade: it adds
-          ~1.8 s per prompt, fails with no network, and lets any future publish run on your machine
-          unreviewed. Install the binary and the hook runs a version you chose.
+          <span class="lit">init</span> never writes <span class="lit">@latest</span> into your
+          settings — that is the one place it would be the wrong trade, since the guard runs on
+          <em>every prompt you type</em>: ~1.8 s each, dead with no network, and any future publish
+          running unreviewed on your machine. So it looks for an installed
+          <span class="lit">vibeward</span>, offers to install one if there is none, and pins to an
+          exact version if you would rather not. All three are safe; the installed binary is just
+          the fastest.
         </p>
-        <pre><button class="copy-mini" onclick="copyEl('guardcmd')">copy</button><span id="guardcmd">npm i -g vibeward
-vibeward init --scope user --yes</span></pre>
+        <pre><button class="copy-mini" onclick="copyEl('guardcmd')">copy</button><span id="guardcmd">npx vibeward@latest init --scope user</span></pre>
         <p style="margin-top:12px;font-size:13.6px">
           Default is <em>not</em> a hard stop. <span class="lit">UserPromptSubmit</span> is the one
           hook whose stdout re-enters the model's context, so the guard exits <span class="lit">0</span>
