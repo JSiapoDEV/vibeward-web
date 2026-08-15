@@ -8,7 +8,7 @@
 > returns two verdicts that never share a scale: security (exposed secrets, missing Row-Level
 > Security, Firebase exposure, insecure backends) and website quality / AI visibility (missing
 > metadata, sitemap, structured data, llms.txt, AI crawlers turned away).
-> Open source (MIT). Current version 0.3.1. Install with `npm i -g vibeward`.
+> Open source (MIT). Current version 0.4.0. Install with `npm i -g vibeward`.
 > Site: https://vibeward.ai
 
 ## Why it exists
@@ -270,7 +270,7 @@ npx vibeward@latest https://your-app.com --json --stdout --yes
 GitHub Action — runs on every push, uploads SARIF to the GitHub Security tab, fails the build on a
 critical finding. Takes a folder (`path`) or a deployed URL (`url`):
 ```yaml
-- uses: JSiapoDEV/vibeward@v0.3.1
+- uses: JSiapoDEV/vibeward@v0.4.0
   with:
     url: https://your-app.com
 ```
