@@ -1,28 +1,29 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>vibeward — stop the insecure prompt before your agent runs it</title>
-<meta name="description" content="A deterministic guardrail for Claude Code that catches &quot;disable RLS&quot; or &quot;use the service_role key in the frontend&quot; the moment you type it — in English, Spanish and Portuguese, with no LLM call. Plus a read-only scanner for exposed secrets, open Supabase RLS and Firebase leaks in what you already shipped." />
-<link rel="canonical" href="https://vibeward.ai/" />
+<title>vibeward — frena el prompt inseguro antes de que tu agente lo ejecute</title>
+<meta name="description" content="Un guardarraíl determinista para Claude Code que caza &quot;desactiva el RLS&quot; o &quot;usa la service_role en el front&quot; en cuanto lo escribes — en español, inglés y portugués, sin ninguna llamada a un LLM. Y un escáner de solo lectura para claves expuestas, RLS de Supabase abierto y fugas de Firebase en lo que ya desplegaste." />
+<link rel="canonical" href="https://vibeward.ai/es/" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/avatar-512.png" />
 
-<meta property="og:title" content="vibeward — stop the insecure prompt before your agent runs it" />
-<meta property="og:description" content="&quot;disable RLS so it works.&quot; A deterministic hook catches it the moment you type it — in English, Spanish and Portuguese, no LLM call — and a read-only scanner audits what you already shipped." />
+<meta property="og:title" content="vibeward — frena el prompt inseguro antes de que tu agente lo ejecute" />
+<meta property="og:description" content="&quot;desactiva el RLS para que funcione.&quot; Un hook determinista lo caza en cuanto lo escribes — en español, inglés y portugués, sin LLM — y un escáner de solo lectura audita lo que ya desplegaste." />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://vibeward.ai/" />
+<meta property="og:url" content="https://vibeward.ai/es/" />
 <meta property="og:image" content="https://vibeward.ai/avatar-512.png" />
 <meta property="og:site_name" content="vibeward" />
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content="vibeward — stop the insecure prompt before your agent runs it" />
-<meta name="twitter:description" content="A deterministic Claude Code hook that catches &quot;disable RLS&quot; before the agent acts — and a read-only scanner for what already shipped." />
+<meta name="twitter:title" content="vibeward — frena el prompt inseguro antes de que tu agente lo ejecute" />
+<meta name="twitter:description" content="Un hook determinista para Claude Code que caza &quot;desactiva el RLS&quot; antes de que el agente actúe — y un escáner de solo lectura para lo ya desplegado." />
 <meta name="twitter:image" content="https://vibeward.ai/avatar-512.png" />
 <meta name="theme-color" content="#16150F" />
 <link rel="alternate" hreflang="en" href="https://vibeward.ai/" />
 <link rel="alternate" hreflang="es" href="https://vibeward.ai/es/" />
 <link rel="alternate" hreflang="x-default" href="https://vibeward.ai/" />
+<meta property="og:locale" content="es_ES" />
 
 <link rel="preload" href="/fonts/instrument-sans-var.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/fonts/newsreader-var.woff2" as="font" type="font/woff2" crossorigin />
@@ -37,11 +38,12 @@
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "macOS, Linux, Windows",
       "softwareVersion": "0.4.0",
-      "url": "https://vibeward.ai/",
+      "url": "https://vibeward.ai/es/",
+      "inLanguage": "es",
       "codeRepository": "https://github.com/JSiapoDEV/vibeward",
       "downloadUrl": "https://www.npmjs.com/package/vibeward",
       "license": "https://opensource.org/licenses/MIT",
-      "description": "A deterministic guardrail and read-only scanner for AI-generated / vibe-coded apps. As a Claude Code hook it catches risky prompts — \"disable RLS\", \"use the service_role key in the frontend\" — in English, Spanish and Portuguese, with no LLM call, before the agent acts. As a scanner it finds exposed secrets, missing Supabase Row-Level Security, Firebase exposure and insecure backends, plus the SEO and AI-visibility gaps that give a vibe-coded site away.",
+      "description": "Guardarraíl determinista y escáner de solo lectura para apps generadas con IA. Como hook de Claude Code caza prompts peligrosos — \"desactiva el RLS\", \"usa la service_role en el front\" — en español, inglés y portugués, sin ninguna llamada a un LLM, antes de que el agente actúe. Como escáner encuentra claves expuestas, Row-Level Security de Supabase ausente, exposición de Firebase y backends inseguros, además de los huecos de SEO y visibilidad ante IA que delatan a un sitio hecho a prompts.",
       "author": { "@type": "Person", "name": "José Siapo", "url": "https://github.com/JSiapoDEV" },
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
     },
@@ -50,33 +52,33 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "Does it exploit or change anything?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Scanning is read-only: it reads your code, bundles and public responses to detect risk — it never modifies, deletes or exploits. The one exception is an explicit, opt-in --write-test that runs a single non-mutating write probe. vibeward init is the only command that writes, and only into your own project, after showing you every file it will touch." }
+          "name": "¿Explota o modifica algo?",
+          "acceptedAnswer": { "@type": "Answer", "text": "El escaneo es de solo lectura: lee tu código, tus bundles y las respuestas públicas para detectar riesgo — nunca modifica, borra ni explota. La única excepción es --write-test, explícita y opcional, que lanza una sola sonda de escritura no destructiva. vibeward init es el único comando que escribe, y solo dentro de tu propio proyecto, tras enseñarte cada fichero que va a tocar." }
         },
         {
           "@type": "Question",
-          "name": "Is this Lighthouse?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. vibeward detects binary absences — the tag is not there, the file was never generated — which is exactly what an AI-built site is missing. Core Web Vitals and full WCAG auditing are out of scope." }
+          "name": "¿Esto es Lighthouse?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. vibeward detecta ausencias binarias — la etiqueta no está, el fichero nunca se generó — que es justo lo que le falta a un sitio hecho con IA. Core Web Vitals y una auditoría WCAG completa quedan fuera de alcance." }
         },
         {
           "@type": "Question",
-          "name": "Can a website finding fail my build?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Never. Website findings stay out of the severity counts, out of the SARIF file and out of the exit code. Only security findings gate. A missing favicon must never share a scale with an exposed service key." }
+          "name": "¿Un hallazgo de web puede tumbarme el build?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Nunca. Los hallazgos de web quedan fuera del recuento por severidad, fuera del fichero SARIF y fuera del código de salida. Solo la seguridad bloquea. Un favicon ausente jamás debe compartir escala con una service key expuesta." }
         },
         {
           "@type": "Question",
-          "name": "Does my code leave my machine?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Never. The scanner and the guardrail run 100% locally — no telemetry, no account, no upload. The only network call is to the URL you point it at." }
+          "name": "¿Mi código sale de mi máquina?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Nunca. El escáner y el guardarraíl corren 100% en local — sin telemetría, sin cuenta, sin subidas. La única petición de red es a la URL a la que tú lo apuntas." }
         },
         {
           "@type": "Question",
-          "name": "Can I silence a check I disagree with?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Website checks only, and never silently. Each entry in vibeward.json needs a written reason, and the report prints how many suppressions were in effect plus each declared reason. Security findings cannot be silenced by a config file, by design." }
+          "name": "¿Puedo silenciar una comprobación con la que no estoy de acuerdo?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Solo las de web, y nunca en silencio. Cada entrada de vibeward.json exige un motivo escrito, y el informe imprime cuántas supresiones estaban activas y el motivo declarado de cada una. Los hallazgos de seguridad no se pueden silenciar desde un fichero de configuración, por diseño." }
         },
         {
           "@type": "Question",
-          "name": "Is the guardrail an LLM?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No — and that is the point. It is a deterministic rule engine, so it cannot be talked out of blocking. 'Ignore previous instructions' does not work on it." }
+          "name": "¿El guardarraíl es un LLM?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No, y ese es justamente el punto. Es un motor de reglas determinista, así que no se le puede convencer de nada. 'Ignora las instrucciones anteriores' no funciona contra él." }
         }
       ]
     }
@@ -572,15 +574,15 @@
       vibeward
     </div>
     <div class="links">
-      <a href="#guard">Guardrail</a>
-      <a href="#scan" class="hide-sm">What it finds</a>
-      <a href="#install" class="hide-sm">Install</a>
+      <a href="#guard">Guardarraíl</a>
+      <a href="#scan" class="hide-sm">Qué encuentra</a>
+      <a href="#install" class="hide-sm">Instalar</a>
       <a href="#faq" class="hide-sm">FAQ</a>
-      <a href="#audits">Audits</a>
+      <a href="#audits">Auditorías</a>
       <a href="https://github.com/JSiapoDEV/vibeward">GitHub</a>
       <span class="navtools">
-        <a class="navbtn" href="/es/" hreflang="es" lang="es" title="Ver esta página en español">ES</a>
-        <button class="navbtn" id="themeBtn" type="button" aria-pressed="false" aria-label="Switch to the light theme">
+        <a class="navbtn" href="/" hreflang="en" lang="en" title="Read this page in English">EN</a>
+        <button class="navbtn" id="themeBtn" type="button" aria-pressed="false" aria-label="Cambiar al tema claro">
           <svg class="ico-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/></svg>
           <svg class="ico-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.6A8.6 8.6 0 1 1 9.4 3.5a6.9 6.9 0 0 0 11.1 11.1Z"/></svg>
         </button>
@@ -589,27 +591,27 @@
   </nav>
 
   <header class="hero stagger">
-    <span class="eyebrow"><b>v0.4.0</b> · guardrail + scanner</span>
-    <h1>Your agent was about to <span class="accent">disable RLS</span>.</h1>
+    <span class="eyebrow"><b>v0.4.0</b> · guardarraíl + escáner</span>
+    <h1>Tu agente estaba a punto de <span class="accent">desactivar el RLS</span>.</h1>
     <p class="sub">
-      The holes in AI-built apps rarely start as bad code. They start as a reasonable-sounding
-      request — <em>“disable RLS so it works”</em> — and the agent complies, because complying is
-      the job. vibeward catches that the moment you type it, and audits whatever already shipped.
-      Deterministic, read-only, MIT.
+      Los agujeros de las apps hechas con IA casi nunca empiezan como código malo. Empiezan como
+      una petición que suena razonable — <em>“desactiva el RLS para que funcione”</em> — y el agente
+      obedece, porque obedecer es su trabajo. vibeward lo caza en cuanto lo escribes, y audita lo
+      que ya esté desplegado. Determinista, de solo lectura, MIT.
     </p>
 
     <div class="cmd">
       <code id="cmd"><span class="p">$</span> npx vibeward@latest init</code>
-      <button onclick="copyCmd('cmd')">copy</button>
+      <button onclick="copyCmd('cmd')">copiar</button>
     </div>
 
     <p class="trust">
-      <span>no LLM call</span><span>100% local</span><span>no telemetry</span><span>no account</span><span>en · es · pt</span>
+      <span>sin llamadas a LLM</span><span>100% local</span><span>sin telemetría</span><span>sin cuenta</span><span>es · en · pt</span>
     </p>
 
     <div class="cta-row">
-      <a class="btn primary" href="#install">Install into your AI tools</a>
-      <a class="btn ghost" href="https://github.com/JSiapoDEV/vibeward">Star on GitHub</a>
+      <a class="btn primary" href="#install">Instálalo en tus herramientas de IA</a>
+      <a class="btn ghost" href="https://github.com/JSiapoDEV/vibeward">Dale una estrella en GitHub</a>
       <span class="badges">
         <a href="https://github.com/JSiapoDEV/vibeward" aria-label="GitHub stars"><img src="https://img.shields.io/github/stars/JSiapoDEV/vibeward?style=flat&label=stars&color=D97757&labelColor=EAE7DC" alt="GitHub stars for vibeward" /></a>
         <a href="https://www.npmjs.com/package/vibeward" aria-label="npm downloads"><img src="https://img.shields.io/npm/dm/vibeward?color=D97757&labelColor=EAE7DC&label=npm" alt="Monthly npm downloads for vibeward" /></a>
@@ -618,24 +620,24 @@
   </header>
 
   <div class="why" data-reveal>
-    <span class="k">Why this exists</span>
-    <p>Three documented failures in the wild — public incident reports and published research, not vibeward's own measurements. All three get quoted badly; what follows is the version that survives reading the primary source.</p>
+    <span class="k">Por qué existe</span>
+    <p>Tres fallos documentados en el mundo real — informes públicos de incidentes e investigación publicada, no mediciones propias de vibeward. Los tres se citan mal; lo que sigue es la versión que sobrevive a leer la fuente primaria.</p>
   </div>
 
   <div class="stats" data-reveal>
     <div class="stat">
       <div class="n">10.3%</div>
-      <div class="l">of the Lovable <em>Launched</em> showcase had Row-Level Security wide open — 170 of 1,645 projects. A floor, not a rate: only each site's homepage was scanned. Mar 2025, by two Replit engineers.</div>
-      <div class="src">Palmer &amp; Low · CVE-2025-48757, disputed</div>
+      <div class="l">del escaparate <em>Launched</em> de Lovable tenía el Row-Level Security abierto de par en par — 170 de 1.645 proyectos. Un suelo, no una tasa: solo se escaneó la portada de cada sitio. Marzo 2025, por dos ingenieros de Replit.</div>
+      <div class="src">Palmer y Low · CVE-2025-48757, disputado</div>
     </div>
     <div class="stat">
       <div class="n">29,631</div>
-      <div class="l">early-access emails, plus 4,060 agent-to-agent DM threads and ~4.75M records, left world-readable by one app with no RLS and unauthenticated writes — not a leaked key</div>
-      <div class="src">as reported by Wiz · Moltbook, Jan 2026</div>
+      <div class="l">correos de acceso anticipado, más 4.060 hilos de DM entre agentes y ~4,75M de registros, legibles por cualquiera en una app sin RLS y con escrituras sin autenticar — no por una clave filtrada</div>
+      <div class="src">según lo reportado por Wiz · Moltbook, ene 2026</div>
     </div>
     <div class="stat">
       <div class="n">44%</div>
-      <div class="l">of AI-generated code fails security review — a pass rate flat at 56% for four years across 100+ models, while the volume of that code exploded</div>
+      <div class="l">del código generado por IA no pasa la revisión de seguridad — una tasa de aprobado plana en 56% durante cuatro años y más de 100 modelos, mientras el volumen de ese código se disparaba</div>
       <div class="src">Veracode GenAI, 2026</div>
     </div>
   </div>
@@ -643,67 +645,67 @@
   <!-- ── guardrail ────────────────────────────────────── -->
   <section id="guard">
     <div class="head" data-reveal>
-      <span class="k">Eight rules · no model in the loop</span>
-      <h2 class="sec-title">A regex cannot be talked out of it</h2>
+      <span class="k">Ocho reglas · ningún modelo de por medio</span>
+      <h2 class="sec-title">A una regex no la convences</h2>
       <p class="sec-lead">
-        Disabling RLS. Moving a <span class="lit">service_role</span> key into the client. Making a
-        bucket or a table public. Removing an auth check. A CORS wildcard, a hardcoded secret, CSRF
-        or rate limiting switched off, a <span class="lit">.env</span> about to be committed. Each
-        one answers with the risk, why it matters and the safe alternative —
-        <em>“ignore previous instructions”</em> does not work on a rule engine.
+        Desactivar el RLS. Mover una clave <span class="lit">service_role</span> al cliente. Hacer
+        público un bucket o una tabla. Quitar una comprobación de auth. Un comodín en CORS, un secreto
+        hardcodeado, el CSRF o el rate limiting apagados, un <span class="lit">.env</span> a punto de
+        commitearse. Cada una responde con el riesgo, por qué importa y la alternativa segura —
+        <em>“ignora las instrucciones anteriores”</em> no funciona contra un motor de reglas.
       </p>
     </div>
 
     <div class="term" data-reveal>
-      <div class="bar"><i></i><i></i><i></i><span>you → Claude Code</span></div>
-<pre><span class="d">&gt;</span> disable RLS on the users table so the query works
+      <div class="bar"><i></i><i></i><i></i><span>tú → Claude Code</span></div>
+<pre><span class="d">&gt;</span> desactiva el RLS de la tabla users para que funcione la query
 
-<span class="y">⚠  vibeward flagged a risky request</span>
+<span class="y">⚠  vibeward marcó una petición peligrosa</span>
 
-<span class="r">✗ Disabling Row-Level Security</span>
-  <span class="d">why:</span>  turning off RLS makes every row readable by anyone holding the public
-        anon key — the single most common cause of vibe-coded data leaks.
-  <span class="g">do this instead:</span>  keep RLS on and add a policy:
+<span class="r">✗ Desactivar Row-Level Security</span>
+  <span class="d">por qué:</span>  apagar el RLS deja cada fila legible para cualquiera que tenga la
+        anon key pública — la causa más común de fugas en apps hechas a prompts.
+  <span class="g">haz esto en su lugar:</span>  deja el RLS activo y añade una policy:
         <span class="c">CREATE POLICY ... USING (auth.uid() = user_id)</span></pre>
     </div>
 
     <div class="two" style="margin-top:14px">
       <div class="panel" data-reveal>
-        <span class="k">English · Español · Português</span>
-        <h3>It catches the prompt in the language you think in</h3>
+        <span class="k">Español · English · Português</span>
+        <h3>Caza el prompt en el idioma en el que piensas</h3>
         <p>
           <span class="lit">desactiva el RLS</span>, <span class="lit">usa la service_role en el
-          front</span>, <span class="lit">desativa o login por enquanto</span> — same rules, no
-          translation layer, no LLM.
+          front</span>, <span class="lit">desativa o login por enquanto</span> — las mismas reglas, sin
+          capa de traducción y sin LLM.
         </p>
         <p style="margin-top:12px">
-          Not eight rules written three times: the dangerous <em>objects</em> are already
-          language-independent — <span class="lit">RLS</span>, <span class="lit">service_role</span>,
-          <span class="lit">CORS</span>, <span class="lit">.env</span> are identifiers, not words.
-          A language costs one verb table of roughly 40 entries, which is the only size a native
-          speaker can actually audit. That is the point: a rule set in a language you don't read
-          is a rule set nobody reviews. PRs adding a table are welcome.
+          No son ocho reglas escritas tres veces: los <em>objetos</em> peligrosos ya son
+          independientes del idioma — <span class="lit">RLS</span>, <span class="lit">service_role</span>,
+          <span class="lit">CORS</span> y <span class="lit">.env</span> son identificadores, no palabras.
+          Un idioma cuesta una tabla de verbos de unas 40 entradas, que es el único tamaño que un
+          hablante nativo puede auditar de verdad. Ese es el punto: un conjunto de reglas en un idioma
+          que no lees es un conjunto de reglas que nadie revisa. Se agradecen PRs añadiendo una tabla.
         </p>
       </div>
       <div class="panel" data-reveal>
-        <span class="k">Wiring it up</span>
-        <h3>One command. It sorts the rest out.</h3>
+        <span class="k">Cómo se conecta</span>
+        <h3>Un comando. Él resuelve el resto.</h3>
         <p>
-          <span class="lit">init</span> never writes <span class="lit">@latest</span> into your
-          settings — that is the one place it would be the wrong trade, since the guard runs on
-          <em>every prompt you type</em>: ~1.8 s each, dead with no network, and any future publish
-          running unreviewed on your machine. So it looks for an installed
-          <span class="lit">vibeward</span>, offers to install one if there is none, and pins to an
-          exact version if you would rather not. All three are safe; the installed binary is just
-          the fastest.
+          <span class="lit">init</span> nunca escribe <span class="lit">@latest</span> en tus
+          ajustes — es el único sitio donde sería mal negocio, porque el guardarraíl corre en
+          <em>cada prompt que escribes</em>: ~1,8 s cada uno, muerto sin red, y cualquier publicación
+          futura ejecutándose sin revisar en tu máquina. Así que busca un
+          <span class="lit">vibeward</span> instalado, te ofrece instalarlo si no hay ninguno, y fija
+          una versión exacta si prefieres que no. Los tres caminos son seguros; el binario instalado
+          es sencillamente el más rápido.
         </p>
-        <pre><button class="copy-mini" onclick="copyEl('guardcmd')">copy</button><span id="guardcmd">npx vibeward@latest init --scope user</span></pre>
+        <pre><button class="copy-mini" onclick="copyEl('guardcmd')">copiar</button><span id="guardcmd">npx vibeward@latest init --scope user</span></pre>
         <p style="margin-top:12px;font-size:13.6px">
-          Default is <em>not</em> a hard stop. <span class="lit">UserPromptSubmit</span> is the one
-          hook whose stdout re-enters the model's context, so the guard exits <span class="lit">0</span>
-          and injects the rule — your prompt survives and the agent corrects its own approach. A false
-          positive costs you one ignored note. <span class="lit">--block</span> is there if you want
-          the hard stop.
+          Por defecto <em>no</em> bloquea. <span class="lit">UserPromptSubmit</span> es el único hook
+          cuyo stdout vuelve al contexto del modelo, así que el guardarraíl sale con
+          <span class="lit">0</span> e inyecta la regla — tu prompt sobrevive y el agente corrige su
+          propio enfoque. Un falso positivo te cuesta una nota que ignoras. <span class="lit">--block</span>
+          está ahí si quieres el corte duro.
         </p>
       </div>
     </div>
@@ -712,70 +714,70 @@
   <!-- ── two scales ───────────────────────────────────── -->
   <section id="scan">
     <div class="head" data-reveal>
-      <span class="k">One scan</span>
-      <h2 class="sec-title">Two verdicts that never share a scale</h2>
+      <span class="k">Un escaneo</span>
+      <h2 class="sec-title">Dos veredictos que nunca comparten escala</h2>
       <p class="sec-lead">
-        An AI-built product fails in two unrelated ways: it leaves data open, and it leaves the
-        page empty. Both are worth knowing. Reporting them on the same scale is how a real leak
-        ends up buried under a missing favicon — so vibeward keeps them apart, all the way down
-        to the exit code.
+        Un producto hecho con IA falla de dos formas que no tienen nada que ver: deja los datos
+        abiertos, y deja la página vacía. Las dos merecen saberse. Reportarlas en la misma escala es
+        cómo una fuga real acaba enterrada bajo un favicon que falta — así que vibeward las mantiene
+        separadas, hasta el código de salida.
       </p>
     </div>
 
     <div class="split">
       <div class="lane sec" data-reveal>
-        <span class="k">Security · gates the build</span>
-        <h3>What is exposed</h3>
-        <p>Counted by severity, written to SARIF, and exit code <span class="lit">2</span> on a critical. No config file can silence it.</p>
+        <span class="k">Seguridad · bloquea el build</span>
+        <h3>Lo que está expuesto</h3>
+        <p>Contado por severidad, escrito en SARIF, y código de salida <span class="lit">2</span> ante un crítico. Ningún fichero de configuración lo silencia.</p>
         <ul>
-          <li>A key in the bundle is a key in the world</li>
-          <li>A table that answers without a login is a leak, today</li>
-          <li>An open bucket has no owner</li>
+          <li>Una clave en el bundle es una clave en el mundo</li>
+          <li>Una tabla que responde sin login es una fuga, hoy</li>
+          <li>Un bucket abierto no tiene dueño</li>
         </ul>
       </div>
       <div class="lane web" data-reveal>
-        <span class="k">Website · never gates</span>
-        <h3>What was never there</h3>
-        <p>Its own section, its own scale. Out of the severity counts, out of SARIF, out of the exit code. Skip it all with <span class="lit">--no-web</span>.</p>
+        <span class="k">Web · nunca bloquea</span>
+        <h3>Lo que nunca estuvo</h3>
+        <p>Su propia sección, su propia escala. Fuera del recuento por severidad, fuera de SARIF, fuera del código de salida. Sáltatelo entero con <span class="lit">--no-web</span>.</p>
         <ul>
-          <li>The tag the generator never wrote</li>
-          <li>The file that was never generated</li>
-          <li>The crawler quietly turned away</li>
+          <li>La etiqueta que el generador nunca escribió</li>
+          <li>El fichero que nunca se generó</li>
+          <li>El crawler al que se echó sin decir nada</li>
         </ul>
       </div>
-      <p class="pull" data-reveal>“A missing favicon must never share a scale with an exposed service key.”</p>
+      <p class="pull" data-reveal>“Un favicon ausente jamás debe compartir escala con una service key expuesta.”</p>
     </div>
 
     <!-- security family -->
     <div class="fam" data-reveal>
       <div class="fam-head">
-        <h3>Security</h3>
-        <span class="note">counts · SARIF · exit 2</span>
+        <h3>Seguridad</h3>
+        <span class="note">recuento · SARIF · salida 2</span>
       </div>
       <div class="grid">
         <div class="card">
-          <h4>Exposed secrets</h4>
-          <p>Supabase <span class="lit">service_role</span> and new-format <span class="lit">sb_secret_</span>, Stripe, OpenAI, Anthropic, Google, AWS, GitHub, Slack, Resend, Twilio, DB connection strings and private PEM keys — in bundles or source, with the exact <span class="lit">file:line</span>.</p>
+          <h4>Claves expuestas</h4>
+          <p>La <span class="lit">service_role</span> de Supabase y el nuevo formato <span class="lit">sb_secret_</span>, Stripe, OpenAI, Anthropic, Google, AWS, GitHub, Slack, Resend, Twilio, cadenas de conexión a base de datos y claves PEM privadas — en bundles o en el código, con el <span class="lit">fichero:línea</span> exacto.</p>
         </div>
         <div class="card">
-          <h4>Broken RLS <span class="tag">Supabase</span></h4>
-          <p>Enumerates your exposed tables <em>live</em> from the data API, then probes each with the public key. Flags which columns hold personal data, scans returned rows for third-party secrets, and checks GraphQL introspection.</p>
+          <h4>RLS roto <span class="tag">Supabase</span></h4>
+          <p>Enumera tus tablas expuestas <em>en vivo</em> desde la data API y luego sondea cada una con la clave pública. Marca qué columnas contienen datos personales, revisa las filas devueltas por si traen claves de terceros, y comprueba la introspección de GraphQL.</p>
         </div>
         <div class="card">
-          <h4>Firebase exposure</h4>
-          <p>Detects the client config and probes for an open Realtime Database and a publicly listable Storage bucket — the pattern behind the Tea breach.</p>
+          <h4>Exposición de Firebase</h4>
+          <p>Detecta la configuración del cliente y sondea si hay una Realtime Database abierta y un bucket de Storage listable públicamente — el patrón detrás de la brecha de Tea.</p>
         </div>
         <div class="card">
-          <h4>Server-rendered stacks <span class="tag n">new</span></h4>
-          <p>Next.js with Prisma or Drizzle: missing headers in <span class="lit">next.config</span>, server actions and route handlers that mutate data with no auth guard, and formula injection in CSV exports.</p>
+          <h4>Stacks renderizados en servidor <span class="tag n">nuevo</span></h4>
+          <p>Next.js con Prisma o Drizzle: cabeceras ausentes en <span class="lit">next.config</span>, server actions y route handlers que mutan datos sin comprobar auth, e inyección de fórmulas en exportaciones CSV.</p>
         </div>
         <div class="card">
-          <h4>Insecure backend</h4>
-          <p>SQL injection, open CORS, command injection, <span class="lit">eval</span> and verbose error leaks across your API routes.</p>
+          <h4>Backend inseguro</h4>
+          <p>Inyección SQL, CORS abierto, inyección de comandos, <span class="lit">eval</span> y errores verbosos que filtran información en tus rutas de API.</p>
         </div>
         <div class="card">
-          <h4>Source &amp; local DB exposure</h4>
-          <p>Shipped <span class="lit">.map</span> source maps, committed SQLite files, a <span class="lit">.env</span> in the repo — plus CSP, HSTS and X-Frame-Options on the live response.</p>
+          <h4>Código y base de datos local expuestos</h4>
+          <p>Source maps <span class="lit">.map</span> desplegados, ficheros SQLite commiteados, un <span class="lit">.env</span> en el repo — además de CSP, HSTS y X-Frame-Options en la respuesta real.</p>
         </div>
       </div>
     </div>
@@ -783,33 +785,33 @@
     <!-- website family -->
     <div class="fam" data-reveal>
       <div class="fam-head">
-        <h3>Website quality &amp; AI visibility <span class="tag n">new in 0.3</span></h3>
-        <span class="note">crawls up to 8 pages</span>
+        <h3>Calidad web y visibilidad ante IA <span class="tag n">nuevo en 0.3</span></h3>
+        <span class="note">rastrea hasta 8 páginas</span>
       </div>
       <div class="grid">
         <div class="card">
-          <h4>AI visibility</h4>
-          <p>A <span class="lit">robots.txt</span> that turns away GPTBot, ClaudeBot, PerplexityBot, CCBot or Google-Extended — and a missing <span class="lit">llms.txt</span>. People search inside assistants now; a site they can't read doesn't get quoted.</p>
+          <h4>Visibilidad ante IA</h4>
+          <p>Un <span class="lit">robots.txt</span> que echa a GPTBot, ClaudeBot, PerplexityBot, CCBot o Google-Extended — y un <span class="lit">llms.txt</span> que falta. La gente ya busca dentro de los asistentes; a un sitio que no pueden leer no lo citan.</p>
         </div>
         <div class="card">
-          <h4>Search &amp; social</h4>
-          <p>No <span class="lit">&lt;title&gt;</span> — or the <em>same</em> title on every page. No meta description, no canonical, no Open Graph, no JSON-LD, no <span class="lit">sitemap.xml</span>.</p>
+          <h4>Buscadores y redes</h4>
+          <p>Sin <span class="lit">&lt;title&gt;</span> — o el <em>mismo</em> título en todas las páginas. Sin meta description, sin canonical, sin Open Graph, sin JSON-LD, sin <span class="lit">sitemap.xml</span>.</p>
         </div>
         <div class="card">
-          <h4>Structure &amp; accessibility</h4>
-          <p>Zero or several <span class="lit">&lt;h1&gt;</span> on a page, a missing <span class="lit">lang</span> attribute, images shipped with no <span class="lit">alt</span>.</p>
+          <h4>Estructura y accesibilidad</h4>
+          <p>Cero o varios <span class="lit">&lt;h1&gt;</span> en una página, un atributo <span class="lit">lang</span> ausente, imágenes desplegadas sin <span class="lit">alt</span>.</p>
         </div>
         <div class="card">
-          <h4>Quality</h4>
-          <p>No real 404, no favicon, broken assets, console errors on load, and an uncompressed JS bundle over 1 MB. Console errors use Playwright if you happen to have it; if not, it says so.</p>
+          <h4>Calidad</h4>
+          <p>Sin un 404 real, sin favicon, assets rotos, errores de consola al cargar y un bundle JS sin comprimir de más de 1 MB. Los errores de consola usan Playwright si resulta que lo tienes; si no, lo dice.</p>
         </div>
         <div class="card">
-          <h4>Vibe-coded fingerprint</h4>
-          <p>Still on <span class="lit">*.vercel.app</span> or <span class="lit">*.lovable.app</span>, framework detected, empty view-source — scored out of 12. How much the site still looks like the day it was generated.</p>
+          <h4>Huella de app hecha a prompts</h4>
+          <p>Todavía en <span class="lit">*.vercel.app</span> o <span class="lit">*.lovable.app</span>, framework detectado, ver-código-fuente vacío — puntuado sobre 12. Cuánto se sigue pareciendo el sitio al día en que se generó.</p>
         </div>
         <div class="card">
-          <h4>Not Lighthouse</h4>
-          <p>vibeward detects <em>binary absences</em>: the tag isn't there, the file was never written. That's what an AI-built site is missing. Core Web Vitals and full WCAG are out of scope, on purpose.</p>
+          <h4>No es Lighthouse</h4>
+          <p>vibeward detecta <em>ausencias binarias</em>: la etiqueta no está, el fichero nunca se escribió. Eso es lo que le falta a un sitio hecho con IA. Core Web Vitals y WCAG completo quedan fuera de alcance, a propósito.</p>
         </div>
       </div>
     </div>
@@ -819,54 +821,55 @@
   <section id="install">
     <div class="head" data-reveal>
       <span class="k">vibeward init</span>
-      <h2 class="sec-title">The package detects. Your agent fixes.</h2>
+      <h2 class="sec-title">El paquete detecta. Tu agente arregla.</h2>
       <p class="sec-lead">
-        Ask an agent “is the meta description missing?” and it will hallucinate an answer. A parser
-        answering yes or no never does. So vibeward installs itself into your AI tools as a skill:
-        it reports, the agent applies what it can, and then re-runs vibeward to verify.
+        Pregúntale a un agente “¿falta la meta description?” y se inventará una respuesta. Un parser
+        que responde sí o no nunca lo hace. Por eso vibeward se instala en tus herramientas de IA como
+        skill: él reporta, el agente aplica lo que puede, y luego vuelve a ejecutar vibeward para
+        comprobarlo.
       </p>
     </div>
 
     <div class="loop" data-reveal>
-      <div class="step"><div class="n">01</div><h4>Detect</h4><p>Deterministic rules produce findings — no model in the loop, no invented gaps.</p></div>
+      <div class="step"><div class="n">01</div><h4>Detectar</h4><p>Reglas deterministas producen los hallazgos — ningún modelo de por medio, ningún hueco inventado.</p></div>
       <div class="arw">→</div>
-      <div class="step"><div class="n">02</div><h4>Fix</h4><p>Every finding carries a <span class="lit">fix</span> and an <span class="lit">autofix</span> field — <em>auto</em>, <em>needs-input</em> or <em>manual</em> — telling the agent how far it may go alone.</p></div>
+      <div class="step"><div class="n">02</div><h4>Arreglar</h4><p>Cada hallazgo trae un campo <span class="lit">fix</span> y otro <span class="lit">autofix</span> — <em>auto</em>, <em>needs-input</em> o <em>manual</em> — que le dicen al agente hasta dónde puede llegar solo.</p></div>
       <div class="arw">→</div>
-      <div class="step"><div class="n">03</div><h4>Re-detect</h4><p>vibeward runs again and proves it. The same loop as a test suite.</p></div>
+      <div class="step"><div class="n">03</div><h4>Re-detectar</h4><p>vibeward vuelve a correr y lo demuestra. El mismo bucle que una suite de tests.</p></div>
     </div>
 
     <div class="two" style="margin-top:14px">
       <div class="term" data-reveal>
         <div class="bar"><i></i><i></i><i></i><span>npx vibeward@latest init</span></div>
-<pre><span class="d">?</span> <b>Where do you want it?</b>
-<span class="c">❯</span> ● This project      <span class="d">~/Developer/my-site</span>
-  ○ My user account   <span class="d">~/.claude — every repo</span>
+<pre><span class="d">?</span> <b>¿Dónde lo quieres?</b>
+<span class="c">❯</span> ● Este proyecto      <span class="d">~/Developer/mi-sitio</span>
+  ○ Mi cuenta          <span class="d">~/.claude — en todos los repos</span>
 
-<span class="d">?</span> <b>What should I install?</b>
-<span class="c">❯</span> ◉ Claude Code · skill    <span class="d">audit + fix</span>
+<span class="d">?</span> <b>¿Qué instalo?</b>
+<span class="c">❯</span> ◉ Claude Code · skill    <span class="d">auditar + arreglar</span>
   ◉ Claude Code · guard hook
-  ◉ Cursor · rule
-  ○ AGENTS.md · fallback   <span class="d">merge</span>
-  ○ GitHub Action          <span class="d">every push</span></pre>
+  ◉ Cursor · regla
+  ○ AGENTS.md · fallback   <span class="d">fusiona</span>
+  ○ GitHub Action          <span class="d">en cada push</span></pre>
       </div>
       <div class="panel" data-reveal>
-        <span class="k">The one command that writes</span>
-        <h3>And it writes carefully</h3>
+        <span class="k">El único comando que escribe</span>
+        <h3>Y escribe con cuidado</h3>
         <p>
-          It previews every file before touching disk, never overwrites a file it did not author,
-          merges <span class="lit">settings.json</span> key by key — your other hooks stay put — and
-          <span class="lit">AGENTS.md</span> between markers. Re-running is how you update. Any
-          existing file is backed up to <span class="lit">.vibeward.bak</span> before its first change.
+          Previsualiza cada fichero antes de tocar el disco, nunca sobrescribe uno que no escribió él,
+          fusiona <span class="lit">settings.json</span> clave por clave — tus otros hooks se quedan
+          donde están — y <span class="lit">AGENTS.md</span> entre marcadores. Volver a ejecutarlo es
+          cómo se actualiza. Cualquier fichero existente se respalda en
+          <span class="lit">.vibeward.bak</span> antes de su primer cambio.
         </p>
         <p style="margin-top:12px">
-          Options the chosen scope can't take are greyed out <em>with the reason</em> rather than hidden.
-          Non-interactive for CI and dotfiles:
+          Las opciones que el ámbito elegido no admite salen en gris <em>con el motivo</em>, no
+          escondidas. No interactivo para CI y dotfiles:
         </p>
-        <pre><button class="copy-mini" onclick="copyEl('initcmd')">copy</button><span id="initcmd">vibeward init --scope user --all --yes</span></pre>
+        <pre><button class="copy-mini" onclick="copyEl('initcmd')">copiar</button><span id="initcmd">vibeward init --scope user --all --yes</span></pre>
         <p style="margin-top:14px;font-size:13.6px">
-          Security findings are never auto-fixed. Deleting an exposed key from a bundle does not
-          un-leak it — only the owner decides when it is rotated and whether the incident has to
-          be disclosed.
+          Los hallazgos de seguridad nunca se arreglan solos. Borrar una clave expuesta de un bundle
+          no la des-filtra — solo el dueño decide cuándo se rota y si el incidente hay que comunicarlo.
         </p>
       </div>
     </div>
@@ -876,18 +879,18 @@
   <section>
     <div class="head" data-reveal>
       <span class="k">vibeward.json</span>
-      <h2 class="sec-title">Some “problems” are decisions</h2>
+      <h2 class="sec-title">Algunos “problemas” son decisiones</h2>
       <p class="sec-lead">
-        Declare what the site is meant to be and vibeward checks reality against it. An
-        <span class="lit">internal</span> tool is not judged on sitemaps or Open Graph — but still on
-        broken assets and <span class="lit">alt</span> text.
+        Declara qué se supone que es el sitio y vibeward contrasta la realidad con eso. A una
+        herramienta <span class="lit">internal</span> no se la juzga por sitemaps ni Open Graph — pero
+        sí por assets rotos y texto <span class="lit">alt</span>.
       </p>
     </div>
 
     <div class="two">
       <div class="panel" data-reveal>
-        <span class="k">Declare it</span>
-        <h3>Intent, not a mute button</h3>
+        <span class="k">Decláralo</span>
+        <h3>Intención, no un botón de silencio</h3>
         <pre>{
   <span class="c">"schemaVersion"</span>: 1,
   <span class="c">"intent"</span>: {
@@ -901,19 +904,19 @@
 }</pre>
       </div>
       <div class="panel" data-reveal>
-        <span class="k">What it does with that</span>
-        <h3>It turns the question around</h3>
+        <span class="k">Qué hace con eso</span>
+        <h3>Le da la vuelta a la pregunta</h3>
         <p>
-          Saying <span class="lit">aiCrawlers: "blocked"</span> stops vibeward calling that a mistake —
-          and asks the better question instead: <em>are you blocked as thoroughly as you think?</em>
-          If your robots.txt shuts out three of the twelve AI crawlers, that incomplete block is now
-          the finding. Believing you are closed while nine crawlers walk in is worse than not having decided.
+          Decir <span class="lit">aiCrawlers: "blocked"</span> hace que vibeward deje de llamarlo error —
+          y plantea la pregunta mejor: <em>¿estás bloqueado tan a fondo como crees?</em> Si tu robots.txt
+          cierra la puerta a tres de los doce crawlers de IA, ese bloqueo incompleto pasa a ser el
+          hallazgo. Creerte cerrado mientras entran nueve es peor que no haber decidido nada.
         </p>
         <p style="margin-top:13px">
-          And nothing is ever hidden. Every suppression needs a written reason, the report prints
-          <em>“produced with N suppression(s) in effect”</em> right under the verdict and lists each one.
-          Only website checks can be suppressed at all — a verdict anyone can edit their way out of
-          is not a verdict.
+          Y nunca se esconde nada. Cada supresión exige un motivo escrito, el informe imprime
+          <em>“producido con N supresión(es) activas”</em> justo bajo el veredicto y las lista una a una.
+          Solo se pueden suprimir comprobaciones de web — un veredicto del que cualquiera puede salir
+          editando un fichero no es un veredicto.
         </p>
       </div>
     </div>
@@ -922,26 +925,26 @@
   <!-- ── modes ────────────────────────────────────────── -->
   <section>
     <div class="head" data-reveal>
-      <span class="k">Four ways to run it</span>
-      <h2 class="sec-title">From the outside, from the code, or from your pipeline</h2>
+      <span class="k">Cuatro formas de ejecutarlo</span>
+      <h2 class="sec-title">Desde fuera, desde el código, o desde tu pipeline</h2>
     </div>
     <div class="three">
       <div class="panel" data-reveal>
-        <span class="k">Black-box · a URL</span>
-        <h3>Outside-in</h3>
-        <p>Bundles, live Supabase and Firebase probing, headers, source maps — and the whole website pass. <span class="lit">--passive</span> narrows it to what a browser already downloads, with no data probing at all.</p>
+        <span class="k">Caja negra · una URL</span>
+        <h3>De fuera hacia dentro</h3>
+        <p>Bundles, sondeo en vivo de Supabase y Firebase, cabeceras, source maps — y toda la pasada de web. <span class="lit">--passive</span> lo reduce a lo que un navegador ya se descarga, sin sondear datos en absoluto.</p>
         <pre><span class="d">$</span> vibeward https://app.lovable.app</pre>
       </div>
       <div class="panel" data-reveal>
-        <span class="k">White-box · a folder</span>
-        <h3>Deep audit</h3>
-        <p>A repo, or a ZIP straight out of v0 or Bolt. Reads source, backend and SQL migrations — tables created without RLS, <span class="lit">USING (true)</span> policies, <span class="lit">SECURITY DEFINER</span> functions.</p>
+        <span class="k">Caja blanca · una carpeta</span>
+        <h3>Auditoría profunda</h3>
+        <p>Un repo, o un ZIP recién salido de v0 o Bolt. Lee el código, el backend y las migraciones SQL — tablas creadas sin RLS, policies <span class="lit">USING (true)</span>, funciones <span class="lit">SECURITY DEFINER</span>.</p>
         <pre><span class="d">$</span> vibeward scan ./client-app</pre>
       </div>
       <div class="panel" data-reveal>
-        <span class="k">Agents &amp; CI</span>
-        <h3>Machine mode</h3>
-        <p>JSON on stdout, every human-facing line on stderr, so it pipes straight into a parser. The payload carries a <span class="lit">schemaVersion</span> — if the shape changes, that number changes with it.</p>
+        <span class="k">Agentes y CI</span>
+        <h3>Modo máquina</h3>
+        <p>JSON en stdout, cada línea para humanos en stderr, así que entra directo en un parser. El payload lleva un <span class="lit">schemaVersion</span> — si la forma cambia, ese número cambia con ella.</p>
         <pre><span class="d">$</span> vibeward https://app.com \
     --json --stdout --yes</pre>
       </div>
@@ -949,9 +952,9 @@
 
     <div class="panel" data-reveal style="margin-top:14px">
       <span class="k">GitHub Action</span>
-      <h3>Or let it run itself, on every push</h3>
-      <p>Findings upload as SARIF and land in the repo's Security tab. The job fails on a critical — website findings never change the exit code. Point it at a folder with <span class="lit">path</span>, or at a deployed URL with <span class="lit">url</span>.</p>
-      <pre><button class="copy-mini" onclick="copyEl('gha')">copy</button><span id="gha">- uses: JSiapoDEV/vibeward@v0.4.0
+      <h3>O deja que se ejecute solo, en cada push</h3>
+      <p>Los hallazgos se suben como SARIF y aterrizan en la pestaña Security del repo. El job falla ante un crítico — los hallazgos de web nunca cambian el código de salida. Apúntalo a una carpeta con <span class="lit">path</span>, o a una URL desplegada con <span class="lit">url</span>.</p>
+      <pre><button class="copy-mini" onclick="copyEl('gha')">copiar</button><span id="gha">- uses: JSiapoDEV/vibeward@v0.4.0
   with:
     url: https://your-app.com</span></pre>
     </div>
@@ -960,18 +963,18 @@
   <!-- ── sample finding ───────────────────────────────── -->
   <section>
     <div class="head" data-reveal>
-      <span class="k">Every finding</span>
-      <h2 class="sec-title">Context, not a red flag</h2>
-      <p class="sec-lead">Enough for a person to grasp the risk in five seconds, and enough for an agent to open a correct pull request.</p>
+      <span class="k">Cada hallazgo</span>
+      <h2 class="sec-title">Contexto, no una bandera roja</h2>
+      <p class="sec-lead">Suficiente para que una persona capte el riesgo en cinco segundos, y suficiente para que un agente abra un pull request correcto.</p>
     </div>
     <div class="finding" data-reveal>
-      <div class="ttl"><span class="sev">CRITICAL</span> Table <code>users</code> is readable without authentication</div>
+      <div class="ttl"><span class="sev">CRÍTICO</span> La tabla <code>users</code> es legible sin autenticación</div>
       <div class="rows">
-        <div class="row"><b>Classification</b> CWE-863 · Incorrect Authorization</div>
-        <div class="row"><b>Evidence</b> 1,847 rows returned with only the public anon key. Sensitive columns present: <code>email</code>, <code>phone</code>, <code>full_name</code>.</div>
-        <div class="row"><b>How it's exploited</b> Any visitor sends <code>GET /rest/v1/users?select=*</code> with the anon key lifted from the JS bundle. Every row comes back. No login.</div>
-        <div class="row"><b>Impact</b> ~1,847 user records readable by anyone on the internet right now. An active personal-data leak, not a theoretical one.</div>
-        <div class="row"><b>Fix</b> <code>autofix: manual</code> — enable RLS and add an owner policy, then rotate nothing: the anon key is public by design. The exposure was the missing policy.</div>
+        <div class="row"><b>Clasificación</b> CWE-863 · Autorización incorrecta</div>
+        <div class="row"><b>Evidencia</b> 1.847 filas devueltas solo con la anon key pública. Columnas sensibles presentes: <code>email</code>, <code>phone</code>, <code>full_name</code>.</div>
+        <div class="row"><b>Cómo se explota</b> Cualquier visitante lanza <code>GET /rest/v1/users?select=*</code> con la anon key sacada del bundle JS. Vuelven todas las filas. Sin login.</div>
+        <div class="row"><b>Impacto</b> ~1.847 registros de usuario legibles por cualquiera en internet ahora mismo. Una fuga de datos personales activa, no teórica.</div>
+        <div class="row"><b>Arreglo</b> <code>autofix: manual</code> — activa el RLS y añade una policy de propietario; no rotes nada: la anon key es pública por diseño. La exposición era la policy que faltaba.</div>
       </div>
     </div>
   </section>
@@ -979,53 +982,53 @@
   <!-- ── faq ──────────────────────────────────────────── -->
   <section id="faq">
     <div class="head" data-reveal>
-      <span class="k">Before you run it</span>
-      <h2 class="sec-title">Questions people ask</h2>
+      <span class="k">Antes de ejecutarlo</span>
+      <h2 class="sec-title">Lo que la gente pregunta</h2>
     </div>
     <div class="faq" data-reveal>
       <details>
-        <summary>Does it exploit or change anything?</summary>
-        <p class="a">Scanning is read-only: it reads your code, bundles and public responses to <em>detect</em> risk — never modifying, deleting or exploiting. The one exception is an explicit, opt-in <span class="lit">--write-test</span> that sends a single non-mutating write probe (an empty insert) to check for unauthenticated writes; it stays off unless you ask. <span class="lit">init</span> is the only command that writes, and only into your own project.</p>
+        <summary>¿Explota o modifica algo?</summary>
+        <p class="a">El escaneo es de solo lectura: lee tu código, tus bundles y las respuestas públicas para <em>detectar</em> riesgo — nunca modifica, borra ni explota. La única excepción es <span class="lit">--write-test</span>, explícita y opcional, que envía una sola sonda de escritura no destructiva (un insert vacío) para comprobar escrituras sin autenticar; está apagada salvo que la pidas. <span class="lit">init</span> es el único comando que escribe, y solo dentro de tu propio proyecto.</p>
       </details>
       <details>
-        <summary>Can a missing favicon fail my build?</summary>
-        <p class="a">No. Website findings are excluded from the severity counts, from the SARIF file and from the exit code — by design, not by configuration. Only security findings gate. If you don't want them in the report at all, <span class="lit">--no-web</span> skips the whole pass.</p>
+        <summary>¿Un favicon que falta puede tumbarme el build?</summary>
+        <p class="a">No. Los hallazgos de web quedan excluidos del recuento por severidad, del fichero SARIF y del código de salida — por diseño, no por configuración. Solo la seguridad bloquea. Si no los quieres ni en el informe, <span class="lit">--no-web</span> se salta la pasada entera.</p>
       </details>
       <details>
-        <summary>Does it catch the bug behind the Moltbook and Lovable leaks?</summary>
-        <p class="a">Yes — that's the flagship check. It finds the public Supabase key in your bundle (a JWT or the new-format <span class="lit">sb_publishable_</span>), enumerates every exposed table live, and flags which ones return data with no login. That is the exact failure mode behind Moltbook — <span class="lit">agents</span>, <span class="lit">owners</span>, <span class="lit">agent_messages</span> and <span class="lit">observers</span> readable by anyone, and public tables writable too. To be precise about what the check is <em>not</em>: finding the <span class="lit">sb_publishable_</span> key in a bundle is not the finding. That key belongs in the client by design. The finding is a table that answers it.</p>
+        <summary>¿Detecta el fallo detrás de las fugas de Moltbook y Lovable?</summary>
+        <p class="a">Sí — es la comprobación estrella. Encuentra la clave pública de Supabase en tu bundle (un JWT o el nuevo formato <span class="lit">sb_publishable_</span>), enumera en vivo cada tabla expuesta, y marca cuáles devuelven datos sin login. Ese es exactamente el modo de fallo de Moltbook — <span class="lit">agents</span>, <span class="lit">owners</span>, <span class="lit">agent_messages</span> y <span class="lit">observers</span> legibles por cualquiera, y las tablas públicas además escribibles. Para ser precisos sobre lo que la comprobación <em>no</em> es: encontrar la clave <span class="lit">sb_publishable_</span> en un bundle no es el hallazgo. Esa clave va en el cliente por diseño. El hallazgo es una tabla que le responde.</p>
       </details>
       <details>
-        <summary>Is this Lighthouse for AI apps?</summary>
-        <p class="a">No. vibeward tests <em>binary absences</em> — a tag that isn't in the HTML, a file that was never generated, a crawler that was turned away. Those are the things a generator skips and nobody goes back for. Core Web Vitals, performance budgets and full WCAG auditing are deliberately out of scope; run Lighthouse for those.</p>
+        <summary>¿Esto es un Lighthouse para apps de IA?</summary>
+        <p class="a">No. vibeward comprueba <em>ausencias binarias</em> — una etiqueta que no está en el HTML, un fichero que nunca se generó, un crawler al que se echó. Son las cosas que un generador se salta y a las que nadie vuelve. Core Web Vitals, presupuestos de rendimiento y una auditoría WCAG completa quedan fuera de alcance a propósito; para eso ejecuta Lighthouse.</p>
       </details>
       <details>
-        <summary>Does my code leave my machine?</summary>
-        <p class="a">Never. The scanner and the guardrail run entirely locally — no telemetry, no account, no upload. The only outbound request is to the URL <em>you</em> point it at.</p>
+        <summary>¿Mi código sale de mi máquina?</summary>
+        <p class="a">Nunca. El escáner y el guardarraíl corren enteramente en local — sin telemetría, sin cuenta, sin subidas. La única petición saliente es a la URL a la que <em>tú</em> lo apuntas.</p>
       </details>
       <details>
-        <summary>Can I silence a check I disagree with?</summary>
-        <p class="a">Website checks only, and never silently. Each entry in <span class="lit">vibeward.json</span> requires a written reason, and the report states how many suppressions were in effect and what each one claimed. Security findings can't be silenced by a config file — otherwise anyone could pass their own audit by editing a file.</p>
+        <summary>¿Puedo silenciar una comprobación con la que no estoy de acuerdo?</summary>
+        <p class="a">Solo las de web, y nunca en silencio. Cada entrada de <span class="lit">vibeward.json</span> exige un motivo escrito, y el informe indica cuántas supresiones estaban activas y qué alegaba cada una. Los hallazgos de seguridad no se pueden silenciar desde un fichero de configuración — si no, cualquiera aprobaría su propia auditoría editando un fichero.</p>
       </details>
       <details>
-        <summary>Is the guardrail an LLM?</summary>
-        <p class="a">No — and that's the point. It's a deterministic rule engine, so it can't be talked out of blocking. <span class="lit">"ignore previous instructions"</span> does not work on it.</p>
+        <summary>¿El guardarraíl es un LLM?</summary>
+        <p class="a">No, y ese es el punto. Es un motor de reglas determinista, así que no se le puede convencer. <span class="lit">"ignora las instrucciones anteriores"</span> no funciona contra él.</p>
       </details>
       <details>
-        <summary>Do I need Supabase? Or a specific framework?</summary>
-        <p class="a">Neither. Supabase RLS is one check among many: Firebase, exposed secrets, insecure backends, source maps, headers and the entire website pass work on any stack. Point it at any repo, ZIP or URL.</p>
+        <summary>¿Necesito Supabase? ¿O algún framework concreto?</summary>
+        <p class="a">Ninguno. El RLS de Supabase es una comprobación entre muchas: Firebase, claves expuestas, backends inseguros, source maps, cabeceras y toda la pasada de web funcionan en cualquier stack. Apúntalo a cualquier repo, ZIP o URL.</p>
       </details>
     </div>
 
-    <h3 style="font-family:var(--sans);font-size:15px;font-weight:600;margin:38px 0 0">What vibeward does <em>not</em> do</h3>
+    <h3 style="font-family:var(--sans);font-size:15px;font-weight:600;margin:38px 0 0">Lo que vibeward <em>no</em> hace</h3>
     <div class="notdo" data-reveal>
-      <span>exploit or attack</span>
-      <span>modify your code</span>
-      <span>send your code anywhere</span>
-      <span>need an account or a key</span>
-      <span>replace a full pentest</span>
-      <span>ask an LLM to decide</span>
-      <span>auto-fix a security finding</span>
+      <span>explotar ni atacar</span>
+      <span>modificar tu código</span>
+      <span>enviar tu código a ningún sitio</span>
+      <span>pedir una cuenta o una clave</span>
+      <span>sustituir un pentest completo</span>
+      <span>preguntarle a un LLM qué decidir</span>
+      <span>arreglar solo un hallazgo de seguridad</span>
     </div>
   </section>
 
@@ -1033,37 +1036,37 @@
   <!-- ── audits ───────────────────────────────────────── -->
   <section id="audits">
     <div class="panel" data-reveal>
-      <span class="k">The half a scanner cannot do</span>
-      <h3>Want a person to read it?</h3>
+      <span class="k">La mitad que un escáner no puede hacer</span>
+      <h3>¿Quieres que lo lea una persona?</h3>
       <p>
-        vibeward finds what is visible from outside and from the code. It does not find broken
-        object-level authorization behind a login, a tenant boundary that holds on the first
-        request and leaks on the third, or business logic that was wrong before anyone typed a
-        prompt. That is not modesty — it is in the README, because a scanner claiming otherwise is
-        the reason people trust a green checkmark they should not.
+        vibeward encuentra lo visible desde fuera y desde el código. No encuentra autorización rota
+        a nivel de objeto detrás de un login, un límite entre inquilinos que aguanta en la primera
+        petición y se rompe en la tercera, ni lógica de negocio que ya estaba mal antes de que nadie
+        escribiera un prompt. No es modestia — está en el README, porque un escáner que diga lo
+        contrario es la razón por la que la gente se fía de un tick verde del que no debería fiarse.
       </p>
       <p>
-        Those need someone reading your app, and that is the work I do: Supabase and Firebase
-        rules, auth boundaries, and a written report specific enough for your own agent to act on.
-        <a href="https://cal.com/jsiapo">Book 20 minutes</a> — bring the URL.
+        Eso necesita a alguien leyendo tu app, y es el trabajo que hago: reglas de Supabase y
+        Firebase, fronteras de autenticación, y un informe escrito lo bastante concreto como para que
+        tu propio agente actúe sobre él. <a href="https://cal.com/jsiapo">Reserva 20 minutos</a> — trae la URL.
       </p>
       <p style="color:var(--ink-4);font-size:13.6px">
-        The tool stays free and MIT regardless. There is no paid tier and nothing is held back
-        from it.
+        La herramienta sigue siendo gratis y MIT pase lo que pase. No hay plan de pago ni nada
+        reservado fuera de ella.
       </p>
     </div>
   </section>
 
   <section class="closer">
     <div data-reveal>
-      <span class="k">Five seconds</span>
-      <h2 class="sec-title">Point it at something you own</h2>
-      <p class="sec-lead">No install, always the latest, read-only. Run it only against apps whose owner authorized the audit.</p>
+      <span class="k">Cinco segundos</span>
+      <h2 class="sec-title">Apúntalo a algo que sea tuyo</h2>
+      <p class="sec-lead">Sin instalar, siempre la última versión, solo lectura. Ejecútalo únicamente contra apps cuyo dueño haya autorizado la auditoría.</p>
       <div class="cmd">
         <code id="cmd2"><span class="p">$</span> npx vibeward@latest scan ./your-app</code>
-        <button onclick="copyCmd('cmd2')">copy</button>
+        <button onclick="copyCmd('cmd2')">copiar</button>
       </div>
-      <div style="margin-top:24px"><a class="btn primary" href="https://github.com/JSiapoDEV/vibeward">Star it on GitHub</a></div>
+      <div style="margin-top:24px"><a class="btn primary" href="https://github.com/JSiapoDEV/vibeward">Dale una estrella en GitHub</a></div>
     </div>
   </section>
 
@@ -1074,7 +1077,7 @@
         <path d="M37 40 L49 50 L37 60" fill="none" stroke="#F0EEE6" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
         <line x1="54" y1="60" x2="67" y2="60" stroke="#F0EEE6" stroke-width="7" stroke-linecap="round"/>
       </svg>
-      vibeward · MIT · built in Lima 🇵🇪
+      vibeward · MIT · hecho en Lima 🇵🇪
     </div>
     <div>
       <a href="https://github.com/JSiapoDEV/vibeward">GitHub</a> ·
@@ -1085,7 +1088,7 @@
 
 </div>
 
-<div class="toast" id="toast">copied</div>
+<div class="toast" id="toast">copiado</div>
 
 <script>
   function flashToast() {
@@ -1107,7 +1110,7 @@
     var root = document.documentElement;
     var btn = document.getElementById('themeBtn');
     var meta = document.querySelector('meta[name="theme-color"]');
-    var LABEL = { dark: 'Switch to the light theme', light: 'Switch to the dark theme' };
+    var LABEL = { dark: 'Cambiar al tema claro', light: 'Cambiar al tema oscuro' };
     var CHROME = { dark: '#16150F', light: '#F0EEE6' };
 
     function apply(theme) {

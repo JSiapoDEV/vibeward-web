@@ -7,6 +7,15 @@
 <meta name="description" content="That page does not exist on vibeward.ai. Head back to the scanner for AI-generated apps and websites." />
 <meta name="robots" content="noindex, follow" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<meta name="theme-color" content="#16150F" />
+<script>
+// Same pre-paint theme read as index.html, so a 404 does not flash the other palette.
+(function () {
+  var t = null;
+  try { t = localStorage.getItem('vw-theme'); } catch (e) {}
+  document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+})();
+</script>
 <style>
   /* Self-hosted: the site's CSP is `style-src 'self' 'unsafe-inline'; font-src 'self'`,
      which blocks a fonts.googleapis.com stylesheet. See index.html. */
@@ -28,13 +37,21 @@
     src: url(/fonts/ibm-plex-mono-500.woff2) format('woff2');
   }
 
+  /* Dark on bare :root, matching index.html — see the note there. */
   :root {
-    --paper: #F0EEE6; --card: #FAF9F5; --line: #DFDACE;
-    --ink: #141413; --ink-3: #6C6A61; --ink-4: #96938A;
-    --clay: #D97757; --clay-deep: #B85A38; --clay-wash: #F6E7DF; --clay-line: #E8CBBB;
+    --paper: #16150F; --card: #1C1A15; --line: #35312A;
+    --ink: #EDE9DE; --ink-3: #99938A; --ink-4: #736E66;
+    --clay: #E08A66; --clay-deep: #EFA684; --clay-wash: #2B1E17; --clay-line: #4A3527;
+    --on-accent: #1A120D;
     --serif: "Newsreader", Georgia, serif;
     --sans: "Instrument Sans", -apple-system, BlinkMacSystemFont, sans-serif;
     --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+  :root[data-theme="light"] {
+    --paper: #F0EEE6; --card: #FAF9F5; --line: #DFDACE;
+    --ink: #141413; --ink-3: #6C6A61; --ink-4: #96938A;
+    --clay: #D97757; --clay-deep: #B85A38; --clay-wash: #F6E7DF; --clay-line: #E8CBBB;
+    --on-accent: #FFF9F6;
   }
   * { box-sizing: border-box; }
   body {
@@ -43,9 +60,10 @@
     display: grid; place-items: center; padding: 40px 26px;
   }
   body::before {
-    content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .5;
+    content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .28;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.055'/%3E%3C/svg%3E");
   }
+  :root[data-theme="light"] body::before { opacity: .5; }
   main { position: relative; max-width: 30rem; text-align: center; }
   .code {
     display: inline-block; font-family: var(--mono); font-size: 11.5px; letter-spacing: .13em;
@@ -61,7 +79,7 @@
   .btn {
     display: inline-flex; align-items: center; gap: 8px; margin-top: 28px;
     font-weight: 500; font-size: 14.5px; padding: 11px 20px; border-radius: 100px;
-    background: var(--clay); color: #FFF9F6; border: 1px solid var(--clay); text-decoration: none;
+    background: var(--clay); color: var(--on-accent); border: 1px solid var(--clay); text-decoration: none;
     box-shadow: 0 10px 22px -12px rgba(184,90,56,.5); transition: background .18s, transform .18s;
   }
   .btn:hover { background: var(--clay-deep); transform: translateY(-1px); }

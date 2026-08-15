@@ -51,3 +51,4 @@ That remaining half is manual work. José Siapo, who wrote vibeward, takes paid 
 - [README and usage](https://github.com/JSiapoDEV/vibeward)
 - [npm package](https://www.npmjs.com/package/vibeward)
 - [Full text for LLMs](https://vibeward.ai/llms-full.txt)
+- [Spanish landing page](https://vibeward.ai/es/) — same content in Spanish (`hreflang` alternates are declared on both)

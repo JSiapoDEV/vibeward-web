@@ -342,5 +342,6 @@ back from it.
 - GitHub: https://github.com/JSiapoDEV/vibeward
 - npm: https://www.npmjs.com/package/vibeward
 - Site: https://vibeward.ai
+- Site (Spanish): https://vibeward.ai/es/
 - Audits: https://cal.com/jsiapo
 - License: MIT
