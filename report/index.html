@@ -13,6 +13,9 @@
 <meta property="og:title" content="Sample report · vibeward">
 <meta property="og:description" content="A complete, unedited vibeward report, produced by scanning a deliberately broken demo app. See what the tool prints before installing anything.">
 <meta property="og:url" content="https://vibeward.ai/report/">
+<meta property="og:image" content="https://vibeward.ai/avatar-512.png">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Sample report · vibeward","description":"A complete, unedited vibeward report, produced by scanning a deliberately broken demo app. See what the tool prints before installing anything.","inLanguage":"en","url":"https://vibeward.ai/report/","isPartOf":{"@type":"WebSite","name":"vibeward","url":"https://vibeward.ai"},"author":{"@type":"Person","name":"José Siapo","url":"https://github.com/JSiapoDEV"},"about":{"@type":"SoftwareApplication","name":"vibeward","applicationCategory":"DeveloperApplication","url":"https://vibeward.ai"}}</script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>@font-face {
     font-family: 'Newsreader'; font-style: normal; font-weight: 300 700; font-display: swap;
@@ -120,12 +123,12 @@ h1.page{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:clamp(3
 .note p{margin:0 0 12px;font-size:15px}
 .note p:last-child{margin-bottom:0}
 .report{margin:44px 0 0;padding:34px 0 0;border-top:1px solid var(--line)}
-.report h1{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:28px;margin:0 0 22px}
-.report h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;
+.report h2:first-child{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:28px;margin:0 0 22px}
+.report h3{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;
   margin:44px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line-soft)}
-.report h3{font-size:17px;margin:34px 0 12px;font-weight:600;letter-spacing:-.01em}
-.report h4{font-size:15.5px;margin:26px 0 10px;font-weight:600}
-.report h3.f,.report h4.f{padding-left:13px;border-left:3px solid var(--line-strong,var(--line))}
+.report h4{font-size:17px;margin:34px 0 12px;font-weight:600;letter-spacing:-.01em}
+.report h5{font-size:15.5px;margin:26px 0 10px;font-weight:600}
+.report h4.f,.report h5.f{padding-left:13px;border-left:3px solid var(--line-strong,var(--line))}
 .report .crit{border-left-color:var(--crit)}
 .report .high{border-left-color:var(--clay)}
 .report .med{border-left-color:var(--amber)}
@@ -178,17 +181,17 @@ footer.btm a{color:color-mix(in srgb,var(--ink) 78%,transparent)}
       <p>The website section is scored on its own scale. It never affects the security verdict, the SARIF file or the exit code — a missing favicon is not a finding next to a leaked credential.</p>
     </div>
   </section>
-  <article class="report"><h1>Audit Report</h1>
+  <article class="report"><h2>Audit Report</h2>
 <p><strong>Application:</strong> http://localhost:8099/</p>
 <p><strong>Date:</strong> 2026-08-16</p>
 <p><strong>Scope:</strong> Automated, non-destructive analysis of the public frontend and data API, plus website quality and AI visibility. Does not include manual penetration testing or server-side code review.</p>
 <hr>
-<h2>Executive summary</h2>
+<h3>Executive summary</h3>
 <blockquote><strong>NEEDS URGENT ATTENTION before staying in production.</strong></blockquote>
 <div class="tw"><table><thead><tr><th>Severity</th><th>Findings</th></tr></thead><tbody><tr class="crit"><td>🔴 Critical</td><td>0</td></tr><tr class="high"><td>🟠 High</td><td>1</td></tr><tr class="med"><td>🟡 Medium</td><td>2</td></tr><tr class="low"><td>⚪ Low</td><td>4</td></tr></tbody></table></div>
 <p>Separately, <strong>12 website quality issue(s)</strong> were found — see the section below. They do not affect the security verdict.</p>
-<h2>Detailed findings</h2>
-<h3 class="f high">1. 🟠 HIGH — Hardcoded bearer token in client code</h3>
+<h3>Detailed findings</h3>
+<h4 class="f high">1. 🟠 HIGH — Hardcoded bearer token in client code</h4>
 <p><strong>Classification:</strong> CWE-798</p>
 <p><strong>Where:</strong> http://localhost:8099/assets/app.js</p>
 <p><strong>Evidence:</strong> Authorization: Bearer 7d3f1a9c…d2b6</p>
@@ -196,14 +199,14 @@ footer.btm a{color:color-mix(in srgb,var(--ink) 78%,transparent)}
 <p><strong>Why it matters:</strong> A bearer token compiled into the bundle is a shared secret handed to every visitor, and it cannot be revoked for one person without revoking it for all. Whether that grants access to anything depends on what the server does with it — but a static token in client code is not authentication, and if it is the only check, the API is effectively public.</p>
 <p><strong>References:</strong> <a href="https://cwe.mitre.org/data/definitions/798.html" rel="noopener noreferrer nofollow">https://cwe.mitre.org/data/definitions/798.html</a> · <a href="https://cwe.mitre.org/data/definitions/798.html" rel="noopener noreferrer nofollow">https://cwe.mitre.org/data/definitions/798.html</a></p>
 <p><em>Checklist item 1.</em></p>
-<h3 class="f med">2. 🟡 MEDIUM — Missing Content-Security-Policy header</h3>
+<h4 class="f med">2. 🟡 MEDIUM — Missing Content-Security-Policy header</h4>
 <p><strong>Classification:</strong> CWE-693</p>
 <p><strong>Evidence:</strong> Absent from the response</p>
 <p><strong>How it's exploited:</strong> Without a CSP, an injected or third-party script can load and run from any origin, exfiltrating tokens or user data.</p>
 <p><strong>Why it matters:</strong> The main defense-in-depth against cross-site scripting is missing.</p>
 <p><strong>References:</strong> <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP" rel="noopener noreferrer nofollow">https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP</a> · <a href="https://cwe.mitre.org/data/definitions/693.html" rel="noopener noreferrer nofollow">https://cwe.mitre.org/data/definitions/693.html</a></p>
 <p><em>Checklist item 22.</em></p>
-<h3 class="f med">3. 🟡 MEDIUM — Source map exposed — original source code is downloadable</h3>
+<h4 class="f med">3. 🟡 MEDIUM — Source map exposed — original source code is downloadable</h4>
 <p><strong>Classification:</strong> CWE-540</p>
 <p><strong>Where:</strong> http://localhost:8099/assets/app.js.map</p>
 <p><strong>Evidence:</strong> http://localhost:8099/assets/app.js.map is served publicly and embeds the full original source (sourcesContent).</p>
@@ -212,28 +215,28 @@ footer.btm a{color:color-mix(in srgb,var(--ink) 78%,transparent)}
 <p><strong>Why it matters:</strong> Production builds should not ship source maps to the public. Disable source-map emission for prod, or strip the <code>.map</code> files from the deployed output.</p>
 <p><strong>References:</strong> <a href="https://cwe.mitre.org/data/definitions/540.html" rel="noopener noreferrer nofollow">https://cwe.mitre.org/data/definitions/540.html</a> · <a href="https://webpack.js.org/configuration/devtool/" rel="noopener noreferrer nofollow">https://webpack.js.org/configuration/devtool/</a></p>
 <p><em>Checklist item 23.</em></p>
-<h3 class="f low">4. ⚪ LOW — Missing Strict-Transport-Security (HSTS) header</h3>
+<h4 class="f low">4. ⚪ LOW — Missing Strict-Transport-Security (HSTS) header</h4>
 <p><strong>Classification:</strong> CWE-319</p>
 <p><strong>Evidence:</strong> Absent from the response</p>
 <p><strong>How it's exploited:</strong> An on-path attacker can force a victim onto plain HTTP on the first request and intercept credentials or session cookies.</p>
 <p><strong>Why it matters:</strong> HTTPS is not pinned for future visits, so the browser is willing to try plain HTTP again next time. The header tells it never to, for a stated period — <code>Strict-Transport-Security: max-age=63072000; includeSubDomains</code> is the usual setting, and it belongs on the CDN or the server, not in the page.</p>
 <p><strong>References:</strong> <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security" rel="noopener noreferrer nofollow">https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security</a></p>
 <p><em>Checklist item 22.</em></p>
-<h3 class="f low">5. ⚪ LOW — Missing X-Frame-Options header</h3>
+<h4 class="f low">5. ⚪ LOW — Missing X-Frame-Options header</h4>
 <p><strong>Classification:</strong> CWE-1021</p>
 <p><strong>Evidence:</strong> Absent from the response</p>
 <p><strong>How it's exploited:</strong> The app can be embedded in a hidden iframe on a malicious page to trick users into clicking actions (clickjacking).</p>
 <p><strong>Why it matters:</strong> No framing protection (also settable via CSP frame-ancestors).</p>
 <p><strong>References:</strong> <a href="https://cwe.mitre.org/data/definitions/1021.html" rel="noopener noreferrer nofollow">https://cwe.mitre.org/data/definitions/1021.html</a></p>
 <p><em>Checklist item 22.</em></p>
-<h3 class="f low">6. ⚪ LOW — Missing X-Content-Type-Options header</h3>
+<h4 class="f low">6. ⚪ LOW — Missing X-Content-Type-Options header</h4>
 <p><strong>Classification:</strong> CWE-430</p>
 <p><strong>Evidence:</strong> Absent from the response</p>
 <p><strong>How it's exploited:</strong> The browser may MIME-sniff a response as a different type than declared, enabling some script-execution attacks.</p>
 <p><strong>Why it matters:</strong> Without <code>X-Content-Type-Options: nosniff</code> the browser is allowed to second-guess the declared Content-Type and treat a file as whatever its bytes look like. An uploaded image that happens to parse as script is the classic case. It is one header with one value and no trade-offs.</p>
 <p><strong>References:</strong> <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options" rel="noopener noreferrer nofollow">https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options</a></p>
 <p><em>Checklist item 22.</em></p>
-<h3 class="f low">7. ⚪ LOW — server header reveals technology</h3>
+<h4 class="f low">7. ⚪ LOW — server header reveals technology</h4>
 <p><strong>Classification:</strong> CWE-200</p>
 <p><strong>Evidence:</strong> server: SimpleHTTP/0.6 Python/3.9.6</p>
 <p><strong>How it's exploited:</strong> Revealing the framework/server and its version lets an attacker look up known CVEs for that exact stack.</p>
@@ -241,81 +244,81 @@ footer.btm a{color:color-mix(in srgb,var(--ink) 78%,transparent)}
 <p><strong>References:</strong> <a href="https://cwe.mitre.org/data/definitions/200.html" rel="noopener noreferrer nofollow">https://cwe.mitre.org/data/definitions/200.html</a></p>
 <p><em>Checklist item 23.</em></p>
 <hr>
-<h2>Website quality &amp; AI visibility</h2>
+<h3>Website quality &amp; AI visibility</h3>
 <blockquote>These findings <strong>do not</strong> affect the security verdict or the exit code. They cover how this site is read by search engines, social platforms and AI assistants.</blockquote>
 <p><strong>Vibe-coded fingerprint: 9/12</strong> — HTML carries no content — JavaScript renders everything · No meta description · No Open Graph tags · No canonical URL · No structured data · No sitemap.xml · No favicon · No lang on &lt;html&gt; · No llms.txt</p>
 <p><strong>5 of 17 checks passed.</strong></p>
 <div class="tw"><table><thead><tr><th>Check</th><th>Status</th><th>Impact</th><th>Note</th></tr></thead><tbody><tr class="ok"><td>robots.txt lets AI crawlers in</td><td>✅ ok</td><td>—</td><td>—</td></tr><tr class="low"><td>AI crawlers blocked as declared</td><td>⚪ not applicable</td><td>—</td><td>no declared intent to block AI crawlers</td></tr><tr class="crit"><td>HTML carries real content</td><td>❌</td><td>🔴 High impact</td><td>—</td></tr><tr class="crit"><td>No broken assets</td><td>❌</td><td>🔴 High impact</td><td>—</td></tr><tr class="low"><td>No JavaScript errors on load</td><td>⚪ not evaluated</td><td>—</td><td>no browser available</td></tr><tr class="crit"><td>Each page has its own &lt;title&gt;</td><td>❌</td><td>🔴 High impact</td><td>—</td></tr><tr class="ok"><td>&lt;title&gt; present</td><td>✅ ok</td><td>—</td><td>—</td></tr><tr class="med"><td>Meta description</td><td>❌</td><td>🟡 Medium impact</td><td>—</td></tr><tr class="med"><td>Open Graph tags</td><td>❌</td><td>🟡 Medium impact</td><td>—</td></tr><tr class="med"><td>Canonical URL</td><td>❌</td><td>🟡 Medium impact</td><td>—</td></tr><tr class="med"><td>Structured data (JSON-LD)</td><td>❌</td><td>🟡 Medium impact</td><td>—</td></tr><tr class="ok"><td>Exactly one &lt;h1&gt; per page</td><td>✅ ok</td><td>—</td><td>—</td></tr><tr class="med"><td>sitemap.xml</td><td>❌</td><td>🟡 Medium impact</td><td>—</td></tr><tr class="med"><td>llms.txt</td><td>❌</td><td>🟡 Medium impact</td><td>—</td></tr><tr class="med"><td>lang attribute on &lt;html&gt;</td><td>❌</td><td>🟡 Medium impact</td><td>—</td></tr><tr class="med"><td>Images have alt text</td><td>❌</td><td>🟡 Medium impact</td><td>—</td></tr><tr class="ok"><td>Unknown URLs return 404</td><td>✅ ok</td><td>—</td><td>—</td></tr><tr class="low"><td>Favicon</td><td>❌</td><td>⚪ Low impact</td><td>—</td></tr><tr class="ok"><td>JavaScript under 1 MB</td><td>✅ ok</td><td>—</td><td>—</td></tr></tbody></table></div>
-<h3>Website findings in detail</h3>
-<h4 class="f crit">1. 🔴 High impact — The HTML ships with no content</h4>
+<h4>Website findings in detail</h4>
+<h5 class="f crit">1. 🔴 High impact — The HTML ships with no content</h5>
 <p><strong>Evidence:</strong> The home page returns 90 characters of visible text before JavaScript runs (2 of 2 pages below 200 characters).</p>
 <p><strong>Impact:</strong> To anything that does not run JavaScript the site is a blank page: no headline, no copy, nothing to index or quote. Most AI crawlers never execute scripts, so the site simply does not exist for them.</p>
 <p><strong>Why it matters:</strong> A client-rendered shell hands crawlers an empty &lt;div&gt;. Google renders eventually and inconsistently; GPTBot, ClaudeBot and PerplexityBot do not render at all. Closing it is an architecture decision, not a text edit: either the real headline and first paragraph live inside the mount node in <code>index.html</code> so they are in the source before any script runs, or the pages are built by a renderer that emits HTML (Astro, Next.js server components, Vite SSG).</p>
 <p><strong>Pages:</strong> <code>http://localhost:8099/</code>, <code>http://localhost:8099/app.html</code></p>
-<h4 class="f crit">2. 🔴 High impact — Assets referenced by the site return an error</h4>
+<h5 class="f crit">2. 🔴 High impact — Assets referenced by the site return an error</h5>
 <p><strong>Evidence:</strong> 1 referenced file answers with 4xx/5xx — http://localhost:8099/logo.png → 404 (referenced from http://localhost:8099/)</p>
 <p><strong>Impact:</strong> Visitors see missing images, unstyled sections or a feature that never loads — the fastest way to look abandoned and lose the sale on the first screen.</p>
 <p><strong>Why it matters:</strong> The page points at files that are not deployed: a path that only exists locally, a renamed asset, or an image the build never copied. Assets served from the site root have to live in <code>public/</code> (Vite, Next.js, Astro) or <code>static/</code> (SvelteKit) for the build to copy them — otherwise the reference has to go.</p>
-<h4 class="f crit">3. 🔴 High impact — Every page has the same &lt;title&gt;</h4>
+<h5 class="f crit">3. 🔴 High impact — Every page has the same &lt;title&gt;</h5>
 <p><strong>Evidence:</strong> All 2 crawled pages send the same title: "Nimbus Invoices".</p>
 <p><strong>Impact:</strong> Every page competes for the same search result and none of them wins. The title is the blue line people click in Google and the label of every shared tab and bookmark.</p>
 <p><strong>Why it matters:</strong> Search engines treat identical titles as duplicate pages and pick one, dropping the rest. A one-page-app router that never updates the title is the usual cause. Each page needs its own <code>&lt;title&gt;</code> of roughly 50-60 characters, page subject first and brand last ("Pricing — Acme"); in a React SPA with no meta framework that means setting <code>document.title</code> per route.</p>
 <p><strong>Pages:</strong> <code>http://localhost:8099/</code>, <code>http://localhost:8099/app.html</code></p>
-<h4 class="f med">4. 🟡 Medium impact — Pages have no meta description</h4>
+<h5 class="f med">4. 🟡 Medium impact — Pages have no meta description</h5>
 <p><strong>Evidence:</strong> 2 of 2 pages have no &lt;meta name="description"&gt;.</p>
 <p><strong>Impact:</strong> Google fills the two lines under the link with whatever text it scrapes off the page, so the pitch a visitor reads before deciding to click is written by an algorithm instead of by the owner.</p>
 <p><strong>Why it matters:</strong> The description is the ad copy of the search result. It does not change ranking, it changes the click-through rate. One per page, 150-160 characters, written for a human deciding whether to click — a generic one is worse than none, because it looks written and so nobody ever writes the real one.</p>
 <p><strong>Pages:</strong> <code>http://localhost:8099/</code>, <code>http://localhost:8099/app.html</code></p>
-<h4 class="f med">5. 🟡 Medium impact — Pages have no Open Graph tags</h4>
+<h5 class="f med">5. 🟡 Medium impact — Pages have no Open Graph tags</h5>
 <p><strong>Evidence:</strong> 2 of 2 pages are missing og:title or og:image.</p>
 <p><strong>Impact:</strong> Shared on WhatsApp, LinkedIn, Slack or X the link renders as a naked URL with no image and no title, which people scroll past. Every share the site gets is wasted.</p>
 <p><strong>Why it matters:</strong> Open Graph tags are what social platforms and chat apps read to build the preview card. Without them there is no card. A complete set in each page's <code>&lt;head&gt;</code> is og:title, og:description, og:image, og:url and og:type, plus <code>twitter:card</code> set to <code>summary_large_image</code> — and og:image has to be a real 1200x630 image, since a missing one renders as a blank box rather than no card at all.</p>
 <p><strong>Pages:</strong> <code>http://localhost:8099/</code>, <code>http://localhost:8099/app.html</code></p>
 <p><strong>References:</strong> <a href="https://ogp.me/" rel="noopener noreferrer nofollow">https://ogp.me/</a></p>
-<h4 class="f med">6. 🟡 Medium impact — Pages declare no canonical URL</h4>
+<h5 class="f med">6. 🟡 Medium impact — Pages declare no canonical URL</h5>
 <p><strong>Evidence:</strong> 2 of 2 pages have no &lt;link rel="canonical"&gt;.</p>
 <p><strong>Impact:</strong> The same page reachable at www and non-www, with and without a trailing slash, or with a campaign parameter, is counted as several competing pages, splitting whatever authority the site has earned.</p>
 <p><strong>Why it matters:</strong> The canonical tag names the one real address of a page so duplicates consolidate into it instead of competing with it. Each page needs its own <code>&lt;link rel="canonical"&gt;</code> pointing at its own absolute URL (<code>http://localhost:8099/pricing</code> on the pricing page) — pointing every page at the home page is the common mistake, and it tells search engines the rest of the site does not exist.</p>
 <p><strong>Pages:</strong> <code>http://localhost:8099/</code>, <code>http://localhost:8099/app.html</code></p>
 <p><strong>References:</strong> <a href="https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls" rel="noopener noreferrer nofollow">https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls</a></p>
-<h4 class="f med">7. 🟡 Medium impact — No structured data (JSON-LD)</h4>
+<h5 class="f med">7. 🟡 Medium impact — No structured data (JSON-LD)</h5>
 <p><strong>Evidence:</strong> 2 of 2 pages contain no &lt;script type="application/ld+json"&gt; block.</p>
 <p><strong>Impact:</strong> Search engines and assistants have to guess what the business is, what it sells and where it is. Rich results (ratings, prices, FAQ, opening hours) are not available to a site that never declares them.</p>
 <p><strong>Why it matters:</strong> Structured data is the machine-readable version of the page. It is how an assistant answers "who are they and what do they do" with facts instead of guesses. The minimum is one <code>application/ld+json</code> block in the home page <code>&lt;head&gt;</code> declaring an <code>Organization</code> with the real name, url, logo, description and <code>sameAs</code> profile links — the values have to be true, because this is the copy an assistant repeats verbatim.</p>
 <p><strong>Pages:</strong> <code>http://localhost:8099/</code>, <code>http://localhost:8099/app.html</code></p>
 <p><strong>References:</strong> <a href="https://schema.org/Organization" rel="noopener noreferrer nofollow">https://schema.org/Organization</a></p>
-<h4 class="f med">8. 🟡 Medium impact — No sitemap.xml</h4>
+<h5 class="f med">8. 🟡 Medium impact — No sitemap.xml</h5>
 <p><strong>Evidence:</strong> http://localhost:8099/sitemap.xml is not served.</p>
 <p><strong>Impact:</strong> Pages that are not linked from the home page can go unnoticed for weeks or never get indexed at all, and every update takes longer to show up in search.</p>
 <p><strong>Why it matters:</strong> A sitemap is the list of pages the owner wants indexed. Without it crawlers only find what they happen to stumble on. It is a <code>urlset</code> of <code>&lt;loc&gt;</code> entries at <code>public/sitemap.xml</code> (<code>static/sitemap.xml</code> on SvelteKit), with a <code>Sitemap: http://localhost:8099/sitemap.xml</code> line in robots.txt pointing at it — this scan reached 2 pages, listed under "Pages scanned".</p>
 <p><strong>References:</strong> <a href="https://www.sitemaps.org/protocol.html" rel="noopener noreferrer nofollow">https://www.sitemaps.org/protocol.html</a></p>
-<h4 class="f med">9. 🟡 Medium impact — No llms.txt</h4>
+<h5 class="f med">9. 🟡 Medium impact — No llms.txt</h5>
 <p><strong>Evidence:</strong> http://localhost:8099/llms.txt is not served.</p>
 <p><strong>Impact:</strong> When an assistant is asked about this business it has to reconstruct the offer from whatever markup it can parse. A short curated file is the difference between being described accurately and being described wrong.</p>
 <p><strong>Why it matters:</strong> llms.txt is the plain-text summary an AI reads first: what the site is, who it is for, and which pages matter. It lives at <code>public/llms.txt</code> — an H1 with the name, a blockquote with one sentence on the offer and the audience, and a <code>## Pages</code> list of the pages worth reading with a line each. It only works if it says what the business actually sells; a placeholder version is worse than none, because it reads as authoritative.</p>
 <p><strong>References:</strong> <a href="https://llmstxt.org/" rel="noopener noreferrer nofollow">https://llmstxt.org/</a></p>
-<h4 class="f med">10. 🟡 Medium impact — The &lt;html&gt; tag declares no language</h4>
+<h5 class="f med">10. 🟡 Medium impact — The &lt;html&gt; tag declares no language</h5>
 <p><strong>Evidence:</strong> 2 of 2 pages have no lang attribute on &lt;html&gt;.</p>
 <p><strong>Impact:</strong> Browsers offer to translate a page that is already in the language of the visitor, screen readers pick the wrong voice, and search engines can serve the site to the wrong country.</p>
 <p><strong>Why it matters:</strong> One attribute — <code>lang</code> on <code>&lt;html&gt;</code> — tells every client what language the content is written in. Templates ship with it empty or copied from the starter, so it has to be set to the language the copy is actually in, not the one the template came with.</p>
 <p><strong>Pages:</strong> <code>http://localhost:8099/</code>, <code>http://localhost:8099/app.html</code></p>
-<h4 class="f med">11. 🟡 Medium impact — Images have no alt text</h4>
+<h5 class="f med">11. 🟡 Medium impact — Images have no alt text</h5>
 <p><strong>Evidence:</strong> 1 of 1 images have no alt attribute, across 1 of 2 pages.</p>
 <p><strong>Impact:</strong> Blind visitors hear "image" instead of the product, image search never returns these pictures, and in several jurisdictions it is an accessibility obligation rather than a nicety.</p>
 <p><strong>Why it matters:</strong> Alt text is what an image says to anyone or anything that cannot see it: screen readers, image search, and any crawler indexing the page. It has to describe what the picture actually shows, in the page's language — which means looking at each image, not generating text from the filename. Purely decorative images take an empty <code>alt=""</code>, which is different from having none.</p>
 <p><strong>Pages:</strong> <code>http://localhost:8099/</code></p>
-<h4 class="f low">12. ⚪ Low impact — No favicon</h4>
+<h5 class="f low">12. ⚪ Low impact — No favicon</h5>
 <p><strong>Evidence:</strong> No favicon is served and no &lt;link rel="icon"&gt; is declared on any crawled page.</p>
 <p><strong>Impact:</strong> The tab, the bookmark and the phone home screen show a blank sheet of paper. It is small, it is free to fix, and it is the difference between a business and a weekend demo.</p>
 <p><strong>Why it matters:</strong> The favicon is the only branding a site gets in a row of thirty open tabs. It needs a <code>public/favicon.svg</code> plus a 180x180 <code>public/apple-touch-icon.png</code> for phone home screens, both referenced with <code>&lt;link rel="icon"&gt;</code> and <code>&lt;link rel="apple-touch-icon"&gt;</code> in the <code>&lt;head&gt;</code>.</p>
 <hr>
-<h2>Coverage</h2>
+<h3>Coverage</h3>
 <p>This automated analysis covers what is verifiable from the outside. Items that require server access (authorization, input validation, rate limiting, backups) are covered by the manual part of the audit.</p>
-<h3>Verified automatically</h3>
+<h4>Verified automatically</h4>
 <ul><li>HTTP security headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options)</li><li>HTTP→HTTPS redirect (whether the site answers on plain http://)</li><li>Exposed secrets/credentials in 1 JavaScript bundle(s)</li><li>Exposed source maps (original source code downloadable from the URL)</li><li>Website quality &amp; AI visibility across 2 page(s) — metadata, headings, structured data, robots.txt/llms.txt/sitemap, 404 page, broken assets, JS weight</li></ul>
 <blockquote>Browser console errors were <strong>not</strong> inspected: Playwright is not installed. Install it (<code>npm i -D playwright &amp;&amp; npx playwright install chromium</code>) and re-run to include runtime errors.</blockquote>
 <hr>
-<h2>Recommended next steps</h2>
+<h3>Recommended next steps</h3>
 <p>1. Address findings in order of severity. 2. Complement with a manual server-side review.</p>
 <p>For the website section, <code>npx vibeward@latest init</code> installs a skill that reads these findings, applies the fixes it can, and re-scans to verify.</p>
 <hr>

@@ -13,6 +13,9 @@
 <meta property="og:title" content="Informe de ejemplo · vibeward">
 <meta property="og:description" content="Un informe completo de vibeward, sin editar, generado escaneando una app rota a propósito. Mira lo que imprime la herramienta antes de instalar nada.">
 <meta property="og:url" content="https://vibeward.ai/es/informe/">
+<meta property="og:image" content="https://vibeward.ai/avatar-512.png">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Informe de ejemplo · vibeward","description":"Un informe completo de vibeward, sin editar, generado escaneando una app rota a propósito. Mira lo que imprime la herramienta antes de instalar nada.","inLanguage":"es","url":"https://vibeward.ai/es/informe/","isPartOf":{"@type":"WebSite","name":"vibeward","url":"https://vibeward.ai"},"author":{"@type":"Person","name":"José Siapo","url":"https://github.com/JSiapoDEV"},"about":{"@type":"SoftwareApplication","name":"vibeward","applicationCategory":"DeveloperApplication","url":"https://vibeward.ai"}}</script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>@font-face {
     font-family: 'Newsreader'; font-style: normal; font-weight: 300 700; font-display: swap;
@@ -120,12 +123,12 @@ h1.page{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:clamp(3
 .note p{margin:0 0 12px;font-size:15px}
 .note p:last-child{margin-bottom:0}
 .report{margin:44px 0 0;padding:34px 0 0;border-top:1px solid var(--line)}
-.report h1{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:28px;margin:0 0 22px}
-.report h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;
+.report h2:first-child{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:28px;margin:0 0 22px}
+.report h3{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;
   margin:44px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line-soft)}
-.report h3{font-size:17px;margin:34px 0 12px;font-weight:600;letter-spacing:-.01em}
-.report h4{font-size:15.5px;margin:26px 0 10px;font-weight:600}
-.report h3.f,.report h4.f{padding-left:13px;border-left:3px solid var(--line-strong,var(--line))}
+.report h4{font-size:17px;margin:34px 0 12px;font-weight:600;letter-spacing:-.01em}
+.report h5{font-size:15.5px;margin:26px 0 10px;font-weight:600}
+.report h4.f,.report h5.f{padding-left:13px;border-left:3px solid var(--line-strong,var(--line))}
 .report .crit{border-left-color:var(--crit)}
 .report .high{border-left-color:var(--clay)}
 .report .med{border-left-color:var(--amber)}
@@ -178,17 +181,17 @@ footer.btm a{color:color-mix(in srgb,var(--ink) 78%,transparent)}
       <p>La sección de web se puntúa en su propia escala. Nunca afecta al veredicto de seguridad, ni al archivo SARIF, ni al código de salida — un favicon que falta no es un hallazgo al lado de una credencial filtrada.</p>
     </div>
   </section>
-  <article class="report"><h1>Informe de auditoría</h1>
+  <article class="report"><h2>Informe de auditoría</h2>
 <p><strong>Aplicación:</strong> http://localhost:8099/</p>
 <p><strong>Fecha:</strong> 2026-08-16</p>
 <p><strong>Alcance:</strong> Análisis automatizado y no destructivo del frontend público y de la API de datos, más la calidad del sitio y su visibilidad ante las IA. No incluye pruebas de intrusión manuales ni revisión del código de servidor.</p>
 <hr>
-<h2>Resumen ejecutivo</h2>
+<h3>Resumen ejecutivo</h3>
 <blockquote><strong>REQUIERE ATENCIÓN URGENTE antes de seguir en producción.</strong></blockquote>
 <div class="tw"><table><thead><tr><th>Severidad</th><th>Hallazgos</th></tr></thead><tbody><tr class="crit"><td>🔴 Crítico</td><td>0</td></tr><tr class="high"><td>🟠 Alto</td><td>1</td></tr><tr class="med"><td>🟡 Medio</td><td>2</td></tr><tr class="low"><td>⚪ Bajo</td><td>4</td></tr></tbody></table></div>
 <p>Aparte, se encontraron <strong>12 problema(s) de calidad del sitio</strong> — están en la sección de abajo. No afectan al veredicto de seguridad.</p>
-<h2>Hallazgos detallados</h2>
-<h3 class="f high">1. 🟠 ALTO — Token bearer hardcodeado en el código del cliente</h3>
+<h3>Hallazgos detallados</h3>
+<h4 class="f high">1. 🟠 ALTO — Token bearer hardcodeado en el código del cliente</h4>
 <p><strong>Clasificación:</strong> CWE-798</p>
 <p><strong>Dónde:</strong> http://localhost:8099/assets/app.js</p>
 <p><strong>Evidencia:</strong> Authorization: Bearer 7d3f1a9c…d2b6</p>
@@ -196,14 +199,14 @@ footer.btm a{color:color-mix(in srgb,var(--ink) 78%,transparent)}
 <p><strong>Por qué importa:</strong> Un token bearer compilado en el bundle es un secreto compartido que se le entrega a cada visitante, y no se puede revocar para uno sin revocarlo para todos. Que dé acceso a algo depende de lo que haga el servidor con él — pero un token estático en código de cliente no es autenticación, y si es la única comprobación, la API es pública de hecho.</p>
 <p><strong>Referencias:</strong> <a href="https://cwe.mitre.org/data/definitions/798.html" rel="noopener noreferrer nofollow">https://cwe.mitre.org/data/definitions/798.html</a> · <a href="https://cwe.mitre.org/data/definitions/798.html" rel="noopener noreferrer nofollow">https://cwe.mitre.org/data/definitions/798.html</a></p>
 <p><em>Punto 1 de la checklist.</em></p>
-<h3 class="f med">2. 🟡 MEDIO — Falta la cabecera Content-Security-Policy</h3>
+<h4 class="f med">2. 🟡 MEDIO — Falta la cabecera Content-Security-Policy</h4>
 <p><strong>Clasificación:</strong> CWE-693</p>
 <p><strong>Evidencia:</strong> Ausente en la respuesta</p>
 <p><strong>Cómo se explota:</strong> Sin CSP, un script inyectado o de terceros puede cargarse y ejecutarse desde cualquier origen, y sacar de ahí tokens o datos de usuarios.</p>
 <p><strong>Por qué importa:</strong> Falta la principal defensa en profundidad contra el cross-site scripting.</p>
 <p><strong>Referencias:</strong> <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP" rel="noopener noreferrer nofollow">https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP</a> · <a href="https://cwe.mitre.org/data/definitions/693.html" rel="noopener noreferrer nofollow">https://cwe.mitre.org/data/definitions/693.html</a></p>
 <p><em>Punto 22 de la checklist.</em></p>
-<h3 class="f med">3. 🟡 MEDIO — Source map expuesto — el código fuente original se puede descargar</h3>
+<h4 class="f med">3. 🟡 MEDIO — Source map expuesto — el código fuente original se puede descargar</h4>
 <p><strong>Clasificación:</strong> CWE-540</p>
 <p><strong>Dónde:</strong> http://localhost:8099/assets/app.js.map</p>
 <p><strong>Evidencia:</strong> http://localhost:8099/assets/app.js.map se sirve públicamente e incrusta el fuente original completo (sourcesContent).</p>
@@ -212,28 +215,28 @@ footer.btm a{color:color-mix(in srgb,var(--ink) 78%,transparent)}
 <p><strong>Por qué importa:</strong> Las builds de producción no deberían publicar source maps. Desactiva su emisión en producción, o elimina los ficheros <code>.map</code> de la salida desplegada.</p>
 <p><strong>Referencias:</strong> <a href="https://cwe.mitre.org/data/definitions/540.html" rel="noopener noreferrer nofollow">https://cwe.mitre.org/data/definitions/540.html</a> · <a href="https://webpack.js.org/configuration/devtool/" rel="noopener noreferrer nofollow">https://webpack.js.org/configuration/devtool/</a></p>
 <p><em>Punto 23 de la checklist.</em></p>
-<h3 class="f low">4. ⚪ BAJO — Falta la cabecera Strict-Transport-Security (HSTS)</h3>
+<h4 class="f low">4. ⚪ BAJO — Falta la cabecera Strict-Transport-Security (HSTS)</h4>
 <p><strong>Clasificación:</strong> CWE-319</p>
 <p><strong>Evidencia:</strong> Ausente en la respuesta</p>
 <p><strong>Cómo se explota:</strong> Un atacante en la ruta de red puede forzar a la víctima a HTTP plano en la primera petición e interceptar credenciales o cookies de sesión.</p>
 <p><strong>Por qué importa:</strong> HTTPS no queda fijado para las visitas siguientes, así que el navegador está dispuesto a volver a probar HTTP plano la próxima vez. La cabecera le dice que no lo haga nunca durante un plazo declarado — <code>Strict-Transport-Security: max-age=63072000; includeSubDomains</code> es el valor habitual, y va en el CDN o en el servidor, no en la página.</p>
 <p><strong>Referencias:</strong> <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security" rel="noopener noreferrer nofollow">https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security</a></p>
 <p><em>Punto 22 de la checklist.</em></p>
-<h3 class="f low">5. ⚪ BAJO — Falta la cabecera X-Frame-Options</h3>
+<h4 class="f low">5. ⚪ BAJO — Falta la cabecera X-Frame-Options</h4>
 <p><strong>Clasificación:</strong> CWE-1021</p>
 <p><strong>Evidencia:</strong> Ausente en la respuesta</p>
 <p><strong>Cómo se explota:</strong> La aplicación se puede incrustar en un iframe oculto dentro de una página maliciosa para que el usuario pulse acciones sin saberlo (clickjacking).</p>
 <p><strong>Por qué importa:</strong> No hay protección contra el enmarcado (también se puede fijar con <code>frame-ancestors</code> en la CSP).</p>
 <p><strong>Referencias:</strong> <a href="https://cwe.mitre.org/data/definitions/1021.html" rel="noopener noreferrer nofollow">https://cwe.mitre.org/data/definitions/1021.html</a></p>
 <p><em>Punto 22 de la checklist.</em></p>
-<h3 class="f low">6. ⚪ BAJO — Falta la cabecera X-Content-Type-Options</h3>
+<h4 class="f low">6. ⚪ BAJO — Falta la cabecera X-Content-Type-Options</h4>
 <p><strong>Clasificación:</strong> CWE-430</p>
 <p><strong>Evidencia:</strong> Ausente en la respuesta</p>
 <p><strong>Cómo se explota:</strong> El navegador puede deducir por los bytes un tipo distinto del declarado (MIME sniffing), lo que habilita algunos ataques de ejecución de scripts.</p>
 <p><strong>Por qué importa:</strong> Sin <code>X-Content-Type-Options: nosniff</code> el navegador puede desconfiar del Content-Type declarado y tratar un fichero como lo que parezcan sus bytes. El caso clásico es una imagen subida que además se interpreta como script. Es una cabecera con un valor y sin contrapartidas.</p>
 <p><strong>Referencias:</strong> <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options" rel="noopener noreferrer nofollow">https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options</a></p>
 <p><em>Punto 22 de la checklist.</em></p>
-<h3 class="f low">7. ⚪ BAJO — La cabecera server revela la tecnología</h3>
+<h4 class="f low">7. ⚪ BAJO — La cabecera server revela la tecnología</h4>
 <p><strong>Clasificación:</strong> CWE-200</p>
 <p><strong>Evidencia:</strong> server: SimpleHTTP/0.6 Python/3.9.6</p>
 <p><strong>Cómo se explota:</strong> Revelar el framework o el servidor y su versión permite a un atacante buscar CVEs conocidos de ese stack exacto.</p>
@@ -241,81 +244,81 @@ footer.btm a{color:color-mix(in srgb,var(--ink) 78%,transparent)}
 <p><strong>Referencias:</strong> <a href="https://cwe.mitre.org/data/definitions/200.html" rel="noopener noreferrer nofollow">https://cwe.mitre.org/data/definitions/200.html</a></p>
 <p><em>Punto 23 de la checklist.</em></p>
 <hr>
-<h2>Calidad del sitio y visibilidad ante las IA</h2>
+<h3>Calidad del sitio y visibilidad ante las IA</h3>
 <blockquote>Estos hallazgos <strong>no</strong> afectan al veredicto de seguridad ni al código de salida. Tratan de cómo leen este sitio los buscadores, las redes sociales y los asistentes de IA.</blockquote>
 <p><strong>Huella de vibe-coding: 9/12</strong> — El HTML no trae contenido — JavaScript lo renderiza todo · Sin meta description · Sin etiquetas Open Graph · Sin URL canónica · Sin datos estructurados · Sin sitemap.xml · Sin favicon · Sin lang en &lt;html&gt; · Sin llms.txt</p>
 <p><strong>5 de 17 comprobaciones superadas.</strong></p>
 <div class="tw"><table><thead><tr><th>Comprobación</th><th>Estado</th><th>Impacto</th><th>Nota</th></tr></thead><tbody><tr class="ok"><td>robots.txt deja entrar a los rastreadores de IA</td><td>✅ ok</td><td>—</td><td>—</td></tr><tr class="low"><td>Rastreadores de IA bloqueados como se declaró</td><td>⚪ no aplica</td><td>—</td><td>no se declaró intención de bloquear rastreadores de IA</td></tr><tr class="crit"><td>El HTML trae contenido real</td><td>❌</td><td>🔴 Impacto alto</td><td>—</td></tr><tr class="crit"><td>Sin recursos rotos</td><td>❌</td><td>🔴 Impacto alto</td><td>—</td></tr><tr class="low"><td>Sin errores de JavaScript al cargar</td><td>⚪ no evaluada</td><td>—</td><td>no hay navegador disponible</td></tr><tr class="crit"><td>Cada página tiene su propio &lt;title&gt;</td><td>❌</td><td>🔴 Impacto alto</td><td>—</td></tr><tr class="ok"><td>&lt;title&gt; presente</td><td>✅ ok</td><td>—</td><td>—</td></tr><tr class="med"><td>Meta description</td><td>❌</td><td>🟡 Impacto medio</td><td>—</td></tr><tr class="med"><td>Etiquetas Open Graph</td><td>❌</td><td>🟡 Impacto medio</td><td>—</td></tr><tr class="med"><td>URL canónica</td><td>❌</td><td>🟡 Impacto medio</td><td>—</td></tr><tr class="med"><td>Datos estructurados (JSON-LD)</td><td>❌</td><td>🟡 Impacto medio</td><td>—</td></tr><tr class="ok"><td>Exactamente un &lt;h1&gt; por página</td><td>✅ ok</td><td>—</td><td>—</td></tr><tr class="med"><td>sitemap.xml</td><td>❌</td><td>🟡 Impacto medio</td><td>—</td></tr><tr class="med"><td>llms.txt</td><td>❌</td><td>🟡 Impacto medio</td><td>—</td></tr><tr class="med"><td>Atributo lang en &lt;html&gt;</td><td>❌</td><td>🟡 Impacto medio</td><td>—</td></tr><tr class="med"><td>Las imágenes tienen texto alt</td><td>❌</td><td>🟡 Impacto medio</td><td>—</td></tr><tr class="ok"><td>Las URLs inexistentes devuelven 404</td><td>✅ ok</td><td>—</td><td>—</td></tr><tr class="low"><td>Favicon</td><td>❌</td><td>⚪ Impacto bajo</td><td>—</td></tr><tr class="ok"><td>JavaScript por debajo de 1 MB</td><td>✅ ok</td><td>—</td><td>—</td></tr></tbody></table></div>
-<h3>Hallazgos del sitio en detalle</h3>
-<h4 class="f crit">1. 🔴 Impacto alto — El HTML se sirve sin contenido</h4>
+<h4>Hallazgos del sitio en detalle</h4>
+<h5 class="f crit">1. 🔴 Impacto alto — El HTML se sirve sin contenido</h5>
 <p><strong>Evidencia:</strong> La página de inicio devuelve 90 caracteres de texto visible antes de que se ejecute JavaScript (2 de 2 páginas por debajo de 200 caracteres).</p>
 <p><strong>Impacto:</strong> Para todo lo que no ejecuta JavaScript el sitio es una página en blanco: sin titular, sin texto, sin nada que indexar ni citar. La mayoría de rastreadores de IA no ejecutan scripts, así que para ellos el sitio sencillamente no existe.</p>
 <p><strong>Por qué importa:</strong> Un shell renderizado en el cliente le entrega al rastreador un &lt;div&gt; vacío. Google renderiza tarde y de forma inconsistente; GPTBot, ClaudeBot y PerplexityBot no renderizan en absoluto. Cerrarlo es una decisión de arquitectura, no una edición de texto: o el titular y el primer párrafo reales viven dentro del nodo de montaje en <code>index.html</code> para estar en el fuente antes de que corra ningún script, o las páginas las genera un renderizador que emite HTML (Astro, React Server Components de Next.js, SSG de Vite).</p>
 <p><strong>Páginas:</strong> <code>http://localhost:8099/</code>, <code>http://localhost:8099/app.html</code></p>
-<h4 class="f crit">2. 🔴 Impacto alto — Recursos referenciados por el sitio devuelven error</h4>
+<h5 class="f crit">2. 🔴 Impacto alto — Recursos referenciados por el sitio devuelven error</h5>
 <p><strong>Evidencia:</strong> 1 fichero(s) referenciado(s) responden con 4xx/5xx — http://localhost:8099/logo.png → 404 (referenciado desde http://localhost:8099/)</p>
 <p><strong>Impacto:</strong> El visitante ve imágenes que faltan, secciones sin estilo o una función que nunca carga — la forma más rápida de parecer abandonado y perder la venta en la primera pantalla.</p>
 <p><strong>Por qué importa:</strong> La página apunta a ficheros que no están desplegados: una ruta que solo existe en local, un recurso renombrado o una imagen que el build nunca copió. Los recursos que se sirven desde la raíz tienen que vivir en <code>public/</code> (Vite, Next.js, Astro) o en <code>static/</code> (SvelteKit) para que el build los copie — si no, la referencia sobra.</p>
-<h4 class="f crit">3. 🔴 Impacto alto — Todas las páginas tienen el mismo &lt;title&gt;</h4>
+<h5 class="f crit">3. 🔴 Impacto alto — Todas las páginas tienen el mismo &lt;title&gt;</h5>
 <p><strong>Evidencia:</strong> Las 2 páginas rastreadas envían el mismo título: "Nimbus Invoices".</p>
 <p><strong>Impacto:</strong> Todas las páginas compiten por el mismo resultado de búsqueda y no gana ninguna. El título es la línea azul que la gente pulsa en Google y la etiqueta de cada pestaña y marcador compartido.</p>
 <p><strong>Por qué importa:</strong> Los buscadores tratan los títulos idénticos como páginas duplicadas: eligen una y descartan el resto. La causa habitual es un router de SPA que nunca actualiza el título. Cada página necesita su propio <code>&lt;title&gt;</code> de unos 50-60 caracteres, con el asunto de la página delante y la marca al final ("Precios — Acme"); en una SPA de React sin meta-framework eso significa fijar <code>document.title</code> en cada ruta.</p>
 <p><strong>Páginas:</strong> <code>http://localhost:8099/</code>, <code>http://localhost:8099/app.html</code></p>
-<h4 class="f med">4. 🟡 Impacto medio — Hay páginas sin meta description</h4>
+<h5 class="f med">4. 🟡 Impacto medio — Hay páginas sin meta description</h5>
 <p><strong>Evidencia:</strong> 2 de 2 páginas no tienen &lt;meta name="description"&gt;.</p>
 <p><strong>Impacto:</strong> Google rellena las dos líneas de debajo del enlace con el texto que rasque de la página, así que el argumento que lee un visitante antes de decidir si pulsa lo escribe un algoritmo en lugar del dueño.</p>
 <p><strong>Por qué importa:</strong> La description es el texto publicitario del resultado de búsqueda. No cambia el posicionamiento, cambia el porcentaje de clics. Una por página, de 150-160 caracteres, escrita para una persona que está decidiendo si pulsa — una genérica es peor que ninguna, porque parece escrita y así nadie escribe nunca la de verdad.</p>
 <p><strong>Páginas:</strong> <code>http://localhost:8099/</code>, <code>http://localhost:8099/app.html</code></p>
-<h4 class="f med">5. 🟡 Impacto medio — Hay páginas sin etiquetas Open Graph</h4>
+<h5 class="f med">5. 🟡 Impacto medio — Hay páginas sin etiquetas Open Graph</h5>
 <p><strong>Evidencia:</strong> A 2 de 2 páginas les falta og:title u og:image.</p>
 <p><strong>Impacto:</strong> Compartido por WhatsApp, LinkedIn, Slack o X, el enlace aparece como una URL pelada sin imagen ni título, y la gente pasa de largo. Cada vez que alguien comparte el sitio, se desperdicia.</p>
 <p><strong>Por qué importa:</strong> Las etiquetas Open Graph son lo que leen las redes sociales y las apps de mensajería para construir la tarjeta de vista previa. Sin ellas no hay tarjeta. El juego completo en el <code>&lt;head&gt;</code> de cada página es og:title, og:description, og:image, og:url y og:type, más <code>twitter:card</code> en <code>summary_large_image</code> — y og:image tiene que ser una imagen real de 1200x630, porque si falta se renderiza un recuadro en blanco en lugar de ninguna tarjeta.</p>
 <p><strong>Páginas:</strong> <code>http://localhost:8099/</code>, <code>http://localhost:8099/app.html</code></p>
 <p><strong>Referencias:</strong> <a href="https://ogp.me/" rel="noopener noreferrer nofollow">https://ogp.me/</a></p>
-<h4 class="f med">6. 🟡 Impacto medio — Hay páginas que no declaran URL canónica</h4>
+<h5 class="f med">6. 🟡 Impacto medio — Hay páginas que no declaran URL canónica</h5>
 <p><strong>Evidencia:</strong> 2 de 2 páginas no tienen &lt;link rel="canonical"&gt;.</p>
 <p><strong>Impacto:</strong> La misma página accesible con y sin www, con y sin barra final, o con un parámetro de campaña, cuenta como varias páginas que compiten entre sí, y reparte entre ellas la autoridad que el sitio se ha ganado.</p>
 <p><strong>Por qué importa:</strong> La etiqueta canonical nombra la única dirección real de una página para que los duplicados se consoliden en ella en vez de competir con ella. Cada página necesita su propio <code>&lt;link rel="canonical"&gt;</code> apuntando a su propia URL absoluta (<code>http://localhost:8099/precios</code> en la página de precios) — apuntar todas las páginas a la de inicio es el error habitual, y le dice a los buscadores que el resto del sitio no existe.</p>
 <p><strong>Páginas:</strong> <code>http://localhost:8099/</code>, <code>http://localhost:8099/app.html</code></p>
 <p><strong>Referencias:</strong> <a href="https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls" rel="noopener noreferrer nofollow">https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls</a></p>
-<h4 class="f med">7. 🟡 Impacto medio — Sin datos estructurados (JSON-LD)</h4>
+<h5 class="f med">7. 🟡 Impacto medio — Sin datos estructurados (JSON-LD)</h5>
 <p><strong>Evidencia:</strong> 2 de 2 páginas no contienen ningún bloque &lt;script type="application/ld+json"&gt;.</p>
 <p><strong>Impacto:</strong> Los buscadores y los asistentes tienen que adivinar qué es el negocio, qué vende y dónde está. Los resultados enriquecidos (valoraciones, precios, FAQ, horarios) no están disponibles para un sitio que nunca los declara.</p>
 <p><strong>Por qué importa:</strong> Los datos estructurados son la versión legible por máquina de la página. Es como un asistente responde "quiénes son y qué hacen" con datos en vez de con suposiciones. Lo mínimo es un bloque <code>application/ld+json</code> en el <code>&lt;head&gt;</code> de la página de inicio declarando una <code>Organization</code> con el nombre real, url, logo, description y los enlaces <code>sameAs</code> a los perfiles — los valores tienen que ser ciertos, porque esto es el texto que un asistente repite tal cual.</p>
 <p><strong>Páginas:</strong> <code>http://localhost:8099/</code>, <code>http://localhost:8099/app.html</code></p>
 <p><strong>Referencias:</strong> <a href="https://schema.org/Organization" rel="noopener noreferrer nofollow">https://schema.org/Organization</a></p>
-<h4 class="f med">8. 🟡 Impacto medio — Sin sitemap.xml</h4>
+<h5 class="f med">8. 🟡 Impacto medio — Sin sitemap.xml</h5>
 <p><strong>Evidencia:</strong> http://localhost:8099/sitemap.xml no se sirve.</p>
 <p><strong>Impacto:</strong> Las páginas que no están enlazadas desde la de inicio pueden pasar semanas sin que nadie las vea, o no indexarse nunca, y cada actualización tarda más en aparecer en las búsquedas.</p>
 <p><strong>Por qué importa:</strong> Un sitemap es la lista de páginas que el dueño quiere que se indexen. Sin él, los rastreadores solo encuentran lo que se van topando. Es un <code>urlset</code> de entradas <code>&lt;loc&gt;</code> en <code>public/sitemap.xml</code> (<code>static/sitemap.xml</code> en SvelteKit), con una línea <code>Sitemap: http://localhost:8099/sitemap.xml</code> en robots.txt que apunte a él — este escaneo alcanzó 2 páginas, listadas en "Páginas escaneadas".</p>
 <p><strong>Referencias:</strong> <a href="https://www.sitemaps.org/protocol.html" rel="noopener noreferrer nofollow">https://www.sitemaps.org/protocol.html</a></p>
-<h4 class="f med">9. 🟡 Impacto medio — Sin llms.txt</h4>
+<h5 class="f med">9. 🟡 Impacto medio — Sin llms.txt</h5>
 <p><strong>Evidencia:</strong> http://localhost:8099/llms.txt no se sirve.</p>
 <p><strong>Impacto:</strong> Cuando a un asistente le preguntan por este negocio, tiene que reconstruir la oferta con el marcado que consiga interpretar. Un fichero corto y bien escrito es la diferencia entre que lo describan bien y que lo describan mal.</p>
 <p><strong>Por qué importa:</strong> llms.txt es el resumen en texto plano que una IA lee primero: qué es el sitio, para quién es y qué páginas importan. Vive en <code>public/llms.txt</code> — un H1 con el nombre, una cita con una frase sobre la oferta y el público, y una lista <code>## Pages</code> con las páginas que merece la pena leer y una línea por cada una. Solo funciona si dice lo que el negocio vende de verdad; una versión de relleno es peor que ninguna, porque se lee como si fuera autoritativa.</p>
 <p><strong>Referencias:</strong> <a href="https://llmstxt.org/" rel="noopener noreferrer nofollow">https://llmstxt.org/</a></p>
-<h4 class="f med">10. 🟡 Impacto medio — La etiqueta &lt;html&gt; no declara idioma</h4>
+<h5 class="f med">10. 🟡 Impacto medio — La etiqueta &lt;html&gt; no declara idioma</h5>
 <p><strong>Evidencia:</strong> 2 de 2 páginas no tienen el atributo lang en &lt;html&gt;.</p>
 <p><strong>Impacto:</strong> Los navegadores ofrecen traducir una página que ya está en el idioma del visitante, los lectores de pantalla eligen la voz equivocada y los buscadores pueden servir el sitio al país que no toca.</p>
 <p><strong>Por qué importa:</strong> Un atributo — <code>lang</code> en <code>&lt;html&gt;</code> — le dice a cualquier cliente en qué idioma está escrito el contenido. Las plantillas vienen con él vacío o copiado del starter, así que hay que ponerlo en el idioma en el que está el texto de verdad, no en el que traía la plantilla.</p>
 <p><strong>Páginas:</strong> <code>http://localhost:8099/</code>, <code>http://localhost:8099/app.html</code></p>
-<h4 class="f med">11. 🟡 Impacto medio — Hay imágenes sin texto alternativo</h4>
+<h5 class="f med">11. 🟡 Impacto medio — Hay imágenes sin texto alternativo</h5>
 <p><strong>Evidencia:</strong> 1 de 1 imágenes no tienen atributo alt, repartidas en 1 de 2 páginas.</p>
 <p><strong>Impacto:</strong> Los visitantes ciegos oyen "imagen" en lugar del producto, la búsqueda de imágenes no devuelve nunca estas fotos y, en varias jurisdicciones, es una obligación de accesibilidad y no un detalle.</p>
 <p><strong>Por qué importa:</strong> El texto alt es lo que una imagen le dice a quien —o a lo que— no puede verla: lectores de pantalla, búsqueda de imágenes y cualquier rastreador que indexe la página. Tiene que describir lo que la foto muestra de verdad, en el idioma de la página — lo que significa mirar cada imagen, no generar texto a partir del nombre del fichero. Las imágenes puramente decorativas llevan un <code>alt=""</code> vacío, que no es lo mismo que no llevar ninguno.</p>
 <p><strong>Páginas:</strong> <code>http://localhost:8099/</code></p>
-<h4 class="f low">12. ⚪ Impacto bajo — Sin favicon</h4>
+<h5 class="f low">12. ⚪ Impacto bajo — Sin favicon</h5>
 <p><strong>Evidencia:</strong> No se sirve ningún favicon ni se declara &lt;link rel="icon"&gt; en ninguna página rastreada.</p>
 <p><strong>Impacto:</strong> La pestaña, el marcador y la pantalla de inicio del móvil muestran una hoja en blanco. Es pequeño, es gratis de arreglar, y es la diferencia entre un negocio y una demo de fin de semana.</p>
 <p><strong>Por qué importa:</strong> El favicon es la única marca que le queda a un sitio en una fila de treinta pestañas abiertas. Necesita un <code>public/favicon.svg</code> más un <code>public/apple-touch-icon.png</code> de 180x180 para la pantalla de inicio del móvil, ambos referenciados con <code>&lt;link rel="icon"&gt;</code> y <code>&lt;link rel="apple-touch-icon"&gt;</code> en el <code>&lt;head&gt;</code>.</p>
 <hr>
-<h2>Alcance verificado</h2>
+<h3>Alcance verificado</h3>
 <p>Este análisis automatizado cubre lo que se puede verificar desde fuera. Lo que exige acceso al servidor (autorización, validación de entradas, límites de tasa, copias de seguridad) corresponde a la parte manual de la auditoría.</p>
-<h3>Verificado automáticamente</h3>
+<h4>Verificado automáticamente</h4>
 <ul><li>Cabeceras de seguridad HTTP (CSP, HSTS, X-Frame-Options, X-Content-Type-Options)</li><li>Redirección HTTP→HTTPS (si el sitio responde en http:// plano)</li><li>Secretos y credenciales expuestos en 1 bundle(s) de JavaScript</li><li>Source maps expuestos (código fuente original descargable desde la URL)</li><li>Calidad del sitio y visibilidad ante las IA en 2 página(s) — metadatos, encabezados, datos estructurados, robots.txt/llms.txt/sitemap, página 404, recursos rotos, peso del JS</li></ul>
 <blockquote>Los errores de consola del navegador <strong>no</strong> se inspeccionaron: Playwright no está instalado. Instálalo (<code>npm i -D playwright &amp;&amp; npx playwright install chromium</code>) y vuelve a ejecutar para incluir los errores en tiempo de ejecución.</blockquote>
 <hr>
-<h2>Siguientes pasos recomendados</h2>
+<h3>Siguientes pasos recomendados</h3>
 <p>1. Atiende los hallazgos por orden de severidad. 2. Complétalo con una revisión manual del lado del servidor.</p>
 <p>Para la sección del sitio web, <code>npx vibeward@latest init</code> instala una skill que lee estos hallazgos, aplica los arreglos que puede y vuelve a escanear para verificarlo.</p>
 <hr>
