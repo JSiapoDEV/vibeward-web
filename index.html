@@ -36,7 +36,7 @@
       "name": "vibeward",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "macOS, Linux, Windows",
-      "softwareVersion": "0.5.0",
+      "softwareVersion": "0.6.0",
       "url": "https://vibeward.ai/",
       "codeRepository": "https://github.com/JSiapoDEV/vibeward",
       "downloadUrl": "https://www.npmjs.com/package/vibeward",
@@ -614,7 +614,7 @@
   </nav>
 
   <header class="hero stagger">
-    <span class="eyebrow"><b>v0.5.0</b> · guardrail + scanner</span>
+    <span class="eyebrow"><b>v0.6.0</b> · guardrail + scanner</span>
     <h1>Your agent was about to <span class="accent">disable RLS</span>.</h1>
     <p class="sub">
       The holes in AI-built apps rarely start as bad code. They start as a reasonable-sounding
@@ -637,8 +637,8 @@
       <a class="btn primary" href="#install">Install into your AI tools</a>
       <a class="btn ghost" href="https://github.com/JSiapoDEV/vibeward">Star on GitHub</a>
       <span class="badges">
-        <a href="https://github.com/JSiapoDEV/vibeward" aria-label="GitHub stars"><img src="https://img.shields.io/github/stars/JSiapoDEV/vibeward?style=flat&label=stars&color=D97757&labelColor=EAE7DC" alt="GitHub stars for vibeward" /></a>
-        <a href="https://www.npmjs.com/package/vibeward" aria-label="npm downloads"><img src="https://img.shields.io/npm/dm/vibeward?color=D97757&labelColor=EAE7DC&label=npm" alt="Monthly npm downloads for vibeward" /></a>
+        <a href="https://www.npmjs.com/package/vibeward" aria-label="npm version"><img src="https://img.shields.io/npm/v/vibeward?color=D97757&labelColor=EAE7DC&label=npm" alt="Latest vibeward version on npm" /></a>
+        <a href="https://github.com/JSiapoDEV/vibeward/blob/main/LICENSE" aria-label="license"><img src="https://img.shields.io/npm/l/vibeward?color=D97757&labelColor=EAE7DC&label=license" alt="vibeward is MIT licensed" /></a>
       </span>
     </div>
   </header>
@@ -870,6 +870,21 @@
       </p>
     </div>
 
+    <div class="panel" data-reveal style="margin-bottom:14px">
+      <span class="k">Claude Code</span>
+      <h3>Two commands, and nothing written into your settings</h3>
+      <pre><button class="copy-mini" onclick="copyEl('pluginadd')">copy</button><span id="pluginadd">claude plugin marketplace add jsiapo-dev/plugins
+claude plugin install vibeward</span></pre>
+      <p style="margin-top:12px">
+        The skill and all three guard moments come with it, and
+        <span class="lit">/plugin uninstall vibeward</span> takes every trace back out. The plugin
+        carries its <strong>own copy</strong> of the CLI — built by CI from the tagged source and
+        published to its own branch, never assembled by hand — so the guard that runs on the prompt
+        you just typed resolves nothing from the network, at a version you chose. There is no
+        <span class="lit">npx @latest</span> anywhere in that path.
+      </p>
+    </div>
+
     <div class="loop" data-reveal>
       <div class="step"><div class="n">01</div><h4>Detect</h4><p>Deterministic rules produce findings — no model in the loop, no invented gaps.</p></div>
       <div class="arw">→</div>
@@ -997,7 +1012,7 @@
       <span class="k">GitHub Action</span>
       <h3>Or let it run itself, on every push</h3>
       <p>Findings upload as SARIF and land in the repo's Security tab. The job fails on a critical — website findings never change the exit code. Point it at a folder with <span class="lit">path</span>, or at a deployed URL with <span class="lit">url</span>.</p>
-      <pre><button class="copy-mini" onclick="copyEl('gha')">copy</button><span id="gha">- uses: JSiapoDEV/vibeward@v0.5.0
+      <pre><button class="copy-mini" onclick="copyEl('gha')">copy</button><span id="gha">- uses: JSiapoDEV/vibeward@v0.6.0
   with:
     url: https://your-app.com</span></pre>
     </div>
