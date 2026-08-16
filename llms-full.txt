@@ -1,14 +1,17 @@
 # vibeward — full reference for LLMs
 
 > Stops the insecure prompt before an AI agent runs it, and audits what it already shipped.
-> As a Claude Code `UserPromptSubmit` hook, eight deterministic rules catch requests like
-> "disable RLS so it works" or "use the service_role key in the frontend" — in English, Spanish
-> and Portuguese — and answer with the risk and the safe alternative before the agent acts. No
-> LLM call anywhere, so the rules cannot be prompt-injected away. As a read-only scanner it
+> It detects and reports; it never fixes. Findings carry no `fix` field and no `autofix` field,
+> and the instructions it installs forbid an agent from editing anything it found. The guard runs
+> as an editor hook at three moments: when you send a prompt (eight deterministic rules over
+> natural language in English, Spanish and Portuguese), when the agent is about to edit a file or
+> run a command, and when the agent reads content carrying instructions aimed at it. Supported in
+> Claude Code, Cursor, OpenAI Codex CLI, GitHub Copilot CLI, Gemini CLI, Windsurf/Devin and
+> opencode. No LLM call anywhere, so the rules cannot be prompt-injected away. As a read-only scanner it
 > returns two verdicts that never share a scale: security (exposed secrets, missing Row-Level
 > Security, Firebase exposure, insecure backends) and website quality / AI visibility (missing
 > metadata, sitemap, structured data, llms.txt, AI crawlers turned away).
-> Open source (MIT). Current version 0.4.0. Run with `npx vibeward@latest`, no install needed,
+> Open source (MIT). Current version 0.5.0. Run with `npx vibeward@latest`, no install needed,
 > or `npm i -g vibeward` for repeat use.
 > Site: https://vibeward.ai
 
@@ -175,8 +178,8 @@ anyone could silence their own audit by uploading a file to their own server.
 
 ## Guardrail — stopping the request before the code exists
 
-Most vibe-coded holes start with a prompt. vibeward runs as a Claude Code `UserPromptSubmit` hook
-and catches the risky request the moment the user types it — before the agent acts:
+Most vibe-coded holes start with a prompt. vibeward runs as an editor hook and catches the risky
+request the moment the user types it — before the agent acts:
 - "disable RLS so it works" → caught, with why + the safe policy to write instead
 - "use the service_role key in the frontend" → caught
 - "make the table public to debug" / "remove the login for now" → caught
@@ -229,15 +232,30 @@ vibeward init --scope project --targets claude-skill,claude-hook,cursor --yes
 vibeward init --scope user --all --yes
 ```
 
-Why a skill: the deterministic package detects, the agent fixes. An agent asked "is the meta
-description missing?" hallucinates; a parser answering yes/no never does. So vibeward reports, the
-skill applies the fixes it can, and then re-runs vibeward to verify — detect, fix, re-detect, the
-same loop as a test suite. Every finding carries a `fix` and an `autofix` field (auto /
-needs-input / manual) telling the agent exactly how far it may go on its own.
+Why a skill: the deterministic package detects, the agent explains. An agent asked "is the meta
+description missing?" hallucinates; a parser answering yes/no never does. So vibeward decides what
+is true, and the skill turns that into something a person can act on — leading with the impact,
+quoting the evidence verbatim, never restating a severity in its own words.
 
-The installed instructions are explicit that security findings are never auto-fixed: deleting an
-exposed key from a bundle does not un-leak it, and only the owner decides when it is rotated and
-whether the incident must be disclosed.
+The installed instructions forbid the agent from fixing ANY finding — security, website, or the
+one-line mechanical ones — even on request. That is the contract, not a missing feature: an audit
+that ends in unrequested diffs replaces the thing you can act on with a thing you have to review.
+On the security side it is worse than untidy — deleting an exposed key from a bundle does not
+un-leak it. It has to be rotated, and only the owner decides when, and whether the incident must
+be disclosed.
+
+Three moments the guard covers, and what each is for:
+- prompt: the user asks for something dangerous. The user is the principal, so the answer informs.
+- action: the agent is about to write a file or run a command. Nobody asked for this one — it is
+  the agent hitting a failing query and reaching for DISABLE ROW LEVEL SECURITY on its own. The
+  decision goes to the human, with the reason attached.
+- content: the agent read text that tries to instruct it. Nothing left to block by then, so it is
+  relabelled as data.
+
+What each editor can enforce differs — Cursor cannot pass a note on a prompt, only block it, and
+Copilot cannot gate a prompt from a config-file hook at all. Where an editor cannot warn without
+blocking, vibeward stays silent rather than destroying work, and `init` prints those limits per
+tool after it writes.
 
 Note: Claude Code reads CLAUDE.md, not AGENTS.md. If you install only the AGENTS.md target, add
 `@AGENTS.md` as the first line of your CLAUDE.md — or install the Claude Code skill, which init
@@ -273,7 +291,7 @@ npx vibeward@latest https://your-app.com --json --stdout --yes
 GitHub Action — runs on every push, uploads SARIF to the GitHub Security tab, fails the build on a
 critical finding. Takes a folder (`path`) or a deployed URL (`url`):
 ```yaml
-- uses: JSiapoDEV/vibeward@v0.4.0
+- uses: JSiapoDEV/vibeward@v0.5.0
   with:
     url: https://your-app.com
 ```
@@ -303,7 +321,9 @@ assistant to open a correct pull request. Each finding includes:
 - How it's exploited (a concrete abuse path for that instance)
 - Impact (quantified: rows, data, money at risk)
 - Why it matters (in business language)
-- A `fix`, and an `autofix` level: auto, needs-input, or manual
+- Why it matters, and what a correct one looks like — in prose, for a person. There is
+  deliberately no `fix` snippet and no `autofix` level: those were an instruction channel to an
+  agent, and vibeward does not issue work orders.
 - References (CVE, CWE, vendor docs)
 
 Reports are written as Markdown; JSON and SARIF 2.1.0 are also available. Exit code is 2 when a

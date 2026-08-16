@@ -4,20 +4,20 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>vibeward — stop the insecure prompt before your agent runs it</title>
-<meta name="description" content="A deterministic guardrail for Claude Code that catches &quot;disable RLS&quot; or &quot;use the service_role key in the frontend&quot; the moment you type it — in English, Spanish and Portuguese, with no LLM call. Plus a read-only scanner for exposed secrets, open Supabase RLS and Firebase leaks in what you already shipped." />
+<meta name="description" content="A deterministic guardrail for Claude Code, Cursor, Codex, Copilot, Gemini and opencode: it catches &quot;disable RLS&quot; as you type it, and audits what already shipped. It reports — it never edits your code." />
 <link rel="canonical" href="https://vibeward.ai/" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/avatar-512.png" />
 
 <meta property="og:title" content="vibeward — stop the insecure prompt before your agent runs it" />
-<meta property="og:description" content="&quot;disable RLS so it works.&quot; A deterministic hook catches it the moment you type it — in English, Spanish and Portuguese, no LLM call — and a read-only scanner audits what you already shipped." />
+<meta property="og:description" content="&quot;disable RLS so it works.&quot; A deterministic hook catches it the moment you type it — and catches the agent doing it unasked. Seven editors, no LLM call. It reports; it never edits your code." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://vibeward.ai/" />
 <meta property="og:image" content="https://vibeward.ai/avatar-512.png" />
 <meta property="og:site_name" content="vibeward" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="vibeward — stop the insecure prompt before your agent runs it" />
-<meta name="twitter:description" content="A deterministic Claude Code hook that catches &quot;disable RLS&quot; before the agent acts — and a read-only scanner for what already shipped." />
+<meta name="twitter:description" content="A deterministic hook that catches &quot;disable RLS&quot; before the agent acts — in seven editors — and a read-only scanner for what already shipped." />
 <meta name="twitter:image" content="https://vibeward.ai/avatar-512.png" />
 <meta name="theme-color" content="#16150F" />
 <link rel="alternate" hreflang="en" href="https://vibeward.ai/" />
@@ -36,7 +36,7 @@
       "name": "vibeward",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "macOS, Linux, Windows",
-      "softwareVersion": "0.4.0",
+      "softwareVersion": "0.5.0",
       "url": "https://vibeward.ai/",
       "codeRepository": "https://github.com/JSiapoDEV/vibeward",
       "downloadUrl": "https://www.npmjs.com/package/vibeward",
@@ -267,12 +267,30 @@
   nav {
     display: flex; justify-content: space-between; align-items: center;
     padding: 24px 0 22px; gap: 20px;
+    /* Wrap rather than overflow. A flex row of links has no reason to be the widest thing on
+       the page, and when it was, it set the document's scroll width for every viewport below
+       it — the whole page could be dragged sideways on a phone. */
+    flex-wrap: wrap;
   }
   .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 17px; letter-spacing: -.02em; }
-  nav .links { display: flex; gap: 26px; font-size: 14.5px; }
+  nav .links {
+    display: flex; align-items: center; gap: 26px; font-size: 14.5px;
+    /* `min-width: 0` is what actually lets this shrink: a flex item defaults to `auto`, which
+       refuses to go below its content, so the row stayed 282px wide at every width. */
+    min-width: 0; flex-wrap: wrap; justify-content: flex-end;
+  }
   nav .links a { color: var(--ink-3); }
   nav .links a:hover { color: var(--ink); text-decoration: none; }
   @media (max-width: 760px) { nav .links a.hide-sm { display: none; } nav .links { gap: 18px; } }
+  /* Below this, the section links stop fitting beside the brand and the two controls. The
+     links go — the page is one scroll and the hero has the same call to action — and the
+     language and theme buttons stay, because a control you cannot reach on a phone is not a
+     control. */
+  @media (max-width: 520px) {
+    nav .links a.hide-xs { display: none; }
+    nav .links { gap: 14px; }
+    .wrap { padding: 0 18px; }
+  }
 
   /* Language and theme sit together, set apart from the section links: they change how the
      page is presented rather than where it takes you. Never hidden on small screens — a
@@ -464,6 +482,13 @@
   @media (max-width: 820px) { .three { grid-template-columns: 1fr; } }
   @media (max-width: 720px) { .two { grid-template-columns: 1fr; } }
 
+  /* A `1fr` track is `minmax(auto, 1fr)`, and `auto` will not go below the item's min-content.
+     A panel holding a `<pre white-space: pre>` therefore forced its column wider than the
+     container — the column computed to 372px inside 338px — and the panel's own
+     `overflow-x: auto` could not help, because the blowout happens one level up. `min-width: 0`
+     on the items is what lets the track shrink and hands the scrolling back to the `<pre>`. */
+  .split > *, .two > *, .three > *, .grid > *, .faq > * { min-width: 0; }
+
   /* ── loop diagram ────────────────────────────────────── */
   .loop { display: flex; align-items: stretch; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
   .loop .step {
@@ -572,11 +597,11 @@
       vibeward
     </div>
     <div class="links">
-      <a href="#guard">Guardrail</a>
+      <a href="#guard" class="hide-xs">Guardrail</a>
       <a href="#scan" class="hide-sm">What it finds</a>
       <a href="#install" class="hide-sm">Install</a>
       <a href="#faq" class="hide-sm">FAQ</a>
-      <a href="#audits">Audits</a>
+      <a href="#audits" class="hide-xs">Audits</a>
       <a href="https://github.com/JSiapoDEV/vibeward">GitHub</a>
       <span class="navtools">
         <a class="navbtn" href="/es/" hreflang="es" lang="es" title="Ver esta página en español">ES</a>
@@ -589,12 +614,13 @@
   </nav>
 
   <header class="hero stagger">
-    <span class="eyebrow"><b>v0.4.0</b> · guardrail + scanner</span>
+    <span class="eyebrow"><b>v0.5.0</b> · guardrail + scanner</span>
     <h1>Your agent was about to <span class="accent">disable RLS</span>.</h1>
     <p class="sub">
       The holes in AI-built apps rarely start as bad code. They start as a reasonable-sounding
       request — <em>“disable RLS so it works”</em> — and the agent complies, because complying is
-      the job. vibeward catches that the moment you type it, and audits whatever already shipped.
+      the job. vibeward catches that the moment you type it, catches the agent doing it unasked,
+      and audits whatever already shipped. It reports; it never edits your code.
       Deterministic, read-only, MIT.
     </p>
 
@@ -643,7 +669,7 @@
   <!-- ── guardrail ────────────────────────────────────── -->
   <section id="guard">
     <div class="head" data-reveal>
-      <span class="k">Eight rules · no model in the loop</span>
+      <span class="k">Three gates · no model in the loop</span>
       <h2 class="sec-title">A regex cannot be talked out of it</h2>
       <p class="sec-lead">
         Disabling RLS. Moving a <span class="lit">service_role</span> key into the client. Making a
@@ -665,6 +691,21 @@
         anon key — the single most common cause of vibe-coded data leaks.
   <span class="g">do this instead:</span>  keep RLS on and add a policy:
         <span class="c">CREATE POLICY ... USING (auth.uid() = user_id)</span></pre>
+    </div>
+
+    <div class="three" style="margin-top:14px" data-reveal>
+      <div class="card">
+        <h4>You send a prompt <span class="tag">gate 1</span></h4>
+        <p>The request above, caught before the agent acts on it. Eight rules over natural language, in the language you think in.</p>
+      </div>
+      <div class="card">
+        <h4>The agent edits or runs <span class="tag">gate 2</span></h4>
+        <p>The one nobody asked for. A prompt gate never sees the agent that hits a failing query and reaches for <span class="lit">DISABLE ROW LEVEL SECURITY</span> on its own — there was no prompt. Same rules as the code scan, pointed at the file that has not been written yet.</p>
+      </div>
+      <div class="card">
+        <h4>The agent reads <span class="tag">gate 3</span></h4>
+        <p>Prompt injection: a README, a page or an MCP result carrying instructions aimed at your agent. Nothing left to block by then, so it gets relabelled as data and you get told what it tried.</p>
+      </div>
     </div>
 
     <div class="two" style="margin-top:14px">
@@ -699,11 +740,12 @@
         </p>
         <pre><button class="copy-mini" onclick="copyEl('guardcmd')">copy</button><span id="guardcmd">npx vibeward@latest init --scope user</span></pre>
         <p style="margin-top:12px;font-size:13.6px">
-          Default is <em>not</em> a hard stop. <span class="lit">UserPromptSubmit</span> is the one
-          hook whose stdout re-enters the model's context, so the guard exits <span class="lit">0</span>
-          and injects the rule — your prompt survives and the agent corrects its own approach. A false
-          positive costs you one ignored note. <span class="lit">--block</span> is there if you want
-          the hard stop.
+          Default is <em>not</em> a hard stop. Where the editor lets a hook put text in front of the
+          model, the guard does that and nothing is interrupted — your prompt survives and the agent
+          corrects its own approach, and a false positive costs you one ignored note. Where an editor
+          can only block, vibeward stays <em>silent</em> instead: losing the paragraph you just typed
+          is how a guardrail gets uninstalled, and one that is uninstalled protects nobody.
+          <span class="lit">--block</span> is there if you want the hard stop anyway.
         </p>
       </div>
     </div>
@@ -819,54 +861,58 @@
   <section id="install">
     <div class="head" data-reveal>
       <span class="k">vibeward init</span>
-      <h2 class="sec-title">The package detects. Your agent fixes.</h2>
+      <h2 class="sec-title">The package detects. Your agent explains.</h2>
       <p class="sec-lead">
         Ask an agent “is the meta description missing?” and it will hallucinate an answer. A parser
-        answering yes or no never does. So vibeward installs itself into your AI tools as a skill:
-        it reports, the agent applies what it can, and then re-runs vibeward to verify.
+        answering yes or no never does. So vibeward decides what is true and installs itself into
+        your AI tools as a skill whose job is to make that readable — leading with what it costs,
+        quoting the evidence, never restating a severity in its own words.
       </p>
     </div>
 
     <div class="loop" data-reveal>
       <div class="step"><div class="n">01</div><h4>Detect</h4><p>Deterministic rules produce findings — no model in the loop, no invented gaps.</p></div>
       <div class="arw">→</div>
-      <div class="step"><div class="n">02</div><h4>Fix</h4><p>Every finding carries a <span class="lit">fix</span> and an <span class="lit">autofix</span> field — <em>auto</em>, <em>needs-input</em> or <em>manual</em> — telling the agent how far it may go alone.</p></div>
+      <div class="step"><div class="n">02</div><h4>Report</h4><p>A JSON payload for the agent and a formatted markdown report for you. Every finding carries its evidence, its impact and what a correct one looks like.</p></div>
       <div class="arw">→</div>
-      <div class="step"><div class="n">03</div><h4>Re-detect</h4><p>vibeward runs again and proves it. The same loop as a test suite.</p></div>
+      <div class="step"><div class="n">03</div><h4>You decide</h4><p>And only you. Findings ship with no <span class="lit">fix</span> field and no <span class="lit">autofix</span> field, because there is no work order here to carry out.</p></div>
     </div>
 
     <div class="two" style="margin-top:14px">
       <div class="term" data-reveal>
         <div class="bar"><i></i><i></i><i></i><span>npx vibeward@latest init</span></div>
-<pre><span class="d">?</span> <b>Where do you want it?</b>
-<span class="c">❯</span> ● This project      <span class="d">~/Developer/my-site</span>
-  ○ My user account   <span class="d">~/.claude — every repo</span>
+<pre><span class="d">?</span> <b>What should I install?</b>
+<span class="c">❯</span> ◉ Claude Code        <span class="d">skill + guard</span>
+  ◉ Cursor             <span class="d">skill + guard</span>
+  ○ OpenAI Codex CLI   <span class="d">skill + guard</span>
+  ○ GitHub Copilot CLI <span class="d">skill + guard</span>
+  ○ Gemini CLI         <span class="d">skill + guard</span>
+  ○ Windsurf / Devin   <span class="d">skill + guard</span>
+  ○ opencode           <span class="d">skill + guard</span>
 
-<span class="d">?</span> <b>What should I install?</b>
-<span class="c">❯</span> ◉ Claude Code · skill    <span class="d">audit + fix</span>
-  ◉ Claude Code · guard hook
-  ◉ Cursor · rule
-  ○ AGENTS.md · fallback   <span class="d">merge</span>
-  ○ GitHub Action          <span class="d">every push</span></pre>
+<span class="d">?</span> <b>What should the guard watch?</b>
+<span class="c">❯</span> ◉ When you send a prompt
+  ◉ When the agent edits or runs
+  ◉ When the agent reads</pre>
       </div>
       <div class="panel" data-reveal>
         <span class="k">The one command that writes</span>
         <h3>And it writes carefully</h3>
         <p>
           It previews every file before touching disk, never overwrites a file it did not author,
-          merges <span class="lit">settings.json</span> key by key — your other hooks stay put — and
-          <span class="lit">AGENTS.md</span> between markers. Re-running is how you update. Any
-          existing file is backed up to <span class="lit">.vibeward.bak</span> before its first change.
+          merges settings files key by key — your other hooks stay put — and markdown between
+          markers. Re-running is how you update. Any existing file is backed up to
+          <span class="lit">.vibeward.bak</span> before its first change.
         </p>
         <p style="margin-top:12px">
-          Options the chosen scope can't take are greyed out <em>with the reason</em> rather than hidden.
-          Non-interactive for CI and dotfiles:
+          One <span class="lit">SKILL.md</span> per tool: the format is shared now, so there is one
+          body of text instead of a rule file per editor. Non-interactive for CI and dotfiles:
         </p>
         <pre><button class="copy-mini" onclick="copyEl('initcmd')">copy</button><span id="initcmd">vibeward init --scope user --all --yes</span></pre>
         <p style="margin-top:14px;font-size:13.6px">
-          Security findings are never auto-fixed. Deleting an exposed key from a bundle does not
-          un-leak it — only the owner decides when it is rotated and whether the incident has to
-          be disclosed.
+          And it tells you what it <em>cannot</em> do. Not every editor enforces the same amount —
+          one cannot gate a prompt at all — so <span class="lit">init</span> prints the limits per
+          tool after it writes, rather than leaving you to assume you are covered.
         </p>
       </div>
     </div>
@@ -951,7 +997,7 @@
       <span class="k">GitHub Action</span>
       <h3>Or let it run itself, on every push</h3>
       <p>Findings upload as SARIF and land in the repo's Security tab. The job fails on a critical — website findings never change the exit code. Point it at a folder with <span class="lit">path</span>, or at a deployed URL with <span class="lit">url</span>.</p>
-      <pre><button class="copy-mini" onclick="copyEl('gha')">copy</button><span id="gha">- uses: JSiapoDEV/vibeward@v0.4.0
+      <pre><button class="copy-mini" onclick="copyEl('gha')">copy</button><span id="gha">- uses: JSiapoDEV/vibeward@v0.5.0
   with:
     url: https://your-app.com</span></pre>
     </div>
@@ -962,7 +1008,7 @@
     <div class="head" data-reveal>
       <span class="k">Every finding</span>
       <h2 class="sec-title">Context, not a red flag</h2>
-      <p class="sec-lead">Enough for a person to grasp the risk in five seconds, and enough for an agent to open a correct pull request.</p>
+      <p class="sec-lead">Enough for a person to grasp the risk in five seconds, and enough to decide what to do about it.</p>
     </div>
     <div class="finding" data-reveal>
       <div class="ttl"><span class="sev">CRITICAL</span> Table <code>users</code> is readable without authentication</div>
@@ -971,7 +1017,7 @@
         <div class="row"><b>Evidence</b> 1,847 rows returned with only the public anon key. Sensitive columns present: <code>email</code>, <code>phone</code>, <code>full_name</code>.</div>
         <div class="row"><b>How it's exploited</b> Any visitor sends <code>GET /rest/v1/users?select=*</code> with the anon key lifted from the JS bundle. Every row comes back. No login.</div>
         <div class="row"><b>Impact</b> ~1,847 user records readable by anyone on the internet right now. An active personal-data leak, not a theoretical one.</div>
-        <div class="row"><b>Fix</b> <code>autofix: manual</code> — enable RLS and add an owner policy, then rotate nothing: the anon key is public by design. The exposure was the missing policy.</div>
+        <div class="row"><b>Why it matters</b> Enable RLS and add an owner policy. Rotate nothing — the anon key is public by design; the exposure was the missing policy. Treat the rows as already read.</div>
       </div>
     </div>
   </section>
@@ -986,6 +1032,10 @@
       <details>
         <summary>Does it exploit or change anything?</summary>
         <p class="a">Scanning is read-only: it reads your code, bundles and public responses to <em>detect</em> risk — never modifying, deleting or exploiting. The one exception is an explicit, opt-in <span class="lit">--write-test</span> that sends a single non-mutating write probe (an empty insert) to check for unauthenticated writes; it stays off unless you ask. <span class="lit">init</span> is the only command that writes, and only into your own project.</p>
+      </details>
+      <details>
+        <summary>Will it fix what it finds?</summary>
+        <p class="a">No — not the security findings, not the website ones, not the one-line mechanical ones, and not if you ask it to. Findings carry no <span class="lit">fix</span> field and no <span class="lit">autofix</span> field, and the instructions vibeward installs forbid the agent from acting on one. That is the product, not a missing feature: an audit that ends in a pile of unrequested diffs replaces the thing you can act on with a thing you now have to review. On the security side it is worse than untidy — deleting an exposed key from a bundle does not un-leak it. The key has to be rotated, and only you decide when, and whether the incident has to be disclosed.</p>
       </details>
       <details>
         <summary>Can a missing favicon fail my build?</summary>
