@@ -322,7 +322,7 @@ footer.btm a{color:color-mix(in srgb,var(--ink) 78%,transparent)}
 <p><em>Generado con vibeward v0.6.0 — análisis automatizado y no destructivo realizado desde fuera.</em></p></article>
   <section class="repro">
     <h2>La app que lo genera</h2>
-    <p>Cuatro archivos, rotos a propósito. Nada de esto es una credencial real: el token bearer son 48 caracteres hex aleatorios y la clave de Supabase es un valor sintácticamente válido que no apunta a ningún sitio. Guárdalos, sirve la carpeta, y te sale el informe de arriba.</p>
+    <p>Cuatro archivos, rotos a propósito. Nada de esto es una credencial real: la clave de Supabase es un valor sintácticamente válido que no apunta a ningún sitio, y el token bearer está escrito como placeholder — pon ahí 48 caracteres hex cualesquiera y te sale el informe de arriba. <strong>El placeholder no es remilgo, es la herramienta funcionando.</strong> Con el valor real impreso aquí, esta misma página se escaneaba como token bearer hardcodeado en código cliente, porque un literal que llega a una cabecera <code>Authorization</code> es justo lo que busca la regla y no puede distinguir una demo de un despliegue. Un placeholder no tiene forma de credencial, así que se queda callado — y los hallazgos de seguridad no se pueden suprimir por configuración, por diseño.</p>
     <pre>python3 -m http.server 8099
 npx vibeward@latest http://localhost:8099/ --yes --lang es</pre>
     <p class="fname">index.html</p><pre>&lt;!doctype html&gt;
@@ -341,7 +341,7 @@ npx vibeward@latest http://localhost:8099/ --yes --lang es</pre>
 &lt;/html&gt;</pre><p class="fname">assets/app.js</p><pre>//# sourceMappingURL=app.js.map
 var SUPABASE_URL = "https://abcdefghijklmnop.supabase.co";
 var SUPABASE_ANON_KEY = "sb_publishable_9f2c1d4e7a8b3c5d6e0f1a2b";
-var B = "7d3f1a9c5e2b8460af17c3d9e64b0521cc8ff37a19e4d2b6";
+var B = "PUT_ANY_48_HEX_CHARACTERS_HERE";
 function api(p) {
   return fetch(SUPABASE_URL + p, {
     headers: { apikey: SUPABASE_ANON_KEY, Authorization: "Bearer ".concat(B) }
