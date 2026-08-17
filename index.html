@@ -777,7 +777,7 @@
         <div class="src">its own rules, or none</div>
       </div>
       <div class="stat">
-        <div class="n">725</div>
+        <div class="n">731</div>
         <div class="l">assertions the rules are held to, including corpora of harmless input built to make them misfire. On ten real apps the last release took 8 secret findings down to 2, both true.</div>
         <div class="src">npm test</div>
       </div>
@@ -1129,6 +1129,21 @@ claude plugin install vibeward</span></pre>
         may use, an inventory of AI components, or SAST across a monorepo, buy something built for
         that — several vendors do it well and this is not competing with them. Knowing which of the
         two you need is worth more than either one's feature list.
+      </p>
+      <p style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line)">
+        <strong>Built with Claude Code</strong>, which is worth saying out loud in a project whose
+        subject is the code AI agents produce. The objection is fair — a security tool written by an
+        agent is what this tool exists to be suspicious of — and the answer is that every rule is
+        deterministic and readable, held to 731 assertions including input built to make them
+        misfire. The useful half is that <strong>it catches its own author</strong>: writing this
+        site tripped the content gate, staging a commit tripped the action gate, and printing a real
+        token on a demo page made vibeward report vibeward.ai. Each was fixed in the rules or in the
+        content — none was silenced, because security findings are the one class the config file
+        deliberately cannot suppress.
+      </p>
+      <p style="margin-top:12px;font-size:13.5px;color:var(--ink-3)">
+        Not affiliated with, sponsored by or endorsed by Anthropic. Claude Code is the editor it
+        guards first, and the one it was written in.
       </p>
     </div>
   </section>
