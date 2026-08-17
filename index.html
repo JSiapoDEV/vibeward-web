@@ -374,6 +374,7 @@
     border-radius: var(--r-lg); overflow: hidden;
   }
   .stat { background: var(--card); padding: 24px 24px 22px; display: flex; flex-direction: column; }
+  .stats--own .stat .n { color: var(--clay); }
   .stat .n { font-family: var(--serif); font-size: 40px; font-weight: 400; color: var(--crit); line-height: 1; letter-spacing: -.03em; }
   .stat .l { color: var(--ink-2); font-size: 14px; margin-top: 11px; line-height: 1.5; }
   .stat .src {
@@ -764,6 +765,24 @@
       </p>
     </div>
 
+    <div class="stats stats--own" data-reveal style="margin-bottom:26px">
+      <div class="stat">
+        <div class="n">25</div>
+        <div class="l">security rules, plus 19 website checks and 8 intent rules over natural language in English, Spanish and Portuguese. Finite and countable on purpose: you can read the whole list before deciding to trust it.</div>
+        <div class="src">all of them in the repository</div>
+      </div>
+      <div class="stat">
+        <div class="n">0</div>
+        <div class="l">runtime dependencies, and no scanner underneath. vibeward wraps nothing — a tool that orchestrates ten others inherits ten installers, ten upgrade paths and ten sets of false positives, and cannot tell you why any one finding fired.</div>
+        <div class="src">its own rules, or none</div>
+      </div>
+      <div class="stat">
+        <div class="n">725</div>
+        <div class="l">assertions the rules are held to, including corpora of harmless input built to make them misfire. On ten real apps the last release took 8 secret findings down to 2, both true.</div>
+        <div class="src">npm test</div>
+      </div>
+    </div>
+
     <div class="split">
       <div class="lane sec" data-reveal>
         <span class="k">Security · gates the build</span>
@@ -1095,6 +1114,25 @@ claude plugin install vibeward</span></pre>
   </section>
 
   <!-- ── closer ───────────────────────────────────────── -->
+  <!-- ── fit ──────────────────────────────────────────── -->
+  <section>
+    <div class="panel" data-reveal>
+      <span class="k">Fit</span>
+      <h3>Who it is for, and who it is not</h3>
+      <p>
+        For the person who shipped a Supabase, Lovable, Bolt or v0 app and is the only one
+        responsible for it: one developer, one app, no security team to escalate to.
+      </p>
+      <p style="margin-top:12px">
+        <strong>Not an enterprise AppSec programme</strong>, and it does not pretend to be. If you
+        need policy governance across an organisation, control over which AI tools your developers
+        may use, an inventory of AI components, or SAST across a monorepo, buy something built for
+        that — several vendors do it well and this is not competing with them. Knowing which of the
+        two you need is worth more than either one's feature list.
+      </p>
+    </div>
+  </section>
+
   <!-- ── audits ───────────────────────────────────────── -->
   <section id="audits">
     <div class="panel" data-reveal>

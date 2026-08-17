@@ -376,6 +376,7 @@
     border-radius: var(--r-lg); overflow: hidden;
   }
   .stat { background: var(--card); padding: 24px 24px 22px; display: flex; flex-direction: column; }
+  .stats--own .stat .n { color: var(--clay); }
   .stat .n { font-family: var(--serif); font-size: 40px; font-weight: 400; color: var(--crit); line-height: 1; letter-spacing: -.03em; }
   .stat .l { color: var(--ink-2); font-size: 14px; margin-top: 11px; line-height: 1.5; }
   .stat .src {
@@ -766,6 +767,24 @@
       </p>
     </div>
 
+    <div class="stats stats--own" data-reveal style="margin-bottom:26px">
+      <div class="stat">
+        <div class="n">25</div>
+        <div class="l">reglas de seguridad, más 19 checks de web y 8 reglas de intención sobre lenguaje natural en inglés, español y portugués. Finitas y contables a propósito: puedes leer la lista entera antes de decidir si te fías.</div>
+        <div class="src">todas en el repositorio</div>
+      </div>
+      <div class="stat">
+        <div class="n">0</div>
+        <div class="l">dependencias en runtime, y ningún escáner por debajo. vibeward no envuelve nada — una herramienta que orquesta otras diez hereda diez instaladores, diez rutas de actualización y diez conjuntos de falsos positivos, y no puede decirte por qué disparó un hallazgo concreto.</div>
+        <div class="src">reglas propias, o ninguna</div>
+      </div>
+      <div class="stat">
+        <div class="n">725</div>
+        <div class="l">aserciones a las que se someten las reglas, incluidos corpus de entradas inofensivas construidos para hacerlas fallar. Sobre diez apps reales, la última versión pasó de 8 hallazgos de secretos a 2, ambos ciertos.</div>
+        <div class="src">npm test</div>
+      </div>
+    </div>
+
     <div class="split">
       <div class="lane sec" data-reveal>
         <span class="k">Seguridad · bloquea el build</span>
@@ -1098,6 +1117,25 @@ claude plugin install vibeward</span></pre>
   </section>
 
   <!-- ── closer ───────────────────────────────────────── -->
+  <!-- ── encaje ───────────────────────────────────────── -->
+  <section>
+    <div class="panel" data-reveal>
+      <span class="k">Encaje</span>
+      <h3>Para quién es, y para quién no</h3>
+      <p>
+        Para quien desplegó una app de Supabase, Lovable, Bolt o v0 y es el único responsable de
+        ella: un desarrollador, una app, ningún equipo de seguridad al que escalar.
+      </p>
+      <p style="margin-top:12px">
+        <strong>No es un programa de AppSec de empresa</strong>, y no pretende serlo. Si necesitas
+        gobierno de políticas en una organización, controlar qué herramientas de IA pueden usar tus
+        desarrolladores, un inventario de componentes de IA o SAST sobre un monorepo, compra algo
+        hecho para eso — hay proveedores que lo hacen bien y esto no compite con ellos. Saber cuál
+        de los dos necesitas vale más que la lista de features de cualquiera.
+      </p>
+    </div>
+  </section>
+
   <!-- ── audits ───────────────────────────────────────── -->
   <section id="audits">
     <div class="panel" data-reveal>
