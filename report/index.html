@@ -15,7 +15,7 @@
 <meta property="og:url" content="https://vibeward.ai/report/">
 <meta property="og:image" content="https://vibeward.ai/avatar-512.png">
 <meta name="twitter:card" content="summary">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Sample report · vibeward","description":"A complete, unedited vibeward report, produced by scanning a deliberately broken demo app. See what the tool prints before installing anything.","inLanguage":"en","url":"https://vibeward.ai/report/","isPartOf":{"@type":"WebSite","name":"vibeward","url":"https://vibeward.ai"},"author":{"@type":"Person","name":"José Siapo","url":"https://github.com/JSiapoDEV"},"about":{"@type":"SoftwareApplication","name":"vibeward","applicationCategory":"DeveloperApplication","url":"https://vibeward.ai"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Sample report · vibeward","description":"A complete, unedited vibeward report, produced by scanning a deliberately broken demo app. See what the tool prints before installing anything.","inLanguage":"en","url":"https://vibeward.ai/report/","isPartOf":{"@type":"WebSite","name":"vibeward","url":"https://vibeward.ai"},"author":{"@type":"Person","name":"Jos\u00e9 Siapo","url":"https://github.com/JSiapoDEV"},"about":{"@type":"SoftwareApplication","name":"vibeward","applicationCategory":"DeveloperApplication","url":"https://vibeward.ai"}}</script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>@font-face {
     font-family: 'Newsreader'; font-style: normal; font-weight: 300 700; font-display: swap;
@@ -93,7 +93,6 @@
     --r-sm: 6px; --r: 10px; --r-lg: 16px;
     --ease: cubic-bezier(.22,.68,.24,1);
   }
-
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--paper);color:var(--ink);
@@ -123,16 +122,16 @@ h1.page{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:clamp(3
 .note p{margin:0 0 12px;font-size:15px}
 .note p:last-child{margin-bottom:0}
 .report{margin:44px 0 0;padding:34px 0 0;border-top:1px solid var(--line)}
-.report h2:first-child{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:28px;margin:0 0 22px}
+.report h2:first-child{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:28px;margin:0 0 22px;border:0;padding:0}
 .report h3{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;
   margin:44px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line-soft)}
 .report h4{font-size:17px;margin:34px 0 12px;font-weight:600;letter-spacing:-.01em}
 .report h5{font-size:15.5px;margin:26px 0 10px;font-weight:600}
-.report h4.f,.report h5.f{padding-left:13px;border-left:3px solid var(--line-strong,var(--line))}
+.report h4.f,.report h5.f{padding-left:13px;border-left:3px solid var(--line)}
 .report .crit{border-left-color:var(--crit)}
 .report .high{border-left-color:var(--clay)}
 .report .med{border-left-color:var(--amber)}
-.report .low{border-left-color:var(--line-strong,#6b6355)}
+.report .low{border-left-color:#6b6355}
 .report p{margin:0 0 12px;font-size:15.5px}
 .report ul{margin:0 0 14px;padding-left:20px}
 .report li{margin:0 0 6px;font-size:15.5px}
@@ -154,11 +153,11 @@ pre{font-family:'IBM Plex Mono',monospace;background:var(--term-bg);border:1px s
 .repro h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:23px;margin:0 0 12px}
 .repro p{font-size:15.5px;color:color-mix(in srgb,var(--ink) 84%,transparent)}
 .fname{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.06em;
-  color:var(--clay);text-transform:none;margin:20px 0 7px}
+  color:var(--clay);margin:20px 0 7px}
 footer.btm{margin:60px 0 0;border-top:1px solid var(--line-soft);padding:26px 0 60px;
   font-size:14px;color:color-mix(in srgb,var(--ink) 60%,transparent)}
 footer.btm a{color:color-mix(in srgb,var(--ink) 78%,transparent)}
-@media (max-width:640px){.intro{padding-top:34px}.report h2{font-size:21px}}
+@media (max-width:640px){.intro{padding-top:34px}.report h3{font-size:21px}}
 </style>
 </head>
 <body>
@@ -174,12 +173,7 @@ footer.btm a{color:color-mix(in srgb,var(--ink) 78%,transparent)}
     <span class="k">Sample report</span>
     <h1 class="page">What it actually prints</h1>
     <p class="lead">This is a complete report, unedited. It came from scanning a deliberately broken demo app served on <code>localhost</code> — not somebody's live site, which is why the address in it says so. Every competing scanner shows you a screenshot of a dashboard; this is the artefact you would hand a client.</p>
-    <div class="note">
-      <h3>Two things worth reading closely</h3>
-      <p>The <strong>hardcoded bearer token</strong> is found by its <em>use</em>, not its shape. After minification the variable is a single letter and the value has no vendor prefix, so there is nothing to pattern-match: what gives it away is a literal that ends up behind <code>Bearer</code>. A token the client obtains at login is an identifier with no literal, and stays silent.</p>
-      <p>The Supabase <strong>publishable key three lines above it is reported as nothing at all.</strong> It belongs in the client by design, and a scanner that flags it is training you to ignore the scanner. Six of eight findings on a real corpus used to be exactly that kind of noise.</p>
-      <p>The website section is scored on its own scale. It never affects the security verdict, the SARIF file or the exit code — a missing favicon is not a finding next to a leaked credential.</p>
-    </div>
+    <div class="note"><h3>Two things worth reading closely</h3><p>The <strong>hardcoded bearer token</strong> is found by its <em>use</em>, not its shape. After minification the variable is a single letter and the value has no vendor prefix, so there is nothing to pattern-match: what gives it away is a literal that ends up behind <code>Bearer</code>. A token the client obtains at login is an identifier with no literal, and stays silent.</p><p>The Supabase <strong>publishable key three lines above it is reported as nothing at all.</strong> It belongs in the client by design, and a scanner that flags it is training you to ignore the scanner. Six of eight findings on a real corpus used to be exactly that kind of noise.</p><p>The website section is scored on its own scale. It never affects the security verdict, the SARIF file or the exit code — a missing favicon is not a finding next to a leaked credential.</p></div>
   </section>
   <article class="report"><h2>Audit Report</h2>
 <p><strong>Application:</strong> http://localhost:8099/</p>
@@ -194,7 +188,7 @@ footer.btm a{color:color-mix(in srgb,var(--ink) 78%,transparent)}
 <h4 class="f high">1. 🟠 HIGH — Hardcoded bearer token in client code</h4>
 <p><strong>Classification:</strong> CWE-798</p>
 <p><strong>Where:</strong> http://localhost:8099/assets/app.js</p>
-<p><strong>Evidence:</strong> Authorization: Bearer 7d3f1a9c…d2b6</p>
+<p><strong>Evidence:</strong> Authorization: Bearer 126a9a89…5082</p>
 <p><strong>How it's exploited:</strong> The key ships in the client JavaScript, so anyone can open the page source, copy it, and call the provider as you — no authentication needed. The token is in a file the site serves to everyone, so every visitor holds the same credential. Anyone who opens the network tab can replay it against the API routes it authorises.</p>
 <p><strong>Why it matters:</strong> A bearer token compiled into the bundle is a shared secret handed to every visitor, and it cannot be revoked for one person without revoking it for all. Whether that grants access to anything depends on what the server does with it — but a static token in client code is not authentication, and if it is the only check, the API is effectively public.</p>
 <p><strong>References:</strong> <a href="https://cwe.mitre.org/data/definitions/798.html" rel="noopener noreferrer nofollow">https://cwe.mitre.org/data/definitions/798.html</a> · <a href="https://cwe.mitre.org/data/definitions/798.html" rel="noopener noreferrer nofollow">https://cwe.mitre.org/data/definitions/798.html</a></p>

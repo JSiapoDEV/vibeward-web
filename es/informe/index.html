@@ -15,7 +15,7 @@
 <meta property="og:url" content="https://vibeward.ai/es/informe/">
 <meta property="og:image" content="https://vibeward.ai/avatar-512.png">
 <meta name="twitter:card" content="summary">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Informe de ejemplo · vibeward","description":"Un informe completo de vibeward, sin editar, generado escaneando una app rota a propósito. Mira lo que imprime la herramienta antes de instalar nada.","inLanguage":"es","url":"https://vibeward.ai/es/informe/","isPartOf":{"@type":"WebSite","name":"vibeward","url":"https://vibeward.ai"},"author":{"@type":"Person","name":"José Siapo","url":"https://github.com/JSiapoDEV"},"about":{"@type":"SoftwareApplication","name":"vibeward","applicationCategory":"DeveloperApplication","url":"https://vibeward.ai"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Informe de ejemplo · vibeward","description":"Un informe completo de vibeward, sin editar, generado escaneando una app rota a propósito. Mira lo que imprime la herramienta antes de instalar nada.","inLanguage":"es","url":"https://vibeward.ai/es/informe/","isPartOf":{"@type":"WebSite","name":"vibeward","url":"https://vibeward.ai"},"author":{"@type":"Person","name":"Jos\u00e9 Siapo","url":"https://github.com/JSiapoDEV"},"about":{"@type":"SoftwareApplication","name":"vibeward","applicationCategory":"DeveloperApplication","url":"https://vibeward.ai"}}</script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>@font-face {
     font-family: 'Newsreader'; font-style: normal; font-weight: 300 700; font-display: swap;
@@ -93,7 +93,6 @@
     --r-sm: 6px; --r: 10px; --r-lg: 16px;
     --ease: cubic-bezier(.22,.68,.24,1);
   }
-
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--paper);color:var(--ink);
@@ -123,16 +122,16 @@ h1.page{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:clamp(3
 .note p{margin:0 0 12px;font-size:15px}
 .note p:last-child{margin-bottom:0}
 .report{margin:44px 0 0;padding:34px 0 0;border-top:1px solid var(--line)}
-.report h2:first-child{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:28px;margin:0 0 22px}
+.report h2:first-child{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:28px;margin:0 0 22px;border:0;padding:0}
 .report h3{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;
   margin:44px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line-soft)}
 .report h4{font-size:17px;margin:34px 0 12px;font-weight:600;letter-spacing:-.01em}
 .report h5{font-size:15.5px;margin:26px 0 10px;font-weight:600}
-.report h4.f,.report h5.f{padding-left:13px;border-left:3px solid var(--line-strong,var(--line))}
+.report h4.f,.report h5.f{padding-left:13px;border-left:3px solid var(--line)}
 .report .crit{border-left-color:var(--crit)}
 .report .high{border-left-color:var(--clay)}
 .report .med{border-left-color:var(--amber)}
-.report .low{border-left-color:var(--line-strong,#6b6355)}
+.report .low{border-left-color:#6b6355}
 .report p{margin:0 0 12px;font-size:15.5px}
 .report ul{margin:0 0 14px;padding-left:20px}
 .report li{margin:0 0 6px;font-size:15.5px}
@@ -154,11 +153,11 @@ pre{font-family:'IBM Plex Mono',monospace;background:var(--term-bg);border:1px s
 .repro h2{font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:23px;margin:0 0 12px}
 .repro p{font-size:15.5px;color:color-mix(in srgb,var(--ink) 84%,transparent)}
 .fname{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.06em;
-  color:var(--clay);text-transform:none;margin:20px 0 7px}
+  color:var(--clay);margin:20px 0 7px}
 footer.btm{margin:60px 0 0;border-top:1px solid var(--line-soft);padding:26px 0 60px;
   font-size:14px;color:color-mix(in srgb,var(--ink) 60%,transparent)}
 footer.btm a{color:color-mix(in srgb,var(--ink) 78%,transparent)}
-@media (max-width:640px){.intro{padding-top:34px}.report h2{font-size:21px}}
+@media (max-width:640px){.intro{padding-top:34px}.report h3{font-size:21px}}
 </style>
 </head>
 <body>
@@ -174,12 +173,7 @@ footer.btm a{color:color-mix(in srgb,var(--ink) 78%,transparent)}
     <span class="k">Informe de ejemplo</span>
     <h1 class="page">Lo que imprime de verdad</h1>
     <p class="lead">Este es un informe completo, sin editar. Salió de escanear una app rota a propósito servida en <code>localhost</code> — no el sitio en vivo de nadie, y por eso la dirección que aparece dentro lo dice. Todos los escáneres de la competencia te enseñan la captura de un panel; esto es el entregable que le pasarías a un cliente.</p>
-    <div class="note">
-      <h3>Dos cosas que conviene leer despacio</h3>
-      <p>El <strong>token bearer hardcodeado</strong> se detecta por su <em>uso</em>, no por su forma. Tras minificar, la variable es una sola letra y el valor no tiene prefijo de proveedor, así que no hay patrón que buscar: lo que lo delata es un literal que acaba detrás de <code>Bearer</code>. Un token que el cliente obtiene al hacer login es un identificador sin literal, y se queda callado.</p>
-      <p>La clave <strong>publishable de Supabase que está tres líneas más arriba no se reporta en absoluto.</strong> Va en el cliente por diseño, y un escáner que la marca te está enseñando a ignorar al escáner. Seis de ocho hallazgos sobre un corpus real eran exactamente ese tipo de ruido.</p>
-      <p>La sección de web se puntúa en su propia escala. Nunca afecta al veredicto de seguridad, ni al archivo SARIF, ni al código de salida — un favicon que falta no es un hallazgo al lado de una credencial filtrada.</p>
-    </div>
+    <div class="note"><h3>Dos cosas que conviene leer despacio</h3><p>El <strong>token bearer hardcodeado</strong> se detecta por su <em>uso</em>, no por su forma. Tras minificar, la variable es una sola letra y el valor no tiene prefijo de proveedor, así que no hay patrón que buscar: lo que lo delata es un literal que acaba detrás de <code>Bearer</code>. Un token que el cliente obtiene al hacer login es un identificador sin literal, y se queda callado.</p><p>La clave <strong>publishable de Supabase que está tres líneas más arriba no se reporta en absoluto.</strong> Va en el cliente por diseño, y un escáner que la marca te está enseñando a ignorar al escáner. Seis de ocho hallazgos sobre un corpus real eran exactamente ese tipo de ruido.</p><p>La sección de web se puntúa en su propia escala. Nunca afecta al veredicto de seguridad, ni al archivo SARIF, ni al código de salida — un favicon que falta no es un hallazgo al lado de una credencial filtrada.</p></div>
   </section>
   <article class="report"><h2>Informe de auditoría</h2>
 <p><strong>Aplicación:</strong> http://localhost:8099/</p>
@@ -194,7 +188,7 @@ footer.btm a{color:color-mix(in srgb,var(--ink) 78%,transparent)}
 <h4 class="f high">1. 🟠 ALTO — Token bearer hardcodeado en el código del cliente</h4>
 <p><strong>Clasificación:</strong> CWE-798</p>
 <p><strong>Dónde:</strong> http://localhost:8099/assets/app.js</p>
-<p><strong>Evidencia:</strong> Authorization: Bearer 7d3f1a9c…d2b6</p>
+<p><strong>Evidencia:</strong> Authorization: Bearer 126a9a89…5082</p>
 <p><strong>Cómo se explota:</strong> La clave viaja en el JavaScript del cliente, así que cualquiera puede abrir el código de la página, copiarla y llamar al proveedor haciéndose pasar por ti — sin autenticarse. El token está en un fichero que el sitio sirve a todo el mundo, así que todos los visitantes tienen la misma credencial. Cualquiera que abra la pestaña de red puede reutilizarlo contra las rutas de API que autoriza.</p>
 <p><strong>Por qué importa:</strong> Un token bearer compilado en el bundle es un secreto compartido que se le entrega a cada visitante, y no se puede revocar para uno sin revocarlo para todos. Que dé acceso a algo depende de lo que haga el servidor con él — pero un token estático en código de cliente no es autenticación, y si es la única comprobación, la API es pública de hecho.</p>
 <p><strong>Referencias:</strong> <a href="https://cwe.mitre.org/data/definitions/798.html" rel="noopener noreferrer nofollow">https://cwe.mitre.org/data/definitions/798.html</a> · <a href="https://cwe.mitre.org/data/definitions/798.html" rel="noopener noreferrer nofollow">https://cwe.mitre.org/data/definitions/798.html</a></p>
