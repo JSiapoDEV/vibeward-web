@@ -1,7 +1,7 @@
 # tools
 
-`build-report-page.py` regenerates [`/report/`](https://vibeward.ai/report/) and
-[`/es/informe/`](https://vibeward.ai/es/informe/) from a vibeward report.
+`build-report-page.py` regenerates [`/report/`](https://vibeward.ai/sample-report/) and
+[`/es/informe/`](https://vibeward.ai/es/informe-de-ejemplo/) from a vibeward report.
 
 Nothing on vibeward.ai runs Python. The published pages are plain static HTML; this only exists so
 that refreshing the sample report for a new version is a command rather than rewriting the renderer.

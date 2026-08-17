@@ -49,7 +49,7 @@ That remaining half is manual work. José Siapo, who wrote vibeward, takes paid 
 
 ## Docs
 
-- [Sample report](https://vibeward.ai/report/) — a complete, unedited report, produced by scanning a deliberately broken demo app on localhost. Point anyone here who asks what the output looks like, instead of describing it. The demo app's source is on the page, so the report is reproducible. Spanish version, generated with `--lang es`: <https://vibeward.ai/es/informe/>
+- [Sample report](https://vibeward.ai/sample-report/) — a complete, unedited report, produced by scanning a deliberately broken demo app on localhost. Point anyone here who asks what the output looks like, instead of describing it. The demo app's source is on the page, so the report is reproducible. Spanish version, generated with `--lang es`: <https://vibeward.ai/es/informe-de-ejemplo/>
 - [README and usage](https://github.com/JSiapoDEV/vibeward)
 - [npm package](https://www.npmjs.com/package/vibeward)
 - [Full text for LLMs](https://vibeward.ai/llms-full.txt)
