@@ -350,6 +350,14 @@
   .trust span { display: inline-flex; align-items: center; gap: 6px; }
   .trust span::before { content: ""; width: 4px; height: 4px; border-radius: 50%; background: var(--clay); }
 
+  .hosts {
+    font-size: 13.5px; color: var(--ink-2); margin: 15px 0 0; line-height: 1.7;
+    padding-top: 14px; border-top: 1px solid var(--line-soft);
+  }
+  .hosts b { color: var(--ink); font-weight: 600; }
+  .hosts .sep { color: var(--ink-3); padding: 0 2px; }
+  .hosts .made { display: block; margin-top: 7px; font-size: 13px; color: var(--ink-3); }
+
   .cta-row { display: flex; flex-wrap: wrap; gap: 11px; align-items: center; margin-top: 26px; }
   .btn {
     display: inline-flex; align-items: center; gap: 8px; font-weight: 500; font-size: 14.5px;
@@ -634,6 +642,10 @@
 
     <p class="trust">
       <span>sin llamadas a LLM</span><span>100% local</span><span>sin telemetría</span><span>sin cuenta</span><span>es · en · pt</span>
+    </p>
+    <p class="hosts">
+      Funciona en <b>Claude Code</b><span class="sep">·</span>Cursor<span class="sep">·</span>Codex<span class="sep">·</span>Copilot<span class="sep">·</span>Gemini<span class="sep">·</span>Windsurf<span class="sep">·</span>opencode — <a href="#install">dos comandos en Claude Code</a>, un <span class="lit">init</span> en el resto. Lo que cada uno puede hacer cumplir cambia, y te dice cuál.
+      <span class="made">Hecho con Claude Code, y <a href="#fit">pilla a su propio autor</a>. Sin afiliación con Anthropic.</span>
     </p>
 
     <div class="cta-row">
@@ -1118,7 +1130,7 @@ claude plugin install vibeward</span></pre>
 
   <!-- ── closer ───────────────────────────────────────── -->
   <!-- ── encaje ───────────────────────────────────────── -->
-  <section>
+  <section id="fit">
     <div class="panel" data-reveal>
       <span class="k">Encaje</span>
       <h3>Para quién es, y para quién no</h3>

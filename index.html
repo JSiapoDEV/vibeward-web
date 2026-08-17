@@ -348,6 +348,14 @@
   .trust span { display: inline-flex; align-items: center; gap: 6px; }
   .trust span::before { content: ""; width: 4px; height: 4px; border-radius: 50%; background: var(--clay); }
 
+  .hosts {
+    font-size: 13.5px; color: var(--ink-2); margin: 15px 0 0; line-height: 1.7;
+    padding-top: 14px; border-top: 1px solid var(--line-soft);
+  }
+  .hosts b { color: var(--ink); font-weight: 600; }
+  .hosts .sep { color: var(--ink-3); padding: 0 2px; }
+  .hosts .made { display: block; margin-top: 7px; font-size: 13px; color: var(--ink-3); }
+
   .cta-row { display: flex; flex-wrap: wrap; gap: 11px; align-items: center; margin-top: 26px; }
   .btn {
     display: inline-flex; align-items: center; gap: 8px; font-weight: 500; font-size: 14.5px;
@@ -632,6 +640,10 @@
 
     <p class="trust">
       <span>no LLM call</span><span>100% local</span><span>no telemetry</span><span>no account</span><span>en · es · pt</span>
+    </p>
+    <p class="hosts">
+      Runs in <b>Claude Code</b><span class="sep">·</span>Cursor<span class="sep">·</span>Codex<span class="sep">·</span>Copilot<span class="sep">·</span>Gemini<span class="sep">·</span>Windsurf<span class="sep">·</span>opencode — <a href="#install">two commands in Claude Code</a>, one <span class="lit">init</span> everywhere else. What each one can enforce differs, and it tells you which.
+      <span class="made">Built with Claude Code, and it <a href="#fit">catches its own author</a>. Not affiliated with Anthropic.</span>
     </p>
 
     <div class="cta-row">
@@ -1115,7 +1127,7 @@ claude plugin install vibeward</span></pre>
 
   <!-- ── closer ───────────────────────────────────────── -->
   <!-- ── fit ──────────────────────────────────────────── -->
-  <section>
+  <section id="fit">
     <div class="panel" data-reveal>
       <span class="k">Fit</span>
       <h3>Who it is for, and who it is not</h3>
