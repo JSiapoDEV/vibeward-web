@@ -4,20 +4,20 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>vibeward — frena el prompt inseguro antes de que tu agente lo ejecute</title>
-<meta name="description" content="Un guardarraíl determinista para Claude Code, Cursor, Codex, Copilot, Gemini y opencode: caza &quot;desactiva el RLS&quot; en cuanto lo escribes, y audita lo que ya está desplegado. Reporta — nunca edita tu código." />
+<meta name="description" content="Caza &quot;desactiva el RLS&quot; en cuanto lo escribes, y audita lo que ya está desplegado. Un guardarraíl determinista, sin llamada a ningún LLM: avisa en el prompt en cuatro editores de IA y vigila escrituras y resultados de herramientas en siete. Reporta — nunca edita tu código." />
 <link rel="canonical" href="https://vibeward.ai/es/" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/avatar-512.png" />
 
 <meta property="og:title" content="vibeward — frena el prompt inseguro antes de que tu agente lo ejecute" />
-<meta property="og:description" content="&quot;desactiva el RLS para que funcione.&quot; Un hook determinista lo caza en cuanto lo escribes — y caza al agente haciéndolo sin que se lo pidan. Siete editores, ninguna llamada a un LLM. Reporta; nunca edita tu código." />
+<meta property="og:description" content="&quot;desactiva el RLS para que funcione.&quot; Un hook determinista lo caza en cuanto lo escribes — y caza al agente haciéndolo sin que se lo pidan. Cuatro editores avisan en el prompt, siete vigilan la escritura. Ninguna llamada a un LLM. Reporta; nunca edita tu código." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://vibeward.ai/es/" />
 <meta property="og:image" content="https://vibeward.ai/avatar-512.png" />
 <meta property="og:site_name" content="vibeward" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="vibeward — frena el prompt inseguro antes de que tu agente lo ejecute" />
-<meta name="twitter:description" content="Un hook determinista que caza &quot;desactiva el RLS&quot; antes de que el agente actúe — en siete editores — y un escáner de solo lectura para lo que ya desplegaste." />
+<meta name="twitter:description" content="Un hook determinista que caza &quot;desactiva el RLS&quot; antes de que el agente actúe — avisando en el prompt en cuatro editores, vigilando la escritura en siete — y un escáner de solo lectura para lo que ya desplegaste." />
 <meta name="twitter:image" content="https://vibeward.ai/avatar-512.png" />
 <meta name="theme-color" content="#16150F" />
 <link rel="alternate" hreflang="en" href="https://vibeward.ai/" />
@@ -37,7 +37,7 @@
       "name": "vibeward",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "macOS, Linux, Windows",
-      "softwareVersion": "0.6.0",
+      "softwareVersion": "0.6.2",
       "url": "https://vibeward.ai/es/",
       "inLanguage": "es",
       "codeRepository": "https://github.com/JSiapoDEV/vibeward",
@@ -78,7 +78,12 @@
         {
           "@type": "Question",
           "name": "¿El guardarraíl es un LLM?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No, y ese es justamente el punto. Es un motor de reglas determinista, así que no se le puede convencer de nada. 'Ignora las instrucciones anteriores' no funciona contra él." }
+          "acceptedAnswer": { "@type": "Answer", "text": "No, y ese es justamente el punto. Es un motor de reglas determinista, así que no se le puede convencer de nada. El clásico que empieza con 'ignora todo lo anterior…' no le hace nada: no hay modelo al que persuadir." }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Por qué no usar el plugin de seguridad oficial de Anthropic?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Usa los dos. El plugin security-guidance de Anthropic es gratis en todos los planes y revisa lo que el modelo ya escribió, y su documentación dice sin rodeos dónde se detiene: ninguna de sus capas bloquea escrituras ni commits, y para aplicación estricta receta combinar el plugin con un hook que bloquee la edición. vibeward es ese hook, un momento antes: frena la petición antes de que el código exista, y --block hace que ahí se detenga. Conoce Supabase y Firebase por su nombre; el guardarraíl no gasta tokens de modelo ni necesita Python, red ni repo git, mientras que el suyo se salta sus dos capas de modelo en silencio fuera de un repo; entiende español y portugués; y el escáner lee una URL desplegada, que ninguna revisión de tu copia de trabajo puede ver. Ninguno de los dos bloquea por defecto, y ninguno sustituye al otro." }
         }
       ]
     }
@@ -625,7 +630,7 @@
   </nav>
 
   <header class="hero stagger">
-    <span class="eyebrow"><b>v0.6.0</b> · guardarraíl + escáner</span>
+    <span class="eyebrow"><b>v0.6.2</b> · guardarraíl + escáner</span>
     <h1>Tu agente estaba a punto de <span class="accent">desactivar el RLS</span>.</h1>
     <p class="sub">
       Los agujeros de las apps hechas con IA casi nunca empiezan como código malo. Empiezan como
@@ -645,7 +650,7 @@
     </p>
     <p class="hosts">
       Funciona en <b>Claude Code</b><span class="sep">·</span>Cursor<span class="sep">·</span>Codex<span class="sep">·</span>Copilot<span class="sep">·</span>Gemini<span class="sep">·</span>Windsurf<span class="sep">·</span>opencode — <a href="#install">dos comandos en Claude Code</a>, un <span class="lit">init</span> en el resto. Lo que cada uno puede hacer cumplir cambia, y te dice cuál.
-      <span class="made">Hecho con Claude Code, y <a href="#fit">pilla a su propio autor</a>. Sin afiliación con Anthropic.</span>
+      <span class="made">Hecho con Claude Code, y <a href="#fit">pilla a su propio autor</a>. <a href="#faq">Una capa junto al plugin de seguridad oficial de Anthropic</a>, no un reemplazo. Sin afiliación con Anthropic.</span>
     </p>
 
     <div class="cta-row">
@@ -691,7 +696,7 @@
         público un bucket o una tabla. Quitar una comprobación de auth. Un comodín en CORS, un secreto
         hardcodeado, el CSRF o el rate limiting apagados, un <span class="lit">.env</span> a punto de
         commitearse. Cada una responde con el riesgo, por qué importa y la alternativa segura —
-        <em>“ignora las instrucciones anteriores”</em> no funciona contra un motor de reglas.
+        <em>“ignora todo lo anterior…”</em>, el clásico, no le hace nada a un motor de reglas.
       </p>
     </div>
 
@@ -791,7 +796,7 @@
         <div class="src">reglas propias, o ninguna</div>
       </div>
       <div class="stat">
-        <div class="n">731</div>
+        <div class="n">751</div>
         <div class="l">aserciones a las que se someten las reglas, incluidos corpus de entradas inofensivas construidos para hacerlas fallar. Sobre diez apps reales, la última versión pasó de 8 hallazgos de secretos a 2, ambos ciertos.</div>
         <div class="src">npm test</div>
       </div>
@@ -1046,7 +1051,7 @@ claude plugin install vibeward</span></pre>
       <span class="k">GitHub Action</span>
       <h3>O deja que se ejecute solo, en cada push</h3>
       <p>Los hallazgos se suben como SARIF y aterrizan en la pestaña Security del repo. El job falla ante un crítico — los hallazgos de web nunca cambian el código de salida. Apúntalo a una carpeta con <span class="lit">path</span>, o a una URL desplegada con <span class="lit">url</span>.</p>
-      <pre><button class="copy-mini" onclick="copyEl('gha')">copiar</button><span id="gha">- uses: JSiapoDEV/vibeward@v0.6.0
+      <pre><button class="copy-mini" onclick="copyEl('gha')">copiar</button><span id="gha">- uses: JSiapoDEV/vibeward@v0.6.2
   with:
     url: https://your-app.com</span></pre>
     </div>
@@ -1108,7 +1113,11 @@ claude plugin install vibeward</span></pre>
       </details>
       <details>
         <summary>¿El guardarraíl es un LLM?</summary>
-        <p class="a">No, y ese es el punto. Es un motor de reglas determinista, así que no se le puede convencer. <span class="lit">"ignora las instrucciones anteriores"</span> no funciona contra él.</p>
+        <p class="a">No, y ese es el punto. Es un motor de reglas determinista, así que no se le puede convencer. El clásico que empieza con <span class="lit">"ignora todo lo anterior…"</span> no le hace nada: no hay modelo al que persuadir.</p>
+      </details>
+      <details>
+        <summary>¿Por qué no usar el plugin de seguridad oficial de Anthropic?</summary>
+        <p class="a">Usa los dos — y si trabajas en Claude Code, instala también el suyo: <span class="lit">/plugin install security-guidance@claude-plugins-official</span>, gratis en todos los planes. Revisa lo que el modelo ya escribió: coincidencia de patrones en cada edición de fichero, un modelo leyendo el diff al final del turno, y una pasada agéntica más profunda en cada commit que hace Claude. Su documentación dice sin rodeos dónde se detiene. Sobre bloqueo: <em>“None of the layers block writes or commits”</em> — ninguna de sus capas frena una escritura ni un commit. Y receta ella misma la solución: <em>“For hard enforcement, pair the plugin with a hook that blocks the edit”</em> — para aplicación estricta, combina el plugin con un hook que bloquee la edición. Pide que se lo tome como <em>“one layer of defense in depth, not a complete security solution”</em>: una capa de defensa en profundidad, no una solución de seguridad completa. vibeward es ese hook, un momento antes: frena la petición antes de que el código exista, y <span class="lit">--block</span> hace que ahí se detenga en vez de solo anotar. Conoce Supabase y Firebase por su nombre y no por clase de patrón; el guardarraíl no gasta tokens de modelo ni necesita Python, red ni repo git, mientras que el suyo se salta sus dos capas de modelo en silencio fuera de un repo; entiende español y portugués; y el escáner lee una URL desplegada, que ninguna revisión de tu copia de trabajo puede ver. Ninguno de los dos bloquea por defecto — el suyo vuelve a preguntarle a Claude con los hallazgos, el nuestro inyecta una nota y sale con 0 — y ninguno sustituye al otro.</p>
       </details>
       <details>
         <summary>¿Necesito Supabase? ¿O algún framework concreto?</summary>
@@ -1125,6 +1134,7 @@ claude plugin install vibeward</span></pre>
       <span>sustituir un pentest completo</span>
       <span>preguntarle a un LLM qué decidir</span>
       <span>arreglar solo un hallazgo de seguridad</span>
+      <span>reemplazar el plugin oficial</span>
     </div>
   </section>
 
@@ -1149,7 +1159,7 @@ claude plugin install vibeward</span></pre>
         <strong>Hecho con Claude Code</strong>, y conviene decirlo en voz alta en un proyecto cuyo
         tema es el código que producen los agentes. La objeción es justa —una herramienta de
         seguridad escrita por un agente es justo de lo que esta herramienta desconfía— y la
-        respuesta es que cada regla es determinista y legible, sometida a 731 aserciones incluidas
+        respuesta es que cada regla es determinista y legible, sometida a 751 aserciones incluidas
         entradas construidas para hacerlas fallar. La mitad útil es que <strong>pilla a su propio
         autor</strong>: escribir esta web disparó el gate de contenido, preparar un commit disparó
         el de acción, e imprimir un token real en una página de demo hizo que vibeward reportara
@@ -1181,9 +1191,21 @@ claude plugin install vibeward</span></pre>
         Firebase, fronteras de autenticación, y un informe escrito lo bastante concreto como para que
         tu propio agente actúe sobre él. <a href="https://cal.com/jsiapo">Reserva 20 minutos</a> — trae la URL.
       </p>
+      <p style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line)">
+        <strong>US$150, alcance fijo, 48 horas.</strong> Una app, un informe escrito y una lista
+        corta de qué cambiar primero. <strong>Si no aparece nada crítico, no hay factura</strong> —
+        una app limpia es un resultado real y no deberías pagar por que te lo digan. La objeción
+        evidente es justa: cobrar solo cuando aparece algo es un incentivo a que aparezca algo. Por
+        eso <strong>“crítico” queda fijado por escrito antes de empezar</strong>, y es una lista
+        corta: una clave <span class="lit">service_role</span> o de admin alcanzable desde el
+        navegador, una tabla o un bucket que responde sin autenticación, o una frontera de auth que
+        una segunda petición atraviesa. Nada más cuenta, diga lo que diga el escáner. Si crees que
+        inflé un hallazgo para llegar a ese listón, dilo y no hay factura.
+        <a href="https://cal.com/jsiapo">Reserva 20 minutos</a> si te encaja.
+      </p>
       <p style="color:var(--ink-4);font-size:13.6px">
         La herramienta sigue siendo gratis y MIT pase lo que pase. No hay plan de pago ni nada
-        reservado fuera de ella.
+        reservado fuera de ella — los US$150 pagan a una persona leyendo tu app, no una función.
       </p>
     </div>
   </section>

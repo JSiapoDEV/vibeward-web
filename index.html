@@ -4,20 +4,20 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>vibeward — stop the insecure prompt before your agent runs it</title>
-<meta name="description" content="A deterministic guardrail for Claude Code, Cursor, Codex, Copilot, Gemini and opencode: it catches &quot;disable RLS&quot; as you type it, and audits what already shipped. It reports — it never edits your code." />
+<meta name="description" content="It catches &quot;disable RLS&quot; as you type it, and audits what already shipped. A deterministic guardrail with no LLM call anywhere: it warns at the prompt in four AI coding editors and guards file writes and tool results in seven. It reports — it never edits your code." />
 <link rel="canonical" href="https://vibeward.ai/" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/avatar-512.png" />
 
 <meta property="og:title" content="vibeward — stop the insecure prompt before your agent runs it" />
-<meta property="og:description" content="&quot;disable RLS so it works.&quot; A deterministic hook catches it the moment you type it — and catches the agent doing it unasked. Seven editors, no LLM call. It reports; it never edits your code." />
+<meta property="og:description" content="&quot;disable RLS so it works.&quot; A deterministic hook catches it the moment you type it — and catches the agent doing it unasked. Four editors warn at the prompt, seven guard the write. No LLM call. It reports; it never edits your code." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://vibeward.ai/" />
 <meta property="og:image" content="https://vibeward.ai/avatar-512.png" />
 <meta property="og:site_name" content="vibeward" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="vibeward — stop the insecure prompt before your agent runs it" />
-<meta name="twitter:description" content="A deterministic hook that catches &quot;disable RLS&quot; before the agent acts — in seven editors — and a read-only scanner for what already shipped." />
+<meta name="twitter:description" content="A deterministic hook that catches &quot;disable RLS&quot; before the agent acts — warning at the prompt in four editors, guarding the write in seven — and a read-only scanner for what already shipped." />
 <meta name="twitter:image" content="https://vibeward.ai/avatar-512.png" />
 <meta name="theme-color" content="#16150F" />
 <link rel="alternate" hreflang="en" href="https://vibeward.ai/" />
@@ -36,7 +36,7 @@
       "name": "vibeward",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "macOS, Linux, Windows",
-      "softwareVersion": "0.6.0",
+      "softwareVersion": "0.6.2",
       "url": "https://vibeward.ai/",
       "codeRepository": "https://github.com/JSiapoDEV/vibeward",
       "downloadUrl": "https://www.npmjs.com/package/vibeward",
@@ -76,7 +76,12 @@
         {
           "@type": "Question",
           "name": "Is the guardrail an LLM?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No — and that is the point. It is a deterministic rule engine, so it cannot be talked out of blocking. 'Ignore previous instructions' does not work on it." }
+          "acceptedAnswer": { "@type": "Answer", "text": "No — and that is the point. It is a deterministic rule engine, so it cannot be talked out of blocking. The classic opener that begins 'ignore all previous…' does nothing to it: there is no model to persuade." }
+        },
+        {
+          "@type": "Question",
+          "name": "Why not just use Anthropic's official security plugin?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Use both. Anthropic's security-guidance plugin is free on every plan and reviews what the model already wrote, and its own documentation is precise about the seams: none of its layers block writes or commits, and for hard enforcement it prescribes pairing the plugin with a hook that blocks the edit. vibeward is that hook, one moment earlier: it gates the request before any code exists, and --block makes it stop there. It knows Supabase and Firebase by name; the guardrail spends no model tokens and needs no Python, no network and no git repo, where theirs skips its two model layers in silence outside a repository; it reads Spanish and Portuguese; and the scanner reads a deployed URL, which no review of a checkout can. Neither of us blocks by default, and neither one replaces the other." }
         }
       ]
     }
@@ -623,7 +628,7 @@
   </nav>
 
   <header class="hero stagger">
-    <span class="eyebrow"><b>v0.6.0</b> · guardrail + scanner</span>
+    <span class="eyebrow"><b>v0.6.2</b> · guardrail + scanner</span>
     <h1>Your agent was about to <span class="accent">disable RLS</span>.</h1>
     <p class="sub">
       The holes in AI-built apps rarely start as bad code. They start as a reasonable-sounding
@@ -643,7 +648,7 @@
     </p>
     <p class="hosts">
       Runs in <b>Claude Code</b><span class="sep">·</span>Cursor<span class="sep">·</span>Codex<span class="sep">·</span>Copilot<span class="sep">·</span>Gemini<span class="sep">·</span>Windsurf<span class="sep">·</span>opencode — <a href="#install">two commands in Claude Code</a>, one <span class="lit">init</span> everywhere else. What each one can enforce differs, and it tells you which.
-      <span class="made">Built with Claude Code, and it <a href="#fit">catches its own author</a>. Not affiliated with Anthropic.</span>
+      <span class="made">Built with Claude Code, and it <a href="#fit">catches its own author</a>. <a href="#faq">A layer next to Anthropic's official security plugin</a>, not a replacement for it. Not affiliated with Anthropic.</span>
     </p>
 
     <div class="cta-row">
@@ -689,7 +694,7 @@
         bucket or a table public. Removing an auth check. A CORS wildcard, a hardcoded secret, CSRF
         or rate limiting switched off, a <span class="lit">.env</span> about to be committed. Each
         one answers with the risk, why it matters and the safe alternative —
-        <em>“ignore previous instructions”</em> does not work on a rule engine.
+        <em>“ignore all previous…”</em>, the classic opener, does nothing here: there is no model to persuade.
       </p>
     </div>
 
@@ -789,7 +794,7 @@
         <div class="src">its own rules, or none</div>
       </div>
       <div class="stat">
-        <div class="n">731</div>
+        <div class="n">751</div>
         <div class="l">assertions the rules are held to, including corpora of harmless input built to make them misfire. On ten real apps the last release took 8 secret findings down to 2, both true.</div>
         <div class="src">npm test</div>
       </div>
@@ -1043,7 +1048,7 @@ claude plugin install vibeward</span></pre>
       <span class="k">GitHub Action</span>
       <h3>Or let it run itself, on every push</h3>
       <p>Findings upload as SARIF and land in the repo's Security tab. The job fails on a critical — website findings never change the exit code. Point it at a folder with <span class="lit">path</span>, or at a deployed URL with <span class="lit">url</span>.</p>
-      <pre><button class="copy-mini" onclick="copyEl('gha')">copy</button><span id="gha">- uses: JSiapoDEV/vibeward@v0.6.0
+      <pre><button class="copy-mini" onclick="copyEl('gha')">copy</button><span id="gha">- uses: JSiapoDEV/vibeward@v0.6.2
   with:
     url: https://your-app.com</span></pre>
     </div>
@@ -1105,7 +1110,11 @@ claude plugin install vibeward</span></pre>
       </details>
       <details>
         <summary>Is the guardrail an LLM?</summary>
-        <p class="a">No — and that's the point. It's a deterministic rule engine, so it can't be talked out of blocking. <span class="lit">"ignore previous instructions"</span> does not work on it.</p>
+        <p class="a">No — and that's the point. It's a deterministic rule engine, so it can't be talked out of blocking. The classic opener that begins <span class="lit">"ignore all previous…"</span> does nothing to it: there is no model to persuade.</p>
+      </details>
+      <details>
+        <summary>Why not just use Anthropic's official security plugin?</summary>
+        <p class="a">Use both — and if you are in Claude Code, install theirs too: <span class="lit">/plugin install security-guidance@claude-plugins-official</span>, free on every plan. It reviews what the model already wrote: a pattern match on each file edit, a model reading the diff at the end of a turn, a deeper agentic pass on each commit Claude makes. Its own documentation draws the seams precisely. On enforcement: <em>“None of the layers block writes or commits.”</em> On what to do about that, it prescribes the answer itself — <em>“For hard enforcement, pair the plugin with a hook that blocks the edit”</em>. And it asks to be taken as <em>“one layer of defense in depth, not a complete security solution.”</em> vibeward is that hook, one moment earlier: it gates the request before any code exists, and <span class="lit">--block</span> makes it stop there rather than annotate. It knows Supabase and Firebase by name rather than by pattern class; the guardrail spends no model tokens and needs no Python, no network and no git repo, where theirs skips its two model layers in silence outside a repository; it reads Spanish and Portuguese; and the scanner reads a deployed URL, which no review of a checkout can. Neither of us blocks by default — theirs re-prompts Claude with findings, ours injects a note and exits 0 — and neither one replaces the other.</p>
       </details>
       <details>
         <summary>Do I need Supabase? Or a specific framework?</summary>
@@ -1122,6 +1131,7 @@ claude plugin install vibeward</span></pre>
       <span>replace a full pentest</span>
       <span>ask an LLM to decide</span>
       <span>auto-fix a security finding</span>
+      <span>replace the official plugin</span>
     </div>
   </section>
 
@@ -1146,7 +1156,7 @@ claude plugin install vibeward</span></pre>
         <strong>Built with Claude Code</strong>, which is worth saying out loud in a project whose
         subject is the code AI agents produce. The objection is fair — a security tool written by an
         agent is what this tool exists to be suspicious of — and the answer is that every rule is
-        deterministic and readable, held to 731 assertions including input built to make them
+        deterministic and readable, held to 751 assertions including input built to make them
         misfire. The useful half is that <strong>it catches its own author</strong>: writing this
         site tripped the content gate, staging a commit tripped the action gate, and printing a real
         token on a demo page made vibeward report vibeward.ai. Each was fixed in the rules or in the
@@ -1177,9 +1187,21 @@ claude plugin install vibeward</span></pre>
         rules, auth boundaries, and a written report specific enough for your own agent to act on.
         <a href="https://cal.com/jsiapo">Book 20 minutes</a> — bring the URL.
       </p>
+      <p style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line)">
+        <strong>US$150, fixed scope, 48 hours.</strong> One app, one written report, and a short
+        list of what to change first. <strong>If nothing critical turns up, there is no
+        invoice</strong> — a clean app is a real result and you should not pay to be told so.
+        The obvious objection to that is fair: a fee that only arrives when something is found is
+        a fee that wants something to be found. So <strong>“critical” is fixed in writing before
+        the work starts</strong>, and it is a short list — a service-role or admin key reachable
+        from the browser, a table or bucket readable without authentication, or an auth boundary a
+        second request walks straight through. Nothing else counts, whatever the scanner labels
+        it. If you think a finding was inflated to clear that bar, say so and there is no invoice.
+        <a href="https://cal.com/jsiapo">Book 20 minutes</a> if that sounds right.
+      </p>
       <p style="color:var(--ink-4);font-size:13.6px">
         The tool stays free and MIT regardless. There is no paid tier and nothing is held back
-        from it.
+        from it — the US$150 buys a person reading your app, not a feature.
       </p>
     </div>
   </section>

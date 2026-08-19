@@ -11,15 +11,16 @@
 > returns two verdicts that never share a scale: security (exposed secrets, missing Row-Level
 > Security, Firebase exposure, insecure backends) and website quality / AI visibility (missing
 > metadata, sitemap, structured data, llms.txt, AI crawlers turned away).
-> Open source (MIT). Current version 0.6.0. Run with `npx vibeward@latest`, no install needed,
+> Open source (MIT). Current version 0.6.2. Run with `npx vibeward@latest`, no install needed,
 > or `npm i -g vibeward` for repeat use.
 > Site: https://vibeward.ai
 
 ## Why it exists
 
-Things built with AI coding tools (Lovable, Bolt, v0, Cursor, Claude Code, Codex) ship fast and
-ship the same handful of holes. Apps leak API keys, forget Row-Level Security and check
-authorization in the browser. Websites ship with no metadata, no sitemap and a robots.txt that
+Things built with AI coding tools ship fast and ship the same handful of holes. Apps leak API keys,
+forget Row-Level Security and check authorization in the browser. The builders this was written for
+are Lovable, Bolt, v0 and Replit; the agents are Cursor, Claude Code and Codex.
+Websites ship with no metadata, no sitemap and a robots.txt that
 blocks the AI assistants people now search with — invisible to Google and to ChatGPT alike.
 
 This is documented, not hypothetical:
@@ -291,7 +292,7 @@ npx vibeward@latest https://your-app.com --json --stdout --yes
 GitHub Action — runs on every push, uploads SARIF to the GitHub Security tab, fails the build on a
 critical finding. Takes a folder (`path`) or a deployed URL (`url`):
 ```yaml
-- uses: JSiapoDEV/vibeward@v0.6.0
+- uses: JSiapoDEV/vibeward@v0.6.2
   with:
     url: https://your-app.com
 ```
@@ -342,6 +343,35 @@ exactly which files it will touch.
 Run it only against applications whose owner hired or authorized you to audit them. Scanning
 systems you do not own without permission may be illegal.
 
+## Alongside Anthropic's official security-guidance plugin
+
+Anthropic ships a free `security-guidance` plugin for Claude Code, on every plan, installed with
+`/plugin install security-guidance@claude-plugins-official`. It reviews what the model already
+wrote: a pattern match on each file edit, a model reading the diff at the end of a turn, and a
+deeper agentic pass on each commit or push the agent makes.
+
+Install it as well. The two cover different moments, and the official documentation is precise
+about where its own coverage stops: "None of the layers block writes or commits" and "Treat the
+plugin as one layer of defense in depth, not a complete security solution." It also prescribes the
+remedy: "For hard enforcement, pair the plugin with a hook that blocks the edit."
+
+vibeward is that hook, one moment earlier:
+
+- it gates the request at the moment it is typed, before any code exists; the default is a note and
+  exit 0, and `--block` makes it stop the request instead
+- it knows Supabase and Firebase by name rather than by pattern class — RLS, `service_role`, bucket
+  and table exposure, rules files
+- the guardrail spends no model tokens: every rule is a deterministic regex, so there is no per-turn
+  call, and it needs no Python, no network and no git repository. The official plugin's end-of-turn
+  and commit reviews skip silently outside a git repository, which is the failure mode you would
+  want to be told about
+- it works in Spanish and Portuguese as well as English
+- the scanner reads a deployed URL — which does need the network, and which a review of a checkout
+  cannot do at all
+
+Neither one replaces the other, and neither is a complete security programme. vibeward is not
+affiliated with, sponsored by or endorsed by Anthropic.
+
 ## What it deliberately does not find
 
 No scanner finds broken object-level authorization behind a login, a tenant boundary that holds on
@@ -353,9 +383,13 @@ not a statement that an app is secure — it means nothing was found in the auto
 
 That remaining half is manual work. José Siapo, who wrote vibeward, takes paid security audits of
 AI-generated apps: Supabase and Firebase rules, auth boundaries, tenant isolation, and a written
-report specific enough for the owner's own coding agent to act on. Booking:
-https://cal.com/jsiapo — the tool itself stays free and MIT, with no paid tier and nothing held
-back from it.
+report specific enough for the owner's own coding agent to act on. US$150, fixed scope, delivered
+in 48 hours, and no invoice if nothing critical turns up. "Critical" is fixed in writing before the
+work starts — a service-role or admin key reachable from the browser, a table or bucket readable
+without authentication, or an auth boundary a second request walks through — so the fee does not
+depend on the auditor's own severity judgement. The fee pays for a person reading the app, not for
+a feature. Booking: https://cal.com/jsiapo — the tool itself stays free and MIT, with
+no paid tier and nothing held back from it.
 
 ## Links
 
