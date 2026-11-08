@@ -2,37 +2,33 @@
 
 Landing site for [vibeward](https://github.com/JSiapoDEV/vibeward) — served at **vibeward.ai**.
 
-Plain static HTML (no build step). Deployed to GitHub Pages by `.github/workflows/deploy.yml`
-on every push to `main`. Includes `llms.txt` and `llms-full.txt` so AI tools can discover and
-summarize the project.
+Plain static HTML (no build step), served by a Cloudflare Worker with static assets.
+Deployed by Cloudflare Workers Builds on every push to `main`. Includes `llms.txt` and
+`llms-full.txt` so AI tools can discover and summarize the project.
 
 ## Files
 
 ```
-index.html        the landing page (self-contained, inline CSS)
-llms.txt          concise project summary for LLMs (llmstxt.org)
-llms-full.txt     full reference for LLMs
-robots.txt        allow all crawlers
-CNAME             custom domain (vibeward.ai)
-.nojekyll         disable Jekyll on GitHub Pages
-.github/workflows/deploy.yml   GitHub Pages deploy
+public/             everything that gets served
+  index.html        the landing page (self-contained, inline CSS)
+  es/index.html     Spanish version
+  404.html          served with status 404 for unknown paths
+  llms.txt          concise project summary for LLMs (llmstxt.org)
+  llms-full.txt     full reference for LLMs
+  robots.txt, sitemap.xml, favicon.svg, avatar*, fonts/
+wrangler.jsonc      Worker config (assets directory + 404 handling)
 ```
 
-## One-time setup
+## Hosting
 
-1. Create the repo under the org: `github.com/JSiapoDEV/vibeward-web`, push this folder.
-2. Repo → **Settings → Pages → Source: GitHub Actions**.
-3. **DNS at Namecheap** (Advanced DNS for vibeward.ai):
-   - `A` `@` → `185.199.108.153`
-   - `A` `@` → `185.199.109.153`
-   - `A` `@` → `185.199.110.153`
-   - `A` `@` → `185.199.111.153`
-   - `CNAME` `www` → `jsiapodev.github.io.`
-4. Settings → Pages → Custom domain: `vibeward.ai`, then enable **Enforce HTTPS** (after the
-   cert provisions, a few minutes to an hour).
+- Worker `vibeward-web`, custom domains `vibeward.ai` and `www.vibeward.ai`.
+- DNS and security headers (CSP, HSTS, X-Frame-Options, ...) live in the Cloudflare zone
+  (Transform Rule `security-headers`), not in this repo.
+- Moved off GitHub Pages in Nov 2026: Pages could not renew its origin certificate behind
+  the Cloudflare proxy.
 
 ## Local preview
 
 ```bash
-python3 -m http.server 8000   # then open http://localhost:8000
+python3 -m http.server 8000 -d public   # then open http://localhost:8000
 ```
