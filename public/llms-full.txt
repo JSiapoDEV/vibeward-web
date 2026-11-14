@@ -3,7 +3,7 @@
 > Stops the insecure prompt before an AI agent runs it, and audits what it already shipped.
 > It detects and reports; it never fixes. Findings carry no `fix` field and no `autofix` field,
 > and the instructions it installs forbid an agent from editing anything it found. The guard runs
-> as an editor hook at three moments: when you send a prompt (eight deterministic rules over
+> as an editor hook at three moments: when you send a prompt (nine deterministic rules over
 > natural language in English, Spanish and Portuguese), when the agent is about to edit a file or
 > run a command, and when the agent reads content carrying instructions aimed at it. Supported in
 > Claude Code, Cursor, OpenAI Codex CLI, GitHub Copilot CLI, Gemini CLI, Windsurf/Devin and
@@ -11,7 +11,7 @@
 > returns two verdicts that never share a scale: security (exposed secrets, missing Row-Level
 > Security, Firebase exposure, insecure backends) and website quality / AI visibility (missing
 > metadata, sitemap, structured data, llms.txt, AI crawlers turned away).
-> Open source (MIT). Current version 0.6.2. Run with `npx vibeward@latest`, no install needed,
+> Open source (MIT). Current version 0.7.0. Run with `npx vibeward@latest`, no install needed,
 > or `npm i -g vibeward` for repeat use.
 > Site: https://vibeward.ai
 
@@ -188,7 +188,7 @@ request the moment the user types it — before the agent acts:
 The rules are deterministic (no LLM call), so they cannot be prompt-injected away.
 
 **Languages.** The rules work in English, Spanish and Portuguese — "desactiva el RLS", "usa la
-service_role en el front", "desativa o login por enquanto". Not eight rules translated three
+service_role en el front", "desativa o login por enquanto". Not nine rules translated three
 times: the dangerous objects (`RLS`, `service_role`, `CORS`, `.env`) are identifiers rather than
 words, so they are already language-independent, and a new language costs one verb table of about
 40 entries in `src/checks/lexicon.ts` and nothing else. That size is the point — it is the only
@@ -292,7 +292,7 @@ npx vibeward@latest https://your-app.com --json --stdout --yes
 GitHub Action — runs on every push, uploads SARIF to the GitHub Security tab, fails the build on a
 critical finding. Takes a folder (`path`) or a deployed URL (`url`):
 ```yaml
-- uses: JSiapoDEV/vibeward@v0.6.2
+- uses: JSiapoDEV/vibeward@v0.7.0
   with:
     url: https://your-app.com
 ```
