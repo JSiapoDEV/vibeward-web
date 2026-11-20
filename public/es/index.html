@@ -37,7 +37,7 @@
       "name": "vibeward",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "macOS, Linux, Windows",
-      "softwareVersion": "0.7.0",
+      "softwareVersion": "0.8.0",
       "url": "https://vibeward.ai/es/",
       "inLanguage": "es",
       "codeRepository": "https://github.com/JSiapoDEV/vibeward",
@@ -630,7 +630,7 @@
   </nav>
 
   <header class="hero stagger">
-    <span class="eyebrow"><b>v0.7.0</b> · guardarraíl + escáner</span>
+    <span class="eyebrow"><b>v0.8.0</b> · guardarraíl + escáner</span>
     <h1>Tu agente estaba a punto de <span class="accent">desactivar el RLS</span>.</h1>
     <p class="sub">
       Los agujeros de las apps hechas con IA casi nunca empiezan como código malo. Empiezan como
@@ -766,6 +766,10 @@
           puede bloquear, vibeward se queda <em>callado</em>: perder el párrafo que acabas de escribir
           es como se desinstala un guardarraíl, y uno desinstalado no protege a nadie.
           <span class="lit">--block</span> está ahí si aun así quieres el corte duro.
+          Antes de un cambio que el agente decidió por su cuenta, te pregunta solo si es crítico;
+          nunca, con <span class="lit">--level warn</span>, para corridas que dejas solas; o siempre,
+          con <span class="lit">--level high</span>. En cualquier caso, cuando el agente termina,
+          Claude Code y Codex te muestran lo que se marcó mientras no mirabas.
         </p>
       </div>
     </div>
@@ -796,7 +800,7 @@
         <div class="src">reglas propias, o ninguna</div>
       </div>
       <div class="stat">
-        <div class="n">842</div>
+        <div class="n">1034</div>
         <div class="l">aserciones a las que se someten las reglas, incluidos corpus de entradas inofensivas construidos para hacerlas fallar. Sobre diez apps reales, una versión anterior pasó de 8 hallazgos de secretos a 2, ambos ciertos.</div>
         <div class="src">npm test</div>
       </div>
@@ -1050,9 +1054,10 @@ claude plugin install vibeward</span></pre>
     <div class="panel" data-reveal style="margin-top:14px">
       <span class="k">GitHub Action</span>
       <h3>O deja que se ejecute solo, en cada push</h3>
-      <p>Los hallazgos se suben como SARIF y aterrizan en la pestaña Security del repo. El job falla ante un crítico — los hallazgos de web nunca cambian el código de salida. Apúntalo a una carpeta con <span class="lit">path</span>, o a una URL desplegada con <span class="lit">url</span>.</p>
-      <pre><button class="copy-mini" onclick="copyEl('gha')">copiar</button><span id="gha">- uses: JSiapoDEV/vibeward@v0.7.0
+      <p>¿Construyes en Lovable, Bolt o v0? Se sincronizan con GitHub, así que corre ahí sin instalar nada. Cada corrida deja un resumen en la página del run, un issue <span class="lit">vibeward: pendientes</span> que llega a tus notificaciones, y un prompt para pegar en tu constructor: su IA revisa lo que una regla fija no puede, con tus créditos. Los hallazgos también van a la pestaña Security como SARIF, y el job falla ante un crítico. En un repo público, el resumen cuenta los hallazgos sin nombrarlos. Apúntalo a una carpeta con <span class="lit">path</span>, o a una URL desplegada con <span class="lit">url</span>; el issue necesita <span class="lit">issues: write</span>.</p>
+      <pre><button class="copy-mini" onclick="copyEl('gha')">copiar</button><span id="gha">- uses: JSiapoDEV/vibeward@v0.8.0
   with:
+    lang: es
     url: https://your-app.com</span></pre>
     </div>
   </section>
@@ -1062,7 +1067,7 @@ claude plugin install vibeward</span></pre>
     <div class="head" data-reveal>
       <span class="k">Cada hallazgo</span>
       <h2 class="sec-title">Contexto, no una bandera roja</h2>
-      <p class="sec-lead">Suficiente para que una persona capte el riesgo en cinco segundos, y suficiente para que un agente abra un pull request correcto.</p>
+      <p class="sec-lead">Suficiente para que una persona capte el riesgo en cinco segundos, y suficiente para decidir qué hacer al respecto.</p>
     </div>
     <div class="finding" data-reveal>
       <div class="ttl"><span class="sev">CRÍTICO</span> La tabla <code>users</code> es legible sin autenticación</div>
@@ -1159,7 +1164,7 @@ claude plugin install vibeward</span></pre>
         <strong>Hecho con Claude Code</strong>, y conviene decirlo en voz alta en un proyecto cuyo
         tema es el código que producen los agentes. La objeción es justa —una herramienta de
         seguridad escrita por un agente es justo de lo que esta herramienta desconfía— y la
-        respuesta es que cada regla es determinista y legible, sometida a 842 aserciones incluidas
+        respuesta es que cada regla es determinista y legible, sometida a 1034 aserciones incluidas
         entradas construidas para hacerlas fallar. La mitad útil es que <strong>pilla a su propio
         autor</strong>: escribir esta web disparó el gate de contenido, preparar un commit disparó
         el de acción, e imprimir un token real en una página de demo hizo que vibeward reportara

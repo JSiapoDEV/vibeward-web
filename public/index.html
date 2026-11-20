@@ -36,7 +36,7 @@
       "name": "vibeward",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "macOS, Linux, Windows",
-      "softwareVersion": "0.7.0",
+      "softwareVersion": "0.8.0",
       "url": "https://vibeward.ai/",
       "codeRepository": "https://github.com/JSiapoDEV/vibeward",
       "downloadUrl": "https://www.npmjs.com/package/vibeward",
@@ -628,7 +628,7 @@
   </nav>
 
   <header class="hero stagger">
-    <span class="eyebrow"><b>v0.7.0</b> · guardrail + scanner</span>
+    <span class="eyebrow"><b>v0.8.0</b> · guardrail + scanner</span>
     <h1>Your agent was about to <span class="accent">disable RLS</span>.</h1>
     <p class="sub">
       The holes in AI-built apps rarely start as bad code. They start as a reasonable-sounding
@@ -764,6 +764,10 @@
           can only block, vibeward stays <em>silent</em> instead: losing the paragraph you just typed
           is how a guardrail gets uninstalled, and one that is uninstalled protects nobody.
           <span class="lit">--block</span> is there if you want the hard stop anyway.
+          Before a change the agent chose on its own, it asks you only when it is critical — never,
+          with <span class="lit">--level warn</span>, for runs you leave alone, or every time, with
+          <span class="lit">--level high</span>. Either way, when the agent finishes, Claude Code and
+          Codex show you what was flagged while you were away.
         </p>
       </div>
     </div>
@@ -794,7 +798,7 @@
         <div class="src">its own rules, or none</div>
       </div>
       <div class="stat">
-        <div class="n">842</div>
+        <div class="n">1,034</div>
         <div class="l">assertions the rules are held to, including corpora of harmless input built to make them misfire. On ten real apps an earlier release took 8 secret findings down to 2, both true.</div>
         <div class="src">npm test</div>
       </div>
@@ -1047,8 +1051,8 @@ claude plugin install vibeward</span></pre>
     <div class="panel" data-reveal style="margin-top:14px">
       <span class="k">GitHub Action</span>
       <h3>Or let it run itself, on every push</h3>
-      <p>Findings upload as SARIF and land in the repo's Security tab. The job fails on a critical — website findings never change the exit code. Point it at a folder with <span class="lit">path</span>, or at a deployed URL with <span class="lit">url</span>.</p>
-      <pre><button class="copy-mini" onclick="copyEl('gha')">copy</button><span id="gha">- uses: JSiapoDEV/vibeward@v0.7.0
+      <p>Built in Lovable, Bolt or v0? They sync to GitHub, so it runs there with nothing to install. Each run leaves a summary on the run page, one <span class="lit">vibeward: pending</span> issue that reaches your notifications, and a prompt to paste into your builder — its AI reviews what fixed rules cannot, on your credits. Findings also go to the Security tab as SARIF, and the job fails on a critical. On a public repo the summary counts findings without naming them. Point it at a folder with <span class="lit">path</span>, or at a deployed URL with <span class="lit">url</span>; the issue needs <span class="lit">issues: write</span>.</p>
+      <pre><button class="copy-mini" onclick="copyEl('gha')">copy</button><span id="gha">- uses: JSiapoDEV/vibeward@v0.8.0
   with:
     url: https://your-app.com</span></pre>
     </div>
@@ -1156,7 +1160,7 @@ claude plugin install vibeward</span></pre>
         <strong>Built with Claude Code</strong>, which is worth saying out loud in a project whose
         subject is the code AI agents produce. The objection is fair — a security tool written by an
         agent is what this tool exists to be suspicious of — and the answer is that every rule is
-        deterministic and readable, held to 842 assertions including input built to make them
+        deterministic and readable, held to 1,034 assertions including input built to make them
         misfire. The useful half is that <strong>it catches its own author</strong>: writing this
         site tripped the content gate, staging a commit tripped the action gate, and printing a real
         token on a demo page made vibeward report vibeward.ai. Each was fixed in the rules or in the
