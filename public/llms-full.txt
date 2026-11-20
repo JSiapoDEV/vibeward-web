@@ -2,7 +2,7 @@
 
 > Stops the insecure prompt before an AI agent runs it, and audits what it already shipped.
 > It detects and reports; it never fixes. Findings carry no `fix` field and no `autofix` field,
-> and the instructions it installs forbid an agent from editing anything it found. The guard runs
+> and the instructions it installs forbid an agent from editing anything it found on its own. The guard runs
 > as an editor hook at three moments: when you send a prompt (nine deterministic rules over
 > natural language in English, Spanish and Portuguese), when the agent is about to edit a file or
 > run a command, and when the agent reads content carrying instructions aimed at it. Supported in
@@ -11,7 +11,7 @@
 > returns two verdicts that never share a scale: security (exposed secrets, missing Row-Level
 > Security, Firebase exposure, insecure backends) and website quality / AI visibility (missing
 > metadata, sitemap, structured data, llms.txt, AI crawlers turned away).
-> Open source (MIT). Current version 0.8.0. Run with `npx vibeward@latest`, no install needed,
+> Open source (MIT). Current version 0.8.2. Run with `npx vibeward@latest`, no install needed,
 > or `npm i -g vibeward` for repeat use.
 > Site: https://vibeward.ai
 
@@ -238,8 +238,8 @@ description missing?" hallucinates; a parser answering yes/no never does. So vib
 is true, and the skill turns that into something a person can act on — leading with the impact,
 quoting the evidence verbatim, never restating a severity in its own words.
 
-The installed instructions forbid the agent from fixing ANY finding — security, website, or the
-one-line mechanical ones — even on request. That is the contract, not a missing feature: an audit
+The installed instructions forbid the agent from fixing ANY finding on its own — security, website,
+or the one-line mechanical ones. A fix the owner explicitly asks for is theirs to ask for. That is the contract, not a missing feature: an audit
 that ends in unrequested diffs replaces the thing you can act on with a thing you have to review.
 On the security side it is worse than untidy — deleting an exposed key from a bundle does not
 un-leak it. It has to be rotated, and only the owner decides when, and whether the incident must
@@ -292,7 +292,7 @@ npx vibeward@latest https://your-app.com --json --stdout --yes
 GitHub Action — runs on every push, uploads SARIF to the GitHub Security tab, fails the build on a
 critical finding. Takes a folder (`path`) or a deployed URL (`url`):
 ```yaml
-- uses: JSiapoDEV/vibeward@v0.8.0
+- uses: JSiapoDEV/vibeward@v0.8.2
   with:
     url: https://your-app.com
 ```
