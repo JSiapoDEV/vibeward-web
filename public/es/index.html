@@ -44,46 +44,59 @@
       "downloadUrl": "https://www.npmjs.com/package/vibeward",
       "license": "https://opensource.org/licenses/MIT",
       "description": "Guardarraíl determinista y escáner de solo lectura para apps generadas con IA. Como hook de Claude Code caza prompts peligrosos — \"desactiva el RLS\", \"usa la service_role en el front\" — en español, inglés y portugués, sin ninguna llamada a un LLM, antes de que el agente actúe. Como escáner encuentra claves expuestas, Row-Level Security de Supabase ausente, exposición de Firebase y backends inseguros, además de los huecos de SEO y visibilidad ante IA que delatan a un sitio hecho a prompts.",
-      "author": { "@type": "Person", "name": "José Siapo", "url": "https://github.com/JSiapoDEV" },
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      "author": {
+        "@type": "Person",
+        "name": "José Siapo",
+        "url": "https://github.com/JSiapoDEV"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
     },
     {
       "@type": "FAQPage",
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "¿Explota o modifica algo?",
-          "acceptedAnswer": { "@type": "Answer", "text": "El escaneo es de solo lectura: lee tu código, tus bundles y las respuestas públicas para detectar riesgo — nunca modifica, borra ni explota. La única excepción es --write-test, explícita y opcional, que lanza una sola sonda de escritura no destructiva. vibeward init es el único comando que escribe, y solo dentro de tu propio proyecto, tras enseñarte cada fichero que va a tocar." }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Esto es Lighthouse?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. vibeward detecta ausencias binarias — la etiqueta no está, el fichero nunca se generó — que es justo lo que le falta a un sitio hecho con IA. Core Web Vitals y una auditoría WCAG completa quedan fuera de alcance." }
-        },
-        {
-          "@type": "Question",
-          "name": "¿Un hallazgo de web puede tumbarme el build?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Nunca. Los hallazgos de web quedan fuera del recuento por severidad, fuera del fichero SARIF y fuera del código de salida. Solo la seguridad bloquea. Un favicon ausente jamás debe compartir escala con una service key expuesta." }
+          "name": "¿Modifica mi código o mi base de datos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Lee y reporta; qué cambiar lo decides tú. Solo init escribe archivos: los de su propia instalación, y te los muestra antes."
+          }
         },
         {
           "@type": "Question",
           "name": "¿Mi código sale de mi máquina?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Nunca. El escáner y el guardarraíl corren 100% en local — sin telemetría, sin cuenta, sin subidas. La única petición de red es a la URL a la que tú lo apuntas." }
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Todo corre en local, sin cuenta ni telemetría. Solo se conecta a la URL que tú le das."
+          }
         },
         {
           "@type": "Question",
-          "name": "¿Puedo silenciar una comprobación con la que no estoy de acuerdo?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Solo las de web, y nunca en silencio. Cada entrada de vibeward.json exige un motivo escrito, y el informe imprime cuántas supresiones estaban activas y el motivo declarado de cada una. Los hallazgos de seguridad no se pueden silenciar desde un fichero de configuración, por diseño." }
+          "name": "¿Usa IA?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Son reglas fijas: el mismo código da siempre el mismo resultado, y un texto escondido no las convence. La IA la pone tu agente, cuando lee el informe."
+          }
         },
         {
           "@type": "Question",
-          "name": "¿El guardarraíl es un LLM?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No, y ese es justamente el punto. Es un motor de reglas determinista, así que no se le puede convencer de nada. El clásico que empieza con 'ignora todo lo anterior…' no le hace nada: no hay modelo al que persuadir." }
+          "name": "¿Necesito Supabase?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Supabase y Firebase tienen reglas propias, pero las claves expuestas, el servidor y las cabeceras se revisan en cualquier stack."
+          }
         },
         {
           "@type": "Question",
-          "name": "¿Por qué no usar el plugin de seguridad oficial de Anthropic?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Usa los dos. El plugin security-guidance de Anthropic es gratis en todos los planes y revisa lo que el modelo ya escribió, y su documentación dice sin rodeos dónde se detiene: ninguna de sus capas bloquea escrituras ni commits, y para aplicación estricta receta combinar el plugin con un hook que bloquee la edición. vibeward es ese hook, un momento antes: frena la petición antes de que el código exista, y --block hace que ahí se detenga. Conoce Supabase y Firebase por su nombre; el guardarraíl no gasta tokens de modelo ni necesita Python, red ni repo git, mientras que el suyo se salta sus dos capas de modelo en silencio fuera de un repo; entiende español y portugués; y el escáner lee una URL desplegada, que ninguna revisión de tu copia de trabajo puede ver. Ninguno de los dos bloquea por defecto, y ninguno sustituye al otro." }
+          "name": "¿Y el plugin de seguridad de Anthropic?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Usa los dos. El suyo revisa el código que Claude ya escribió. vibeward frena la petición antes, conoce Supabase y Firebase, entiende español y portugués, y revisa tu app publicada."
+          }
         }
       ]
     }
@@ -613,8 +626,8 @@
       vibeward
     </div>
     <div class="links">
-      <a href="#guard" class="hide-xs">Guardarraíl</a>
-      <a href="#scan" class="hide-sm">Qué encuentra</a>
+      <a href="#guard" class="hide-xs">Cómo funciona</a>
+      <a href="#scan" class="hide-sm">Qué revisa</a>
       <a href="#install" class="hide-sm">Instalar</a>
       <a href="#faq" class="hide-sm">FAQ</a>
       <a href="#audits" class="hide-xs">Auditorías</a>
@@ -633,11 +646,9 @@
     <span class="eyebrow"><b>v0.8.0</b> · guardarraíl + escáner</span>
     <h1>Tu agente estaba a punto de <span class="accent">desactivar el RLS</span>.</h1>
     <p class="sub">
-      Los agujeros de las apps hechas con IA casi nunca empiezan como código malo. Empiezan como
-      una petición que suena razonable — <em>“desactiva el RLS para que funcione”</em> — y el agente
-      obedece, porque obedecer es su trabajo. vibeward lo caza en cuanto lo escribes, caza al agente
-      haciéndolo sin que se lo pidan, y audita lo que ya esté desplegado. Reporta; nunca edita tu
-      código. Determinista, de solo lectura, MIT.
+      Las fugas de las apps hechas con IA empiezan con una petición que suena razonable —
+      <em>“desactiva el RLS para que funcione”</em> — y un agente que obedece. vibeward lo frena
+      antes de que pase y revisa lo que ya publicaste. Solo avisa: nunca toca tu código.
     </p>
 
     <div class="cmd">
@@ -646,57 +657,49 @@
     </div>
 
     <p class="trust">
-      <span>sin llamadas a LLM</span><span>100% local</span><span>sin telemetría</span><span>sin cuenta</span><span>es · en · pt</span>
+      <span>sin IA</span><span>100% local</span><span>sin cuenta</span><span>es · en · pt</span>
     </p>
     <p class="hosts">
-      Funciona en <b>Claude Code</b><span class="sep">·</span>Cursor<span class="sep">·</span>Codex<span class="sep">·</span>Copilot<span class="sep">·</span>Gemini<span class="sep">·</span>Windsurf<span class="sep">·</span>opencode — <a href="#install">dos comandos en Claude Code</a>, un <span class="lit">init</span> en el resto. Lo que cada uno puede hacer cumplir cambia, y te dice cuál.
-      <span class="made">Hecho con Claude Code, y <a href="#fit">pilla a su propio autor</a>. <a href="#faq">Una capa junto al plugin de seguridad oficial de Anthropic</a>, no un reemplazo. Sin afiliación con Anthropic.</span>
+      Funciona en <b>Claude Code</b><span class="sep">·</span>Cursor<span class="sep">·</span>Codex<span class="sep">·</span>Copilot<span class="sep">·</span>Gemini<span class="sep">·</span>Windsurf<span class="sep">·</span>opencode, y en GitHub para apps de Lovable, Bolt y v0.
     </p>
 
     <div class="cta-row">
-      <a class="btn primary" href="#install">Instálalo en tus herramientas de IA</a>
+      <a class="btn primary" href="#install">Instálalo</a>
       <a class="btn ghost" href="https://github.com/JSiapoDEV/vibeward">Dale una estrella en GitHub</a>
-      <span class="badges">
-        <a href="https://www.npmjs.com/package/vibeward" aria-label="versión en npm"><img src="https://img.shields.io/npm/v/vibeward?color=D97757&labelColor=EAE7DC&label=npm" alt="Última versión de vibeward en npm" /></a>
-        <a href="https://github.com/JSiapoDEV/vibeward/blob/main/LICENSE" aria-label="licencia"><img src="https://img.shields.io/npm/l/vibeward?color=D97757&labelColor=EAE7DC&label=license" alt="vibeward es MIT" /></a>
-      </span>
     </div>
   </header>
 
   <div class="why" data-reveal>
     <span class="k">Por qué existe</span>
-    <p>Tres fallos documentados en el mundo real — informes públicos de incidentes e investigación publicada, no mediciones propias de vibeward. Los tres se citan mal; lo que sigue es la versión que sobrevive a leer la fuente primaria.</p>
+    <p>Tres casos públicos, con su fuente.</p>
   </div>
 
   <div class="stats" data-reveal>
     <div class="stat">
       <div class="n">10.3%</div>
-      <div class="l">del escaparate <em>Launched</em> de Lovable tenía el Row-Level Security abierto de par en par — 170 de 1.645 proyectos. Un suelo, no una tasa: solo se escaneó la portada de cada sitio. Marzo 2025, por dos ingenieros de Replit.</div>
+      <div class="l">de las apps del escaparate de Lovable tenía la base de datos abierta: 170 de 1645. Y solo se revisó la portada de cada una.</div>
       <div class="src">Palmer y Low · CVE-2025-48757, disputado</div>
     </div>
     <div class="stat">
       <div class="n">29,631</div>
-      <div class="l">correos de acceso anticipado, más 4.060 hilos de DM entre agentes y ~4,75M de registros, legibles por cualquiera en una app sin RLS y con escrituras sin autenticar — no por una clave filtrada</div>
-      <div class="src">según lo reportado por Wiz · Moltbook, ene 2026</div>
+      <div class="l">correos legibles por cualquiera en Moltbook, por tablas sin RLS. No hizo falta ninguna clave filtrada.</div>
+      <div class="src">según lo reportado por Wiz · ene 2026</div>
     </div>
     <div class="stat">
       <div class="n">44%</div>
-      <div class="l">del código generado por IA no pasa la revisión de seguridad — una tasa de aprobado plana en 56% durante cuatro años y más de 100 modelos, mientras el volumen de ese código se disparaba</div>
+      <div class="l">del código generado por IA no pasa una revisión de seguridad, y la cifra no mejora con modelos nuevos.</div>
       <div class="src">Veracode GenAI, 2026</div>
     </div>
   </div>
 
-  <!-- ── guardrail ────────────────────────────────────── -->
+  <!-- ── cómo funciona ────────────────────────────────── -->
   <section id="guard">
     <div class="head" data-reveal>
-      <span class="k">Tres puertas · ningún modelo de por medio</span>
-      <h2 class="sec-title">A una regex no la convences</h2>
+      <span class="k">Cómo funciona</span>
+      <h2 class="sec-title">Te avisa justo antes de que pase</h2>
       <p class="sec-lead">
-        Desactivar el RLS. Mover una clave <span class="lit">service_role</span> al cliente. Hacer
-        público un bucket o una tabla. Quitar una comprobación de auth. Un comodín en CORS, un secreto
-        hardcodeado, el CSRF o el rate limiting apagados, un <span class="lit">.env</span> a punto de
-        commitearse. Cada una responde con el riesgo, por qué importa y la alternativa segura —
-        <em>“ignora todo lo anterior…”</em>, el clásico, no le hace nada a un motor de reglas.
+        Revisa tres momentos con reglas fijas, sin IA de por medio: un texto escondido no lo
+        convence de nada.
       </p>
     </div>
 
@@ -707,376 +710,131 @@
 <span class="y">⚠  vibeward marcó una petición peligrosa</span>
 
 <span class="r">✗ Desactivar Row-Level Security</span>
-  <span class="d">por qué:</span>  apagar el RLS deja cada fila legible para cualquiera que tenga la
-        anon key pública — la causa más común de fugas en apps hechas a prompts.
+  <span class="d">por qué:</span>  cualquiera con la clave pública podría leer cada fila.
   <span class="g">haz esto en su lugar:</span>  deja el RLS activo y añade una policy:
         <span class="c">CREATE POLICY ... USING (auth.uid() = user_id)</span></pre>
     </div>
 
     <div class="three" style="margin-top:14px" data-reveal>
       <div class="card">
-        <h4>Envías un prompt <span class="tag">puerta 1</span></h4>
-        <p>La petición de arriba, atrapada antes de que el agente actúe. Nueve reglas sobre lenguaje natural, en el idioma en el que piensas.</p>
+        <h4>Envías un prompt <span class="tag">1</span></h4>
+        <p>Lo caza antes de que el agente actúe, en español, inglés o portugués.</p>
       </div>
       <div class="card">
-        <h4>El agente edita o ejecuta <span class="tag">puerta 2</span></h4>
-        <p>La que nadie pidió. Una puerta de prompt nunca ve al agente que choca con una query que falla y tira de <span class="lit">DISABLE ROW LEVEL SECURITY</span> por su cuenta — no hubo prompt. Mismas reglas que el escaneo de código, apuntadas al archivo que todavía no se ha escrito.</p>
+        <h4>El agente edita o ejecuta <span class="tag">2</span></h4>
+        <p>Lo que nadie pidió: el agente que apaga el RLS por su cuenta cuando una query falla.</p>
       </div>
       <div class="card">
-        <h4>El agente lee <span class="tag">puerta 3</span></h4>
-        <p>Inyección de prompt: un README, una página o un resultado MCP con instrucciones dirigidas a tu agente. Ya no queda nada que bloquear, así que se reetiqueta como dato y se te dice qué intentaba.</p>
+        <h4>El agente lee <span class="tag">3</span></h4>
+        <p>Un README o una página con instrucciones escondidas para tu agente.</p>
       </div>
     </div>
 
     <div class="two" style="margin-top:14px">
       <div class="panel" data-reveal>
-        <span class="k">Español · English · Português</span>
-        <h3>Caza el prompt en el idioma en el que piensas</h3>
+        <span class="k">No te frena por cada aviso</span>
+        <h3>Pregunta solo antes de lo crítico</h3>
         <p>
-          <span class="lit">desactiva el RLS</span>, <span class="lit">usa la service_role en el
-          front</span>, <span class="lit">desativa o login por enquanto</span> — las mismas reglas, sin
-          capa de traducción y sin LLM.
+          El resto se lo dice al agente, que suele corregirse solo. Si lo dejas trabajando sin mirar,
+          al terminar te muestra todo lo que marcó.
         </p>
-        <p style="margin-top:12px">
-          No son nueve reglas escritas tres veces: los <em>objetos</em> peligrosos ya son
-          independientes del idioma — <span class="lit">RLS</span>, <span class="lit">service_role</span>,
-          <span class="lit">CORS</span> y <span class="lit">.env</span> son identificadores, no palabras.
-          Un idioma cuesta una tabla de verbos de unas 40 entradas, que es el único tamaño que un
-          hablante nativo puede auditar de verdad. Ese es el punto: un conjunto de reglas en un idioma
-          que no lees es un conjunto de reglas que nadie revisa. Se agradecen PRs añadiendo una tabla.
+        <p style="margin-top:12px;font-size:13.6px">
+          <span class="lit">warn</span> nunca pregunta · <span class="lit">medium</span> solo lo
+          crítico (por defecto) · <span class="lit">high</span> pregunta en todo.
         </p>
       </div>
-      <div class="panel" data-reveal>
-        <span class="k">Cómo se conecta</span>
-        <h3>Un comando. Él resuelve el resto.</h3>
-        <p>
-          <span class="lit">init</span> nunca escribe <span class="lit">@latest</span> en tus
-          ajustes — es el único sitio donde sería mal negocio, porque el guardarraíl corre en
-          <em>cada prompt que escribes</em>: ~1,8 s cada uno, muerto sin red, y cualquier publicación
-          futura ejecutándose sin revisar en tu máquina. Así que busca un
-          <span class="lit">vibeward</span> instalado, te ofrece instalarlo si no hay ninguno, y fija
-          una versión exacta si prefieres que no. Los tres caminos son seguros; el binario instalado
-          es sencillamente el más rápido.
-        </p>
-        <pre><button class="copy-mini" onclick="copyEl('guardcmd')">copiar</button><span id="guardcmd">npx vibeward@latest init --scope user</span></pre>
-        <p style="margin-top:12px;font-size:13.6px">
-          Por defecto <em>no</em> bloquea. Donde el editor permite que un hook ponga texto delante del
-          modelo, el guardarraíl hace eso y no interrumpe nada — tu prompt sobrevive, el agente corrige
-          su propio enfoque, y un falso positivo te cuesta una nota que ignoras. Donde un editor solo
-          puede bloquear, vibeward se queda <em>callado</em>: perder el párrafo que acabas de escribir
-          es como se desinstala un guardarraíl, y uno desinstalado no protege a nadie.
-          <span class="lit">--block</span> está ahí si aun así quieres el corte duro.
-          Antes de un cambio que el agente decidió por su cuenta, te pregunta solo si es crítico;
-          nunca, con <span class="lit">--level warn</span>, para corridas que dejas solas; o siempre,
-          con <span class="lit">--level high</span>. En cualquier caso, cuando el agente termina,
-          Claude Code y Codex te muestran lo que se marcó mientras no mirabas.
-        </p>
+      <div class="term" data-reveal>
+        <div class="bar"><i></i><i></i><i></i><span>al terminar el turno</span></div>
+<pre><span class="y">vibeward flagged 2 things while the agent
+worked — 1 critical:</span>
+  <span class="r">• critical:</span> This command switches off
+    Row Level Security <span class="d">— you were asked</span>
+  <span class="y">• medium:</span> Policy `public read` lets
+    anyone read every row of `posts`
+    <span class="d">— the agent was told</span></pre>
       </div>
     </div>
   </section>
 
-  <!-- ── two scales ───────────────────────────────────── -->
+  <!-- ── qué revisa ───────────────────────────────────── -->
   <section id="scan">
     <div class="head" data-reveal>
-      <span class="k">Un escaneo</span>
-      <h2 class="sec-title">Dos veredictos que nunca comparten escala</h2>
-      <p class="sec-lead">
-        Un producto hecho con IA falla de dos formas que no tienen nada que ver: deja los datos
-        abiertos, y deja la página vacía. Las dos merecen saberse. Reportarlas en la misma escala es
-        cómo una fuga real acaba enterrada bajo un favicon que falta — así que vibeward las mantiene
-        separadas, hasta el código de salida.
-      </p>
+      <span class="k">Qué revisa</span>
+      <h2 class="sec-title">Lo que deja expuesta una app hecha con IA</h2>
     </div>
 
-    <div class="stats stats--own" data-reveal style="margin-bottom:26px">
-      <div class="stat">
-        <div class="n">25</div>
-        <div class="l">reglas de seguridad, más 19 checks de web y 9 reglas de intención sobre lenguaje natural en inglés, español y portugués. Finitas y contables a propósito: puedes leer la lista entera antes de decidir si te fías.</div>
-        <div class="src">todas en el repositorio</div>
-      </div>
-      <div class="stat">
-        <div class="n">0</div>
-        <div class="l">dependencias en runtime, y ningún escáner por debajo. vibeward no envuelve nada — una herramienta que orquesta otras diez hereda diez instaladores, diez rutas de actualización y diez conjuntos de falsos positivos, y no puede decirte por qué disparó un hallazgo concreto.</div>
-        <div class="src">reglas propias, o ninguna</div>
-      </div>
-      <div class="stat">
-        <div class="n">1034</div>
-        <div class="l">aserciones a las que se someten las reglas, incluidos corpus de entradas inofensivas construidos para hacerlas fallar. Sobre diez apps reales, una versión anterior pasó de 8 hallazgos de secretos a 2, ambos ciertos.</div>
-        <div class="src">npm test</div>
-      </div>
-    </div>
-
-    <div class="split">
-      <div class="lane sec" data-reveal>
-        <span class="k">Seguridad · bloquea el build</span>
-        <h3>Lo que está expuesto</h3>
-        <p>Contado por severidad, escrito en SARIF, y código de salida <span class="lit">2</span> ante un crítico. Ningún fichero de configuración lo silencia.</p>
-        <ul>
-          <li>Una clave en el bundle es una clave en el mundo</li>
-          <li>Una tabla que responde sin login es una fuga, hoy</li>
-          <li>Un bucket abierto no tiene dueño</li>
-        </ul>
-      </div>
-      <div class="lane web" data-reveal>
-        <span class="k">Web · nunca bloquea</span>
-        <h3>Lo que nunca estuvo</h3>
-        <p>Su propia sección, su propia escala. Fuera del recuento por severidad, fuera de SARIF, fuera del código de salida. Sáltatelo entero con <span class="lit">--no-web</span>.</p>
-        <ul>
-          <li>La etiqueta que el generador nunca escribió</li>
-          <li>El fichero que nunca se generó</li>
-          <li>El crawler al que se echó sin decir nada</li>
-        </ul>
-      </div>
-      <p class="pull" data-reveal>“Un favicon ausente jamás debe compartir escala con una service key expuesta.”</p>
-    </div>
-
-    <!-- security family -->
     <div class="fam" data-reveal>
-      <div class="fam-head">
-        <h3>Seguridad</h3>
-        <span class="note">recuento · SARIF · salida 2</span>
-      </div>
       <div class="grid">
         <div class="card">
           <h4>Claves expuestas</h4>
-          <p>La <span class="lit">service_role</span> de Supabase y el nuevo formato <span class="lit">sb_secret_</span>, Stripe, OpenAI, Anthropic, Google, AWS, GitHub, Slack, Resend, Twilio, cadenas de conexión a base de datos y claves PEM privadas — en bundles o en el código, con el <span class="lit">fichero:línea</span> exacto.</p>
+          <p>La <span class="lit">service_role</span> de Supabase, Stripe, OpenAI y más, en tu código o en lo que descarga el navegador.</p>
         </div>
         <div class="card">
-          <h4>RLS roto <span class="tag">Supabase</span></h4>
-          <p>Enumera tus tablas expuestas <em>en vivo</em> desde la data API y luego sondea cada una con la clave pública. Marca qué columnas contienen datos personales, revisa las filas devueltas por si traen claves de terceros, y comprueba la introspección de GraphQL.</p>
+          <h4>Tablas abiertas <span class="tag">Supabase</span></h4>
+          <p>Prueba cada tabla con la clave pública, con tu permiso, y te dice cuáles responden sin login.</p>
         </div>
         <div class="card">
-          <h4>Exposición de Firebase</h4>
-          <p>Detecta la configuración del cliente y sondea si hay una Realtime Database abierta y un bucket de Storage listable públicamente — el patrón detrás de la brecha de Tea.</p>
+          <h4>Políticas y funciones</h4>
+          <p>RLS apagado, <span class="lit">USING (true)</span>, SQL armado con lo que manda el usuario, vistas que se saltan la RLS.</p>
         </div>
         <div class="card">
-          <h4>Stacks renderizados en servidor <span class="tag n">nuevo</span></h4>
-          <p>Next.js con Prisma o Drizzle: cabeceras ausentes en <span class="lit">next.config</span>, server actions y route handlers que mutan datos sin comprobar auth, e inyección de fórmulas en exportaciones CSV.</p>
+          <h4>Registro de usuarios</h4>
+          <p>Inicios anónimos o sin verificar el correo, que vuelven “usuario con sesión” en “cualquiera”.</p>
         </div>
         <div class="card">
-          <h4>Backend inseguro</h4>
-          <p>Inyección SQL, CORS abierto, inyección de comandos, <span class="lit">eval</span> y errores verbosos que filtran información en tus rutas de API.</p>
+          <h4>Firebase y el servidor</h4>
+          <p>Base de datos y Storage abiertos, rutas sin comprobar quién llama, cabeceras y cookies inseguras.</p>
         </div>
         <div class="card">
-          <h4>Código y base de datos local expuestos</h4>
-          <p>Source maps <span class="lit">.map</span> desplegados, ficheros SQLite commiteados, un <span class="lit">.env</span> en el repo — además de CSP, HSTS y X-Frame-Options en la respuesta real.</p>
+          <h4>Lo que no puede juzgar</h4>
+          <p>XSS, acceso a datos ajenos y SSRF quedan como pendientes, con sus archivos, para tu agente o tu constructor.</p>
         </div>
       </div>
-    </div>
-
-    <!-- website family -->
-    <div class="fam" data-reveal>
-      <div class="fam-head">
-        <h3>Calidad web y visibilidad ante IA <span class="tag n">nuevo en 0.3</span></h3>
-        <span class="note">rastrea hasta 8 páginas</span>
-      </div>
-      <div class="grid">
-        <div class="card">
-          <h4>Visibilidad ante IA</h4>
-          <p>Un <span class="lit">robots.txt</span> que echa a GPTBot, ClaudeBot, PerplexityBot, CCBot o Google-Extended — y un <span class="lit">llms.txt</span> que falta. La gente ya busca dentro de los asistentes; a un sitio que no pueden leer no lo citan.</p>
-        </div>
-        <div class="card">
-          <h4>Buscadores y redes</h4>
-          <p>Sin <span class="lit">&lt;title&gt;</span> — o el <em>mismo</em> título en todas las páginas. Sin meta description, sin canonical, sin Open Graph, sin JSON-LD, sin <span class="lit">sitemap.xml</span>.</p>
-        </div>
-        <div class="card">
-          <h4>Estructura y accesibilidad</h4>
-          <p>Cero o varios <span class="lit">&lt;h1&gt;</span> en una página, un atributo <span class="lit">lang</span> ausente, imágenes desplegadas sin <span class="lit">alt</span>.</p>
-        </div>
-        <div class="card">
-          <h4>Calidad</h4>
-          <p>Sin un 404 real, sin favicon, assets rotos, errores de consola al cargar y un bundle JS sin comprimir de más de 1 MB. Los errores de consola usan Playwright si resulta que lo tienes; si no, lo dice.</p>
-        </div>
-        <div class="card">
-          <h4>Huella de app hecha a prompts</h4>
-          <p>Todavía en <span class="lit">*.vercel.app</span> o <span class="lit">*.lovable.app</span>, framework detectado, ver-código-fuente vacío — puntuado sobre 12. Cuánto se sigue pareciendo el sitio al día en que se generó.</p>
-        </div>
-        <div class="card">
-          <h4>No es Lighthouse</h4>
-          <p>vibeward detecta <em>ausencias binarias</em>: la etiqueta no está, el fichero nunca se escribió. Eso es lo que le falta a un sitio hecho con IA. Core Web Vitals y WCAG completo quedan fuera de alcance, a propósito.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── init / skill ─────────────────────────────────── -->
-  <section id="install">
-    <div class="head" data-reveal>
-      <span class="k">vibeward init</span>
-      <h2 class="sec-title">El paquete detecta. Tu agente lo explica.</h2>
-      <p class="sec-lead">
-        Pregúntale a un agente “¿falta la meta description?” y se inventará una respuesta. Un parser
-        que responde sí o no nunca lo hace. Así que vibeward decide qué es cierto y se instala en tus
-        herramientas de IA como skill cuyo trabajo es hacerlo legible — liderando con lo que te cuesta,
-        citando la evidencia, sin reformular jamás una severidad con sus propias palabras.
+      <p style="margin-top:14px;font-size:13.6px;color:var(--ink-3)">
+        Aparte, y sin bloquear nunca nada: calidad web y visibilidad ante IA (título, sitemap,
+        <span class="lit">llms.txt</span>, crawlers bloqueados).
       </p>
     </div>
 
-    <div class="panel" data-reveal style="margin-bottom:14px">
-      <span class="k">Claude Code</span>
-      <h3>Dos comandos, y nada escrito en tu settings</h3>
-      <pre><button class="copy-mini" onclick="copyEl('pluginadd')">copiar</button><span id="pluginadd">claude plugin marketplace add jsiapo-dev/plugins
-claude plugin install vibeward</span></pre>
-      <p style="margin-top:12px">
-        El skill y los tres momentos del guard vienen incluidos, y
-        <span class="lit">/plugin uninstall vibeward</span> se lleva hasta el último rastro. El
-        plugin lleva su <strong>propia copia</strong> del CLI —compilada por CI desde el código del
-        tag y publicada en su propia rama, nunca ensamblada a mano—, así que el guard que corre
-        sobre el prompt que acabas de escribir no resuelve nada desde la red, en la versión que tú
-        elegiste. No hay <span class="lit">npx @latest</span> en ese camino.
-      </p>
-    </div>
-
-    <div class="loop" data-reveal>
-      <div class="step"><div class="n">01</div><h4>Detectar</h4><p>Reglas deterministas producen los hallazgos — ningún modelo de por medio, ningún hueco inventado.</p></div>
-      <div class="arw">→</div>
-      <div class="step"><div class="n">02</div><h4>Reportar</h4><p>Un payload JSON para el agente y un informe markdown formateado para ti. Cada hallazgo trae su evidencia, su impacto y cómo es uno correcto.</p></div>
-      <div class="arw">→</div>
-      <div class="step"><div class="n">03</div><h4>Tú decides</h4><p>Y solo tú. Los hallazgos no llevan campo <span class="lit">fix</span> ni <span class="lit">autofix</span>, porque aquí no hay una orden de trabajo que ejecutar.</p></div>
-    </div>
-
-    <div class="two" style="margin-top:14px">
-      <div class="term" data-reveal>
-        <div class="bar"><i></i><i></i><i></i><span>npx vibeward@latest init</span></div>
-<pre><span class="d">?</span> <b>¿Qué instalo?</b>
-<span class="c">❯</span> ◉ Claude Code        <span class="d">skill + guard</span>
-  ◉ Cursor             <span class="d">skill + guard</span>
-  ○ OpenAI Codex CLI   <span class="d">skill + guard</span>
-  ○ GitHub Copilot CLI <span class="d">skill + guard</span>
-  ○ Gemini CLI         <span class="d">skill + guard</span>
-  ○ Windsurf / Devin   <span class="d">skill + guard</span>
-  ○ opencode           <span class="d">skill + guard</span>
-
-<span class="d">?</span> <b>¿Qué debe vigilar el guard?</b>
-<span class="c">❯</span> ◉ Cuando envías un prompt
-  ◉ Cuando el agente edita o ejecuta
-  ◉ Cuando el agente lee</pre>
-      </div>
-      <div class="panel" data-reveal>
-        <span class="k">El único comando que escribe</span>
-        <h3>Y escribe con cuidado</h3>
-        <p>
-          Previsualiza cada fichero antes de tocar el disco, nunca sobrescribe uno que no escribió él,
-          fusiona los ficheros de settings clave por clave — tus otros hooks se quedan donde están — y
-          el markdown entre marcadores. Volver a ejecutarlo es cómo se actualiza. Cualquier fichero
-          existente se respalda en <span class="lit">.vibeward.bak</span> antes de su primer cambio.
-        </p>
-        <p style="margin-top:12px">
-          Un <span class="lit">SKILL.md</span> por herramienta: el formato ya es común, así que hay un
-          solo cuerpo de texto en vez de un fichero de reglas por editor. No interactivo para CI y
-          dotfiles:
-        </p>
-        <pre><button class="copy-mini" onclick="copyEl('initcmd')">copiar</button><span id="initcmd">vibeward init --scope user --all --yes</span></pre>
-        <p style="margin-top:14px;font-size:13.6px">
-          Y te dice lo que <em>no</em> puede hacer. No todos los editores aplican lo mismo — uno no
-          puede filtrar un prompt en absoluto — así que <span class="lit">init</span> imprime los
-          límites por herramienta después de escribir, en vez de dejarte suponer que estás cubierto.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── config ───────────────────────────────────────── -->
-  <section>
-    <div class="head" data-reveal>
-      <span class="k">vibeward.json</span>
-      <h2 class="sec-title">Algunos “problemas” son decisiones</h2>
-      <p class="sec-lead">
-        Declara qué se supone que es el sitio y vibeward contrasta la realidad con eso. A una
-        herramienta <span class="lit">internal</span> no se la juzga por sitemaps ni Open Graph — pero
-        sí por assets rotos y texto <span class="lit">alt</span>.
-      </p>
-    </div>
-
-    <div class="two">
-      <div class="panel" data-reveal>
-        <span class="k">Decláralo</span>
-        <h3>Intención, no un botón de silencio</h3>
-        <pre>{
-  <span class="c">"schemaVersion"</span>: 1,
-  <span class="c">"intent"</span>: {
-    <span class="c">"aiCrawlers"</span>: <span class="d">"blocked"</span>,
-    <span class="c">"siteType"</span>: <span class="d">"website"</span>
-  },
-  <span class="c">"suppress"</span>: [
-    { <span class="c">"id"</span>: <span class="d">"web_missing_og"</span>,
-      <span class="c">"reason"</span>: <span class="d">"private landing"</span> }
-  ]
-}</pre>
-      </div>
-      <div class="panel" data-reveal>
-        <span class="k">Qué hace con eso</span>
-        <h3>Le da la vuelta a la pregunta</h3>
-        <p>
-          Decir <span class="lit">aiCrawlers: "blocked"</span> hace que vibeward deje de llamarlo error —
-          y plantea la pregunta mejor: <em>¿estás bloqueado tan a fondo como crees?</em> Si tu robots.txt
-          cierra la puerta a tres de los doce crawlers de IA, ese bloqueo incompleto pasa a ser el
-          hallazgo. Creerte cerrado mientras entran nueve es peor que no haber decidido nada.
-        </p>
-        <p style="margin-top:13px">
-          Y nunca se esconde nada. Cada supresión exige un motivo escrito, el informe imprime
-          <em>“producido con N supresión(es) activas”</em> justo bajo el veredicto y las lista una a una.
-          Solo se pueden suprimir comprobaciones de web — un veredicto del que cualquiera puede salir
-          editando un fichero no es un veredicto.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── modes ────────────────────────────────────────── -->
-  <section>
-    <div class="head" data-reveal>
-      <span class="k">Cuatro formas de ejecutarlo</span>
-      <h2 class="sec-title">Desde fuera, desde el código, o desde tu pipeline</h2>
-    </div>
-    <div class="three">
-      <div class="panel" data-reveal>
-        <span class="k">Caja negra · una URL</span>
-        <h3>De fuera hacia dentro</h3>
-        <p>Bundles, sondeo en vivo de Supabase y Firebase, cabeceras, source maps — y toda la pasada de web. <span class="lit">--passive</span> lo reduce a lo que un navegador ya se descarga, sin sondear datos en absoluto.</p>
-        <pre><span class="d">$</span> vibeward https://app.lovable.app</pre>
-      </div>
-      <div class="panel" data-reveal>
-        <span class="k">Caja blanca · una carpeta</span>
-        <h3>Auditoría profunda</h3>
-        <p>Un repo, o un ZIP recién salido de v0 o Bolt. Lee el código, el backend y las migraciones SQL — tablas creadas sin RLS, policies <span class="lit">USING (true)</span>, funciones <span class="lit">SECURITY DEFINER</span>.</p>
-        <pre><span class="d">$</span> vibeward scan ./client-app</pre>
-      </div>
-      <div class="panel" data-reveal>
-        <span class="k">Agentes y CI</span>
-        <h3>Modo máquina</h3>
-        <p>JSON en stdout, cada línea para humanos en stderr, así que entra directo en un parser. El payload lleva un <span class="lit">schemaVersion</span> — si la forma cambia, ese número cambia con ella.</p>
-        <pre><span class="d">$</span> vibeward https://app.com \
-    --json --stdout --yes</pre>
-      </div>
-    </div>
-
-    <div class="panel" data-reveal style="margin-top:14px">
-      <span class="k">GitHub Action</span>
-      <h3>O deja que se ejecute solo, en cada push</h3>
-      <p>¿Construyes en Lovable, Bolt o v0? Se sincronizan con GitHub, así que corre ahí sin instalar nada. Cada corrida deja un resumen en la página del run, un issue <span class="lit">vibeward: pendientes</span> que llega a tus notificaciones, y un prompt para pegar en tu constructor: su IA revisa lo que una regla fija no puede, con tus créditos. Los hallazgos también van a la pestaña Security como SARIF, y el job falla ante un crítico. En un repo público, el resumen cuenta los hallazgos sin nombrarlos. Apúntalo a una carpeta con <span class="lit">path</span>, o a una URL desplegada con <span class="lit">url</span>; el issue necesita <span class="lit">issues: write</span>.</p>
-      <pre><button class="copy-mini" onclick="copyEl('gha')">copiar</button><span id="gha">- uses: JSiapoDEV/vibeward@v0.8.0
-  with:
-    lang: es
-    url: https://your-app.com</span></pre>
-    </div>
-  </section>
-
-  <!-- ── sample finding ───────────────────────────────── -->
-  <section>
-    <div class="head" data-reveal>
-      <span class="k">Cada hallazgo</span>
-      <h2 class="sec-title">Contexto, no una bandera roja</h2>
-      <p class="sec-lead">Suficiente para que una persona capte el riesgo en cinco segundos, y suficiente para decidir qué hacer al respecto.</p>
-    </div>
-    <div class="finding" data-reveal>
+    <div class="finding" data-reveal style="margin-top:22px">
       <div class="ttl"><span class="sev">CRÍTICO</span> La tabla <code>users</code> es legible sin autenticación</div>
       <div class="rows">
-        <div class="row"><b>Clasificación</b> CWE-863 · Autorización incorrecta</div>
-        <div class="row"><b>Evidencia</b> 1.847 filas devueltas solo con la anon key pública. Columnas sensibles presentes: <code>email</code>, <code>phone</code>, <code>full_name</code>.</div>
-        <div class="row"><b>Cómo se explota</b> Cualquier visitante lanza <code>GET /rest/v1/users?select=*</code> con la anon key sacada del bundle JS. Vuelven todas las filas. Sin login.</div>
-        <div class="row"><b>Impacto</b> ~1.847 registros de usuario legibles por cualquiera en internet ahora mismo. Una fuga de datos personales activa, no teórica.</div>
-        <div class="row"><b>Por qué importa</b> Activa el RLS y añade una policy de propietario. No rotes nada — la anon key es pública por diseño; la exposición era la policy que faltaba. Da las filas por leídas.</div>
+        <div class="row"><b>Evidencia</b> 1.847 filas devueltas solo con la clave pública. Columnas sensibles: <code>email</code>, <code>phone</code>, <code>full_name</code>.</div>
+        <div class="row"><b>Cómo se explota</b> Cualquier visitante pide <code>GET /rest/v1/users?select=*</code> con la clave que viene en tu JavaScript. Sin login.</div>
+        <div class="row"><b>Qué hacer</b> Activa el RLS y añade una policy de propietario. La clave pública no se rota: el problema era la policy que faltaba.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── dónde corre ──────────────────────────────────── -->
+  <section id="install">
+    <div class="head" data-reveal>
+      <span class="k">Dónde corre</span>
+      <h2 class="sec-title">Con tu agente, con una URL o en GitHub</h2>
+    </div>
+    <div class="panel" data-reveal>
+      <span class="k">En tu editor</span>
+      <h3>Claude Code, Cursor, Codex…</h3>
+      <p>Instala el guardarraíl y la skill. Tu agente lee el informe y te lo explica.</p>
+      <pre><button class="copy-mini" onclick="copyEl('initcmd')">copiar</button><span id="initcmd">npx vibeward@latest init</span></pre>
+      <p style="margin-top:10px;font-size:13.2px">En Claude Code, también como plugin:</p>
+      <pre><button class="copy-mini" onclick="copyEl('pluginadd')">copiar</button><span id="pluginadd">claude plugin marketplace add jsiapo-dev/plugins
+claude plugin install vibeward</span></pre>
+    </div>
+    <div class="two" style="margin-top:14px">
+      <div class="panel" data-reveal>
+        <span class="k">Tu app publicada</span>
+        <h3>Desde fuera, como un atacante</h3>
+        <p>Lee lo que descarga cualquier navegador y, si le das permiso, prueba tu Supabase o Firebase.</p>
+        <pre><span class="d">$</span> npx vibeward https://tu-app.com</pre>
+      </div>
+      <div class="panel" data-reveal>
+        <span class="k">Lovable · Bolt · v0</span>
+        <h3>En GitHub, en cada push</h3>
+        <p>Deja un resumen, un issue con los pendientes y un prompt para pegar en tu constructor.</p>
+        <pre><button class="copy-mini" onclick="copyEl('gha')">copiar</button><span id="gha">- uses: JSiapoDEV/vibeward@v0.8.0
+  with:
+    lang: es</span></pre>
       </div>
     </div>
   </section>
@@ -1084,133 +842,42 @@ claude plugin install vibeward</span></pre>
   <!-- ── faq ──────────────────────────────────────────── -->
   <section id="faq">
     <div class="head" data-reveal>
-      <span class="k">Antes de ejecutarlo</span>
-      <h2 class="sec-title">Lo que la gente pregunta</h2>
+      <span class="k">Preguntas</span>
+      <h2 class="sec-title">Antes de instalarlo</h2>
     </div>
     <div class="faq" data-reveal>
       <details>
-        <summary>¿Explota o modifica algo?</summary>
-        <p class="a">El escaneo es de solo lectura: lee tu código, tus bundles y las respuestas públicas para <em>detectar</em> riesgo — nunca modifica, borra ni explota. La única excepción es <span class="lit">--write-test</span>, explícita y opcional, que envía una sola sonda de escritura no destructiva (un insert vacío) para comprobar escrituras sin autenticar; está apagada salvo que la pidas. <span class="lit">init</span> es el único comando que escribe, y solo dentro de tu propio proyecto.</p>
-      </details>
-      <details>
-        <summary>¿Va a arreglar lo que encuentra?</summary>
-        <p class="a">No — ni los hallazgos de seguridad, ni los de web, ni los mecánicos de una línea, ni aunque se lo pidas. Los hallazgos no llevan campo <span class="lit">fix</span> ni <span class="lit">autofix</span>, y las instrucciones que vibeward instala le prohíben al agente actuar sobre uno. Eso es el producto, no una funcionalidad que falta: una auditoría que termina en un montón de diffs que nadie pidió sustituye lo que puedes accionar por algo que ahora tienes que revisar. Y en seguridad es peor que desordenado — borrar una clave expuesta de un bundle no la des-filtra. Hay que rotarla, y solo tú decides cuándo y si el incidente hay que comunicarlo.</p>
-      </details>
-      <details>
-        <summary>¿Un favicon que falta puede tumbarme el build?</summary>
-        <p class="a">No. Los hallazgos de web quedan excluidos del recuento por severidad, del fichero SARIF y del código de salida — por diseño, no por configuración. Solo la seguridad bloquea. Si no los quieres ni en el informe, <span class="lit">--no-web</span> se salta la pasada entera.</p>
-      </details>
-      <details>
-        <summary>¿Detecta el fallo detrás de las fugas de Moltbook y Lovable?</summary>
-        <p class="a">Sí — es la comprobación estrella. Encuentra la clave pública de Supabase en tu bundle (un JWT o el nuevo formato <span class="lit">sb_publishable_</span>), enumera en vivo cada tabla expuesta, y marca cuáles devuelven datos sin login. Ese es exactamente el modo de fallo de Moltbook — <span class="lit">agents</span>, <span class="lit">owners</span>, <span class="lit">agent_messages</span> y <span class="lit">observers</span> legibles por cualquiera, y las tablas públicas además escribibles. Para ser precisos sobre lo que la comprobación <em>no</em> es: encontrar la clave <span class="lit">sb_publishable_</span> en un bundle no es el hallazgo. Esa clave va en el cliente por diseño. El hallazgo es una tabla que le responde.</p>
-      </details>
-      <details>
-        <summary>¿Esto es un Lighthouse para apps de IA?</summary>
-        <p class="a">No. vibeward comprueba <em>ausencias binarias</em> — una etiqueta que no está en el HTML, un fichero que nunca se generó, un crawler al que se echó. Son las cosas que un generador se salta y a las que nadie vuelve. Core Web Vitals, presupuestos de rendimiento y una auditoría WCAG completa quedan fuera de alcance a propósito; para eso ejecuta Lighthouse.</p>
+        <summary>¿Modifica mi código o mi base de datos?</summary>
+        <p class="a">No. Lee y reporta; qué cambiar lo decides tú. Solo <span class="lit">init</span> escribe archivos: los de su propia instalación, y te los muestra antes.</p>
       </details>
       <details>
         <summary>¿Mi código sale de mi máquina?</summary>
-        <p class="a">Nunca. El escáner y el guardarraíl corren enteramente en local — sin telemetría, sin cuenta, sin subidas. La única petición saliente es a la URL a la que <em>tú</em> lo apuntas.</p>
+        <p class="a">No. Todo corre en local, sin cuenta ni telemetría. Solo se conecta a la URL que tú le das.</p>
       </details>
       <details>
-        <summary>¿Puedo silenciar una comprobación con la que no estoy de acuerdo?</summary>
-        <p class="a">Solo las de web, y nunca en silencio. Cada entrada de <span class="lit">vibeward.json</span> exige un motivo escrito, y el informe indica cuántas supresiones estaban activas y qué alegaba cada una. Los hallazgos de seguridad no se pueden silenciar desde un fichero de configuración — si no, cualquiera aprobaría su propia auditoría editando un fichero.</p>
+        <summary>¿Usa IA?</summary>
+        <p class="a">No. Son reglas fijas: el mismo código da siempre el mismo resultado, y un texto escondido no las convence. La IA la pone tu agente, cuando lee el informe.</p>
       </details>
       <details>
-        <summary>¿El guardarraíl es un LLM?</summary>
-        <p class="a">No, y ese es el punto. Es un motor de reglas determinista, así que no se le puede convencer. El clásico que empieza con <span class="lit">"ignora todo lo anterior…"</span> no le hace nada: no hay modelo al que persuadir.</p>
+        <summary>¿Necesito Supabase?</summary>
+        <p class="a">No. Supabase y Firebase tienen reglas propias, pero las claves expuestas, el servidor y las cabeceras se revisan en cualquier stack.</p>
       </details>
       <details>
-        <summary>¿Por qué no usar el plugin de seguridad oficial de Anthropic?</summary>
-        <p class="a">Usa los dos — y si trabajas en Claude Code, instala también el suyo: <span class="lit">/plugin install security-guidance@claude-plugins-official</span>, gratis en todos los planes. Revisa lo que el modelo ya escribió: coincidencia de patrones en cada edición de fichero, un modelo leyendo el diff al final del turno, y una pasada agéntica más profunda en cada commit que hace Claude. Su documentación dice sin rodeos dónde se detiene. Sobre bloqueo: <em>“None of the layers block writes or commits”</em> — ninguna de sus capas frena una escritura ni un commit. Y receta ella misma la solución: <em>“For hard enforcement, pair the plugin with a hook that blocks the edit”</em> — para aplicación estricta, combina el plugin con un hook que bloquee la edición. Pide que se lo tome como <em>“one layer of defense in depth, not a complete security solution”</em>: una capa de defensa en profundidad, no una solución de seguridad completa. vibeward es ese hook, un momento antes: frena la petición antes de que el código exista, y <span class="lit">--block</span> hace que ahí se detenga en vez de solo anotar. Conoce Supabase y Firebase por su nombre y no por clase de patrón; el guardarraíl no gasta tokens de modelo ni necesita Python, red ni repo git, mientras que el suyo se salta sus dos capas de modelo en silencio fuera de un repo; entiende español y portugués; y el escáner lee una URL desplegada, que ninguna revisión de tu copia de trabajo puede ver. Ninguno de los dos bloquea por defecto — el suyo vuelve a preguntarle a Claude con los hallazgos, el nuestro inyecta una nota y sale con 0 — y ninguno sustituye al otro.</p>
+        <summary>¿Y el plugin de seguridad de Anthropic?</summary>
+        <p class="a">Usa los dos. El suyo revisa el código que Claude ya escribió. vibeward frena la petición antes, conoce Supabase y Firebase, entiende español y portugués, y revisa tu app publicada.</p>
       </details>
-      <details>
-        <summary>¿Necesito Supabase? ¿O algún framework concreto?</summary>
-        <p class="a">Ninguno. El RLS de Supabase es una comprobación entre muchas: Firebase, claves expuestas, backends inseguros, source maps, cabeceras y toda la pasada de web funcionan en cualquier stack. Apúntalo a cualquier repo, ZIP o URL.</p>
-      </details>
-    </div>
-
-    <h3 style="font-family:var(--sans);font-size:15px;font-weight:600;margin:38px 0 0">Lo que vibeward <em>no</em> hace</h3>
-    <div class="notdo" data-reveal>
-      <span>explotar ni atacar</span>
-      <span>modificar tu código</span>
-      <span>enviar tu código a ningún sitio</span>
-      <span>pedir una cuenta o una clave</span>
-      <span>sustituir un pentest completo</span>
-      <span>preguntarle a un LLM qué decidir</span>
-      <span>arreglar solo un hallazgo de seguridad</span>
-      <span>reemplazar el plugin oficial</span>
     </div>
   </section>
 
-  <!-- ── closer ───────────────────────────────────────── -->
-  <!-- ── encaje ───────────────────────────────────────── -->
-  <section id="fit">
-    <div class="panel" data-reveal>
-      <span class="k">Encaje</span>
-      <h3>Para quién es, y para quién no</h3>
-      <p>
-        Para quien desplegó una app de Supabase, Lovable, Bolt o v0 y es el único responsable de
-        ella: un desarrollador, una app, ningún equipo de seguridad al que escalar.
-      </p>
-      <p style="margin-top:12px">
-        <strong>No es un programa de AppSec de empresa</strong>, y no pretende serlo. Si necesitas
-        gobierno de políticas en una organización, controlar qué herramientas de IA pueden usar tus
-        desarrolladores, un inventario de componentes de IA o SAST sobre un monorepo, compra algo
-        hecho para eso — hay proveedores que lo hacen bien y esto no compite con ellos. Saber cuál
-        de los dos necesitas vale más que la lista de features de cualquiera.
-      </p>
-      <p style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line)">
-        <strong>Hecho con Claude Code</strong>, y conviene decirlo en voz alta en un proyecto cuyo
-        tema es el código que producen los agentes. La objeción es justa —una herramienta de
-        seguridad escrita por un agente es justo de lo que esta herramienta desconfía— y la
-        respuesta es que cada regla es determinista y legible, sometida a 1034 aserciones incluidas
-        entradas construidas para hacerlas fallar. La mitad útil es que <strong>pilla a su propio
-        autor</strong>: escribir esta web disparó el gate de contenido, preparar un commit disparó
-        el de acción, e imprimir un token real en una página de demo hizo que vibeward reportara
-        vibeward.ai. Cada uno se arregló en las reglas o en el contenido — ninguno se silenció,
-        porque los hallazgos de seguridad son la única clase que el archivo de configuración
-        deliberadamente no puede suprimir.
-      </p>
-      <p style="margin-top:12px;font-size:13.5px;color:var(--ink-3)">
-        Sin afiliación, patrocinio ni respaldo de Anthropic. Claude Code es el editor que protege
-        primero, y aquel en el que fue escrito.
-      </p>
-    </div>
-  </section>
-
-  <!-- ── audits ───────────────────────────────────────── -->
+  <!-- ── auditorías ───────────────────────────────────── -->
   <section id="audits">
     <div class="panel" data-reveal>
-      <span class="k">La mitad que un escáner no puede hacer</span>
-      <h3>¿Quieres que lo lea una persona?</h3>
+      <span class="k">Lo que un escáner no ve</span>
+      <h3>¿Quieres que lo revise una persona?</h3>
       <p>
-        vibeward encuentra lo visible desde fuera y desde el código. No encuentra autorización rota
-        a nivel de objeto detrás de un login, un límite entre inquilinos que aguanta en la primera
-        petición y se rompe en la tercera, ni lógica de negocio que ya estaba mal antes de que nadie
-        escribiera un prompt. No es modestia — está en el README, porque un escáner que diga lo
-        contrario es la razón por la que la gente se fía de un tick verde del que no debería fiarse.
-      </p>
-      <p>
-        Eso necesita a alguien leyendo tu app, y es el trabajo que hago: reglas de Supabase y
-        Firebase, fronteras de autenticación, y un informe escrito lo bastante concreto como para que
-        tu propio agente actúe sobre él. <a href="https://cal.com/jsiapo">Reserva 20 minutos</a> — trae la URL.
-      </p>
-      <p style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line)">
-        <strong>US$150, alcance fijo, 48 horas.</strong> Una app, un informe escrito y una lista
-        corta de qué cambiar primero. <strong>Si no aparece nada crítico, no hay factura</strong> —
-        una app limpia es un resultado real y no deberías pagar por que te lo digan. La objeción
-        evidente es justa: cobrar solo cuando aparece algo es un incentivo a que aparezca algo. Por
-        eso <strong>“crítico” queda fijado por escrito antes de empezar</strong>, y es una lista
-        corta: una clave <span class="lit">service_role</span> o de admin alcanzable desde el
-        navegador, una tabla o un bucket que responde sin autenticación, o una frontera de auth que
-        una segunda petición atraviesa. Nada más cuenta, diga lo que diga el escáner. Si crees que
-        inflé un hallazgo para llegar a ese listón, dilo y no hay factura.
-        <a href="https://cal.com/jsiapo">Reserva 20 minutos</a> si te encaja.
-      </p>
-      <p style="color:var(--ink-4);font-size:13.6px">
-        La herramienta sigue siendo gratis y MIT pase lo que pase. No hay plan de pago ni nada
-        reservado fuera de ella — los US$150 pagan a una persona leyendo tu app, no una función.
+        vibeward no ve lo que pasa detrás de un login ni la lógica de tu negocio. Reviso tu app por
+        <strong>US$150, en 48 horas</strong>, con un informe escrito; si no aparece nada crítico, no
+        pagas. <a href="https://cal.com/jsiapo">Reserva 20 minutos</a>.
       </p>
     </div>
   </section>
@@ -1219,9 +886,9 @@ claude plugin install vibeward</span></pre>
     <div data-reveal>
       <span class="k">Cinco segundos</span>
       <h2 class="sec-title">Apúntalo a algo que sea tuyo</h2>
-      <p class="sec-lead">Sin instalar, siempre la última versión, solo lectura. Ejecútalo únicamente contra apps cuyo dueño haya autorizado la auditoría.</p>
+      <p class="sec-lead">Sin instalar, solo lectura. Úsalo solo con apps tuyas o con permiso de su dueño.</p>
       <div class="cmd">
-        <code id="cmd2"><span class="p">$</span> npx vibeward@latest scan ./your-app</code>
+        <code id="cmd2"><span class="p">$</span> npx vibeward@latest scan ./tu-app</code>
         <button onclick="copyCmd('cmd2')">copiar</button>
       </div>
       <div style="margin-top:24px"><a class="btn primary" href="https://github.com/JSiapoDEV/vibeward">Dale una estrella en GitHub</a></div>
@@ -1235,10 +902,11 @@ claude plugin install vibeward</span></pre>
         <path d="M37 40 L49 50 L37 60" fill="none" stroke="#F0EEE6" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
         <line x1="54" y1="60" x2="67" y2="60" stroke="#F0EEE6" stroke-width="7" stroke-linecap="round"/>
       </svg>
-      vibeward · MIT · hecho en Lima 🇵🇪
+      vibeward · MIT · hecho en Lima 🇵🇪 con Claude Code · sin afiliación con Anthropic
     </div>
     <div>
-      <a href="https://github.com/JSiapoDEV/vibeward">GitHub</a> ·
+      <a href="https://github.com/JSiapoDEV/vibeward#readme">Documentación</a> ·
+      <a href="https://github.com/JSiapoDEV/vibeward/blob/main/METHODOLOGY.md">Metodología</a> ·
       <a href="https://www.npmjs.com/package/vibeward">npm</a> ·
       <a href="/llms.txt">llms.txt</a>
     </div>
