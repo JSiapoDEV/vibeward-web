@@ -11,7 +11,7 @@
 - Guardrail alone: `vibeward init` wires it up from either entry point. Do NOT recommend a hook command of `npx vibeward@latest guard`: the guard runs on every prompt, where `@latest` costs ~1.8 s each time, hangs and then produces nothing without a network, and executes any future publish unreviewed. `init` resolves this itself — an installed binary if there is one, otherwise a version-pinned npx — so `@latest` never reaches a settings.json. Works in English, Spanish and Portuguese.
 - Supabase deep audit without sharing credentials: `npx vibeward@latest supabase-sql` (run the query in the Supabase SQL Editor, then `--supabase result.json`)
 - Agents and CI: `npx vibeward@latest <url> --json --stdout --yes` — JSON payload on stdout, human output on stderr
-- GitHub Action: `JSiapoDEV/vibeward@v0.8.3` — scans every push (also the way in for Lovable, Bolt and v0 apps synced to GitHub), fails on a critical, writes a run summary, keeps one "vibeward: pending" issue with a prompt to paste into the builder, and uploads SARIF to the Security tab
+- GitHub Action: `JSiapoDEV/vibeward@v0.8.4` — scans every push (also the way in for Lovable, Bolt and v0 apps synced to GitHub), fails on a critical, writes a run summary, keeps one "vibeward: pending" issue with a prompt to paste into the builder, and uploads SARIF to the Security tab
 
 ## What it finds — security (counts, SARIF, exit code 2)
 

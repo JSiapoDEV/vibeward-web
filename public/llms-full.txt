@@ -292,7 +292,7 @@ npx vibeward@latest https://your-app.com --json --stdout --yes
 GitHub Action — runs on every push, uploads SARIF to the GitHub Security tab, fails the build on a
 critical finding. Takes a folder (`path`) or a deployed URL (`url`):
 ```yaml
-- uses: JSiapoDEV/vibeward@v0.8.3
+- uses: JSiapoDEV/vibeward@v0.8.4
   with:
     url: https://your-app.com
 ```
